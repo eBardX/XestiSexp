@@ -1,4 +1,4 @@
-// swift-tools-version:5.9
+// swift-tools-version:5.10
 
 import PackageDescription
 
@@ -16,7 +16,7 @@ let package = Package(name: "XestiSexp",
                       dependencies: [.package(url: "https://github.com/eBardX/XestiMath.git",
                                               from: "1.0.0"),
                                      .package(url: "https://github.com/eBardX/XestiTools.git",
-                                              from: "2.0.0")],
+                                              from: "3.0.0")],
                       targets: [.target(name: "XestiSexp",
                                         dependencies: [.product(name: "XestiMath",
                                         						package: "XestiMath"),
