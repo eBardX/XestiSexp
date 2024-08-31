@@ -1,4 +1,5 @@
 {
+  "originHash" : "b715c3b5308cb59d02b50bd945ae8ec610fc4bbf5b51c83864f5b03752dbf19e",
   "pins" : [
     {
       "identity" : "bigint",
@@ -14,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser.git",
       "state" : {
-        "revision" : "0fbc8848e389af3bb55c182bc19ca9d5dc2f255b",
-        "version" : "1.4.0"
+        "revision" : "41982a3656a71c768319979febd796c6fd111d5c",
+        "version" : "1.5.0"
       }
     },
     {
@@ -32,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eBardX/XestiMath.git",
       "state" : {
-        "revision" : "6b845cb88d899d3ae69a5e6bd96f7565a94ef213",
-        "version" : "1.0.0"
+        "revision" : "ece36f5f1882270556b57c9c1fe014a8e484073d",
+        "version" : "1.2.0"
       }
     },
     {
@@ -41,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eBardX/XestiText.git",
       "state" : {
-        "revision" : "50fc6f6564fc44eb0bf326279484b1b9c673dbfb",
-        "version" : "1.3.1"
+        "revision" : "da4ba9ae33c350d56d8c26f1bbbcdea17302378e",
+        "version" : "2.0.0"
       }
     },
     {
@@ -50,10 +51,10 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eBardX/XestiTools.git",
       "state" : {
-        "revision" : "7495dfb09c3fe1863e28d4f33cd6965c747f803e",
-        "version" : "3.0.0"
+        "revision" : "484b2ffaec5b7214a81729f25ebef242aa2c7148",
+        "version" : "3.3.1"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

@@ -134,7 +134,7 @@ extension Sexp.Formatter {
     }
 
     private static func _isIdentifier(_ value: String) -> Bool {
-        guard value.first?.isSexpSymbolHead ?? true
+        guard value.first?.isSexpSymbolHead ?? false    // empty string is _not_ an identifier
         else { return false }
 
         for chr in value.dropFirst() where !chr.isSexpSymbolTail {
