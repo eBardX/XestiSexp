@@ -11,9 +11,7 @@ extension Sexp {
 
         // MARK: Private Instance Properties
 
-        private let string: String
-
-        private var index: String.Index
+        private var reader: StringReader
     }
 }
 
@@ -32,8 +30,7 @@ extension Sexp.Parser {
     // MARK: Internal Initializers
 
     internal init(_ string: String) {
-        self.index = string.startIndex
-        self.string = string
+        self.reader = .init(string)
     }
 
     // MARK: Internal Instance Methods
@@ -45,22 +42,16 @@ extension Sexp.Parser {
 
         _skipWhitespace()
 
-        guard isAtEnd
+        guard !reader.hasMore
         else { throw Sexp.Error.badExpression }
 
         return sexp
     }
 
-    // MARK: Private Instance Properties
-
-    private var isAtEnd: Bool {
-        index == string.endIndex
-    }
-
     // MARK: Private Instance Methods
 
     private mutating func _parseExpression() throws -> Sexp {
-        guard let chr = _peekChar()
+        guard let chr = reader.peek()
         else { throw Sexp.Error.endOfString }
 
         switch chr {
@@ -87,7 +78,7 @@ extension Sexp.Parser {
     }
 
     private mutating func _parseList() throws -> Sexp {
-        precondition(_scanChar() == "(",
+        precondition(reader.read() == "(",
                      "Internal parser inconsistency")
 
         var stack: [Sexp] = []
@@ -96,10 +87,10 @@ extension Sexp.Parser {
         _skipWhitespace()
 
     loop:
-        while let chr = _peekChar() {
+        while let chr = reader.peek() {
             switch chr {
             case ".":
-                _skipChar()
+                reader.skip()
                 _skipWhitespace()
 
                 tail = try _parseExpression()
@@ -117,7 +108,7 @@ extension Sexp.Parser {
             }
         }
 
-        guard _scanChar() == ")"
+        guard reader.read() == ")"
         else { throw Sexp.Error.badList }
 
         var list = tail
@@ -132,13 +123,13 @@ extension Sexp.Parser {
     private mutating func _parseNumber() throws -> Sexp {
         // what about +inf.0, -inf.0, +nan.0, -nan.0 ???
 
-        guard let headChar = _scanChar(),
+        guard let headChar = reader.read(),
               headChar.isSexpNumberHead
         else { preconditionFailure("Internal parser inconsistency") }
 
         var buffer = String(headChar)
 
-        while let tailChar = _peekChar() {
+        while let tailChar = reader.peek() {
             if tailChar.isSexpDelimiter {
                 break
             }
@@ -147,7 +138,7 @@ extension Sexp.Parser {
                 throw Sexp.Error.badChar(tailChar) // .illegalNumberChar ???
             }
 
-            _skipChar()
+            reader.skip()
 
             buffer.append(tailChar)
         }
@@ -160,10 +151,10 @@ extension Sexp.Parser {
     }
 
     private mutating func _parseSpecial() throws -> Sexp {
-        precondition(_scanChar() == "#",
+        precondition(reader.read() == "#",
                      "Internal parser inconsistency")
 
-        guard let chr = _scanChar()
+        guard let chr = reader.read()
         else { throw Sexp.Error.endOfString }
 
         switch chr {
@@ -179,12 +170,12 @@ extension Sexp.Parser {
     }
 
     private mutating func _parseSymbolQuoted() throws -> Sexp {
-        precondition(_scanChar() == "|",
+        precondition(reader.read() == "|",
                      "Internal parser inconsistency")
 
         var buffer = ""
 
-        while let chr = _scanChar() {
+        while let chr = reader.read() {
             switch chr {
             case "\\":
                 try buffer.append(_scanEscapedChar())
@@ -201,13 +192,13 @@ extension Sexp.Parser {
     }
 
     private mutating func _parseSymbolUnquoted() throws -> Sexp {
-        guard let headChar = _scanChar(),
+        guard let headChar = reader.read(),
               headChar.isSexpSymbolHead
         else { preconditionFailure("Internal parser inconsistency") }
 
         var buffer = String(headChar)
 
-        while let tailChar = _peekChar() {
+        while let tailChar = reader.peek() {
             if tailChar.isSexpDelimiter {
                 break
             }
@@ -216,7 +207,7 @@ extension Sexp.Parser {
                 throw Sexp.Error.badChar(tailChar)
             }
 
-            _skipChar()
+            reader.skip()
 
             buffer.append(tailChar)
         }
@@ -224,29 +215,13 @@ extension Sexp.Parser {
         return .symbol(buffer)
     }
 
-    private func _peekChar() -> Character? {
-        guard index < string.endIndex
-        else { return nil }
-
-        return string[index]
-    }
-
-    private mutating func _scanChar() -> Character? {
-        guard index < string.endIndex
-        else { return nil }
-
-        defer { index = string.index(after: index) }
-
-        return string[index]
-    }
-
     private mutating func _scanEscapedChar() throws -> Character {
-        guard let chr = _peekChar()
+        guard let chr = reader.peek()
         else { throw Sexp.Error.endOfString }
 
         switch chr {
         case "\"", "\\", "|":
-            _skipChar()
+            reader.skip()
 
             return chr
 
@@ -257,17 +232,10 @@ extension Sexp.Parser {
         throw Sexp.Error.badEscape
     }
 
-    private mutating func _skipChar() {
-        guard index < string.endIndex
-        else { return }
-
-        index = string.index(after: index)
-    }
-
     private mutating func _skipWhitespace() {
         var inComment = false
 
-        while let chr = _peekChar() {
+        while let chr = reader.peek() {
             switch chr {
             case ";":
                 if !inComment {
@@ -289,7 +257,7 @@ extension Sexp.Parser {
                 }
             }
 
-            _skipChar()
+            reader.skip()
         }
     }
 }
