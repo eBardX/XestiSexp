@@ -1,6 +1,4 @@
-// © 2024 John Gary Pusey (see LICENSE.md)
-
-import XestiMath
+// © 2024–2025 John Gary Pusey (see LICENSE.md)
 
 extension SexpEncoderImpl {
 
@@ -10,16 +8,16 @@ extension SexpEncoderImpl {
 
         // MARK: Internal Initializers
 
-        internal init(impl: SexpEncoderImpl,
+        internal init(encoderImpl: SexpEncoderImpl,
                       codingPath: [any CodingKey]) {
             self.codingPath = codingPath
-            self.impl = impl
+            self.encoderImpl = encoderImpl
         }
 
         // MARK: Internal Instance Properties
 
         internal let codingPath: [any CodingKey]
-        internal let impl: SexpEncoderImpl
+        internal let encoderImpl: SexpEncoderImpl
 
         // MARK: Private Instance Properties
 
@@ -44,49 +42,49 @@ extension SexpEncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     internal func encode(_ value: Bool) throws {
         try _checkStorageEmpty(value)
 
-        storage = .boolean(value)
+        storage = Sexp(boolean: value)
     }
 
     internal func encode(_ value: Double) throws {
         try _checkStorageEmpty(value)
 
-        storage = .number(Real(value))
+        storage = Sexp(number: Sexp.Number(value))
     }
 
     internal func encode(_ value: Float) throws {
         try _checkStorageEmpty(value)
 
-        storage = .number(Real(value))
+        storage = Sexp(number: Sexp.Number(value))
     }
 
     internal func encode(_ value: Int) throws {
         try _checkStorageEmpty(value)
 
-        storage = .number(Real(value))
+        storage = Sexp(number: Sexp.Number(value))
     }
 
     internal func encode(_ value: Int8) throws {
         try _checkStorageEmpty(value)
 
-        storage = .number(Real(value))
+        storage = Sexp(number: Sexp.Number(value))
     }
 
     internal func encode(_ value: Int16) throws {
         try _checkStorageEmpty(value)
 
-        storage = .number(Real(value))
+        storage = Sexp(number: Sexp.Number(value))
     }
 
     internal func encode(_ value: Int32) throws {
         try _checkStorageEmpty(value)
 
-        storage = .number(Real(value))
+        storage = Sexp(number: Sexp.Number(value))
     }
 
     internal func encode(_ value: Int64) throws {
         try _checkStorageEmpty(value)
 
-        storage = .number(Real(value))
+        storage = Sexp(number: Sexp.Number(value))
     }
 
     internal func encode(_ value: String) throws {
@@ -94,44 +92,44 @@ extension SexpEncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
 
         // Add special handling for symbols?
 
-        storage = .symbol(value)
+        storage = Sexp(string: value)
     }
 
     internal func encode(_ value: UInt) throws {
         try _checkStorageEmpty(value)
 
-        storage = .number(Real(value))
+        storage = Sexp(number: Sexp.Number(value))
     }
 
     internal func encode(_ value: UInt8) throws {
         try _checkStorageEmpty(value)
 
-        storage = .number(Real(value))
+        storage = Sexp(number: Sexp.Number(value))
     }
 
     internal func encode(_ value: UInt16) throws {
         try _checkStorageEmpty(value)
 
-        storage = .number(Real(value))
+        storage = Sexp(number: Sexp.Number(value))
     }
 
     internal func encode(_ value: UInt32) throws {
         try _checkStorageEmpty(value)
 
-        storage = .number(Real(value))
+        storage = Sexp(number: Sexp.Number(value))
     }
 
     internal func encode(_ value: UInt64) throws {
         try _checkStorageEmpty(value)
 
-        storage = .number(Real(value))
+        storage = Sexp(number: Sexp.Number(value))
     }
 
     internal func encode<T: Encodable>(_ value: T) throws {
         try _checkStorageEmpty(value)
 
-        if let realValue = value as? Real {
-            storage = .number(realValue)
+        if let numberValue = value as? Sexp.Number {
+            storage = Sexp(number: numberValue)
         } else {
             let encoder = SexpEncoderImpl(codingPath: [],
                                           userInfo: [:])
@@ -145,7 +143,7 @@ extension SexpEncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     internal func encodeNil() throws {
         try _checkStorageEmpty(nil)
 
-        storage = .null
+        storage = Sexp()
     }
 
     // MARK: Private Instance Methods

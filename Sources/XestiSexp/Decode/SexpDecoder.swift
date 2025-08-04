@@ -33,7 +33,8 @@ public final class SexpDecoder {
                                                           message: "Invalid UTF-8 in data") }
 
         do {
-            return try Sexp.Parser.parse(string)
+            return try Sexp.Parser(syntax: .r7rsPartial,
+                                   tracing: .silent).parse(input: string)
         } catch let error as Sexp.Error {
             throw DecodingError.makeDataCorruptedError(at: [],
                                                        message: "Invalid S-expression in data",

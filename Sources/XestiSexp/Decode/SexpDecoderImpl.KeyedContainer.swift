@@ -1,6 +1,4 @@
-// © 2024 John Gary Pusey (see LICENSE.md)
-
-import XestiMath
+// © 2024–2025 John Gary Pusey (see LICENSE.md)
 
 extension SexpDecoderImpl {
 
@@ -10,21 +8,21 @@ extension SexpDecoderImpl {
 
         // MARK: Internal Initializers
 
-        internal init(impl: SexpDecoderImpl,
+        internal init(decoderImpl: SexpDecoderImpl,
                       codingPath: [any CodingKey],
                       dictionary: [String: Sexp],
                       keys: [String]) {
             self.codingPath = codingPath
+            self.decoderImpl = decoderImpl
             self.dictionary = dictionary
-            self.impl = impl
             self.keys = keys
         }
 
         // MARK: Internal Instance Properties
 
         internal let codingPath: [any CodingKey]
+        internal let decoderImpl: SexpDecoderImpl
         internal let dictionary: [String: Sexp]
-        internal let impl: SexpDecoderImpl
         internal let keys: [String]
     }
 }
@@ -49,84 +47,84 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                          forKey key: Key) throws -> Bool {
         let value = try _fetchValue(key)
 
-        guard let val = value.boolValue
+        guard let boolValue = value.booleanValue
         else { throw DecodingError.makeTypeMismatchError(for: type,
                                                          at: codingPath + [key],
                                                          message: "Expected a boolean, instead found: \(value)") }
 
-        return val
+        return boolValue
     }
 
     internal func decode(_ type: Double.Type,
                          forKey key: Key) throws -> Double {
-        try _fetchRealValue(type, key).doubleValue
+        try _fetchNumberValue(type, key).doubleValue
     }
 
     internal func decode(_ type: Float.Type,
                          forKey key: Key) throws -> Float {
-        try _fetchRealValue(type, key).floatValue
+        try _fetchNumberValue(type, key).floatValue
     }
 
     internal func decode(_ type: Int.Type,
                          forKey key: Key) throws -> Int {
-        try _fetchRealValue(type, key).intValue
+        try _fetchNumberValue(type, key).intValue
     }
 
     internal func decode(_ type: Int8.Type,
                          forKey key: Key) throws -> Int8 {
-        try _fetchRealValue(type, key).int8Value
+        try _fetchNumberValue(type, key).int8Value
     }
 
     internal func decode(_ type: Int16.Type,
                          forKey key: Key) throws -> Int16 {
-        try _fetchRealValue(type, key).int16Value
+        try _fetchNumberValue(type, key).int16Value
     }
 
     internal func decode(_ type: Int32.Type,
                          forKey key: Key) throws -> Int32 {
-        try _fetchRealValue(type, key).int32Value
+        try _fetchNumberValue(type, key).int32Value
     }
 
     internal func decode(_ type: Int64.Type,
                          forKey key: Key) throws -> Int64 {
-        try _fetchRealValue(type, key).int64Value
+        try _fetchNumberValue(type, key).int64Value
     }
 
     internal func decode(_ type: String.Type,
                          forKey key: Key) throws -> String {
         let value = try _fetchValue(key)
 
-        guard let val = value.stringValue
+        guard let stringValue = value.stringValue
         else { throw DecodingError.makeTypeMismatchError(for: type,
                                                          at: codingPath + [key],
                                                          message: "Expected a string, instead found: \(value)") }
 
-        return val
+        return stringValue
     }
 
     internal func decode(_ type: UInt.Type,
                          forKey key: Key) throws -> UInt {
-        try _fetchRealValue(type, key).uintValue
+        try _fetchNumberValue(type, key).uintValue
     }
 
     internal func decode(_ type: UInt8.Type,
                          forKey key: Key) throws -> UInt8 {
-        try _fetchRealValue(type, key).uint8Value
+        try _fetchNumberValue(type, key).uint8Value
     }
 
     internal func decode(_ type: UInt16.Type,
                          forKey key: Key) throws -> UInt16 {
-        try _fetchRealValue(type, key).uint16Value
+        try _fetchNumberValue(type, key).uint16Value
     }
 
     internal func decode(_ type: UInt32.Type,
                          forKey key: Key) throws -> UInt32 {
-        try _fetchRealValue(type, key).uint32Value
+        try _fetchNumberValue(type, key).uint32Value
     }
 
     internal func decode(_ type: UInt64.Type,
                          forKey key: Key) throws -> UInt64 {
-        try _fetchRealValue(type, key).uint64Value
+        try _fetchNumberValue(type, key).uint64Value
     }
 
     internal func decode<T: Decodable>(_ type: T.Type,
@@ -135,7 +133,7 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     }
 
     internal func decodeNil(forKey key: Key) throws -> Bool {
-        try _fetchValue(key) == .null
+        try _fetchValue(key) == Sexp()
     }
 
     internal func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type,
@@ -160,7 +158,7 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     private func _decoderForKey(_ key: any CodingKey) throws -> SexpDecoderImpl {
         SexpDecoderImpl(from: try _fetchValue(key),
                         codingPath: codingPath + [key],
-                        userInfo: impl.userInfo)
+                        userInfo: decoderImpl.userInfo)
     }
 
     private func _decoderForKeyNoThrow(_ key: any CodingKey) -> SexpDecoderImpl {
@@ -169,24 +167,24 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         do {
             value = try _fetchValue(key)
         } catch {
-            value = .null
+            value = Sexp()
         }
 
         return SexpDecoderImpl(from: value,
                                codingPath: codingPath + [key],
-                               userInfo: impl.userInfo)
+                               userInfo: decoderImpl.userInfo)
     }
 
-    private func _fetchRealValue<T>(_ type: T.Type,
-                                    _ key: any CodingKey) throws -> Real {
+    private func _fetchNumberValue<T>(_ type: T.Type,
+                                      _ key: any CodingKey) throws -> Sexp.Number {
         let value = try _fetchValue(key)
 
-        guard let val = value.realValue
+        guard let numberValue = value.numberValue
         else { throw DecodingError.makeTypeMismatchError(for: type,
                                                          at: codingPath + [key],
                                                          message: "Expected a number, instead found: \(value)") }
 
-        return val
+        return numberValue
     }
 
     private func _fetchValue(_ key: any CodingKey) throws -> Sexp {

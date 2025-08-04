@@ -16,7 +16,7 @@ internal final class SexpEncoderImpl {
     internal let userInfo: [CodingUserInfoKey: Any]
 
     internal var sexp: Sexp {
-        container?.sexp ?? .null
+        container?.sexp ?? Sexp()
     }
 
     // MARK: Private Instance Properties
@@ -33,7 +33,7 @@ extension SexpEncoderImpl: Encoder {
     internal func container<Key: CodingKey>(keyedBy type: Key.Type) -> KeyedEncodingContainer<Key> {
         precondition(container == nil)
 
-        let tmpContainer = KeyedContainer<Key>(impl: self,
+        let tmpContainer = KeyedContainer<Key>(encoderImpl: self,
                                                codingPath: codingPath)
 
         container = tmpContainer
@@ -44,7 +44,7 @@ extension SexpEncoderImpl: Encoder {
     internal func singleValueContainer() -> any SingleValueEncodingContainer {
         precondition(container == nil)
 
-        let tmpContainer = SingleValueContainer(impl: self,
+        let tmpContainer = SingleValueContainer(encoderImpl: self,
                                                 codingPath: codingPath)
 
         container = tmpContainer
@@ -55,7 +55,7 @@ extension SexpEncoderImpl: Encoder {
     internal func unkeyedContainer() -> any UnkeyedEncodingContainer {
         precondition(container == nil)
 
-        let tmpContainer = UnkeyedContainer(impl: self,
+        let tmpContainer = UnkeyedContainer(encoderImpl: self,
                                             codingPath: codingPath)
 
         container = tmpContainer

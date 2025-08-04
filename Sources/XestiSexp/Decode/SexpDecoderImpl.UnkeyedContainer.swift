@@ -1,6 +1,4 @@
-// © 2024 John Gary Pusey (see LICENSE.md)
-
-import XestiMath
+// © 2024–2025 John Gary Pusey (see LICENSE.md)
 
 extension SexpDecoderImpl {
 
@@ -10,20 +8,20 @@ extension SexpDecoderImpl {
 
         // MARK: Internal Initializers
 
-        internal init(impl: SexpDecoderImpl,
+        internal init(decoderImpl: SexpDecoderImpl,
                       codingPath: [any CodingKey],
-                      array: [Sexp]) {
-            self.array = array
+                      arrayValue: [Sexp]) {
+            self.arrayValue = arrayValue
             self.codingPath = codingPath
             self.currentIndex = 0
-            self.impl = impl
+            self.decoderImpl = decoderImpl
         }
 
         // MARK: Internal Instance Properties
 
-        internal let array: [Sexp]
+        internal let arrayValue: [Sexp]
         internal let codingPath: [any CodingKey]
-        internal let impl: SexpDecoderImpl
+        internal let decoderImpl: SexpDecoderImpl
 
         internal var currentIndex: Int
     }
@@ -36,7 +34,7 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     // MARK: Internal Instance Properties
 
     internal var count: Int? {
-        array.count
+        arrayValue.count
     }
 
     internal var isAtEnd: Bool {
@@ -48,81 +46,81 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     internal mutating func decode(_ type: Bool.Type) throws -> Bool {
         let value = try _fetchValue(type)
 
-        guard let val = value.boolValue
+        guard let boolValue = value.booleanValue
         else { throw DecodingError.makeTypeMismatchError(for: type,
                                                          at: codingPath + [SexpCodingKey(currentIndex)],
                                                          message: "Expected a boolean, instead found: \(value)") }
 
         currentIndex += 1
 
-        return val
+        return boolValue
     }
 
     internal mutating func decode(_ type: Double.Type) throws -> Double {
-        try _fetchRealValue(type).doubleValue
+        try _fetchNumberValue(type).doubleValue
     }
 
     internal mutating func decode(_ type: Float.Type) throws -> Float {
-        try _fetchRealValue(type).floatValue
+        try _fetchNumberValue(type).floatValue
     }
 
     internal mutating func decode(_ type: Int.Type) throws -> Int {
-        try _fetchRealValue(type).intValue
+        try _fetchNumberValue(type).intValue
     }
 
     internal mutating func decode(_ type: Int8.Type) throws -> Int8 {
-        try _fetchRealValue(type).int8Value
+        try _fetchNumberValue(type).int8Value
     }
 
     internal mutating func decode(_ type: Int16.Type) throws -> Int16 {
-        try _fetchRealValue(type).int16Value
+        try _fetchNumberValue(type).int16Value
     }
 
     internal mutating func decode(_ type: Int32.Type) throws -> Int32 {
-        try _fetchRealValue(type).int32Value
+        try _fetchNumberValue(type).int32Value
     }
 
     internal mutating func decode(_ type: Int64.Type) throws -> Int64 {
-        try _fetchRealValue(type).int64Value
+        try _fetchNumberValue(type).int64Value
     }
 
     internal mutating func decode(_ type: String.Type) throws -> String {
         let value = try _fetchValue(type)
 
-        guard let val = value.stringValue
+        guard let stringValue = value.stringValue
         else { throw DecodingError.makeTypeMismatchError(for: type,
                                                          at: codingPath + [SexpCodingKey(currentIndex)],
                                                          message: "Expected a string, instead found: \(value)") }
 
         currentIndex += 1
 
-        return val
+        return stringValue
     }
 
     internal mutating func decode(_ type: UInt.Type) throws -> UInt {
-        try _fetchRealValue(type).uintValue
+        try _fetchNumberValue(type).uintValue
     }
 
     internal mutating func decode(_ type: UInt8.Type) throws -> UInt8 {
-        try _fetchRealValue(type).uint8Value
+        try _fetchNumberValue(type).uint8Value
     }
 
     internal mutating func decode(_ type: UInt16.Type) throws -> UInt16 {
-        try _fetchRealValue(type).uint16Value
+        try _fetchNumberValue(type).uint16Value
     }
 
     internal mutating func decode(_ type: UInt32.Type) throws -> UInt32 {
-        try _fetchRealValue(type).uint32Value
+        try _fetchNumberValue(type).uint32Value
     }
 
     internal mutating func decode(_ type: UInt64.Type) throws -> UInt64 {
-        try _fetchRealValue(type).uint64Value
+        try _fetchNumberValue(type).uint64Value
     }
 
     internal mutating func decode<T: Decodable>(_ type: T.Type) throws -> T {
         let decoder = SexpDecoderImpl(from: try _fetchValue(type),
                                       codingPath: codingPath + [SexpCodingKey(currentIndex)],
-                                      userInfo: impl.userInfo)
+                                      userInfo: decoderImpl.userInfo)
         let result = try T(from: decoder)
 
         currentIndex += 1
@@ -131,7 +129,7 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
 
     internal mutating func decodeNil() throws -> Bool {
-        guard try _fetchValue(Never.self) == .null
+        guard try _fetchValue(Never.self) == Sexp()
         else { return false }
 
         currentIndex += 1
@@ -142,7 +140,7 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     internal mutating func nestedContainer<NestedKey: CodingKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> {
         let decoder = SexpDecoderImpl(from: try _fetchValue(KeyedDecodingContainer<NestedKey>.self),
                                       codingPath: codingPath + [SexpCodingKey(currentIndex)],
-                                      userInfo: impl.userInfo)
+                                      userInfo: decoderImpl.userInfo)
         let container = try decoder.container(keyedBy: type)
 
         currentIndex += 1
@@ -153,7 +151,7 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     internal mutating func nestedUnkeyedContainer() throws -> any UnkeyedDecodingContainer {
         let decoder = SexpDecoderImpl(from: try _fetchValue((any UnkeyedDecodingContainer).self),
                                       codingPath: codingPath + [SexpCodingKey(currentIndex)],
-                                      userInfo: impl.userInfo)
+                                      userInfo: decoderImpl.userInfo)
         let container = try decoder.unkeyedContainer()
 
         currentIndex += 1
@@ -164,7 +162,7 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     internal mutating func superDecoder() throws -> any Decoder {
         let decoder = SexpDecoderImpl(from: try _fetchValue((any Decoder).self),
                                       codingPath: codingPath + [SexpCodingKey(currentIndex)],
-                                      userInfo: impl.userInfo)
+                                      userInfo: decoderImpl.userInfo)
 
         currentIndex += 1
 
@@ -173,17 +171,17 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
 
     // MARK: Private Instance Methods
 
-    private mutating func _fetchRealValue<T>(_ type: T.Type) throws -> Real {
+    private mutating func _fetchNumberValue<T>(_ type: T.Type) throws -> Sexp.Number {
         let value = try _fetchValue(type)
 
-        guard let val = value.realValue
+        guard let numberValue = value.numberValue
         else { throw DecodingError.makeTypeMismatchError(for: type,
                                                          at: codingPath + [SexpCodingKey(currentIndex)],
                                                          message: "Expected a number, instead found: \(value)") }
 
         currentIndex += 1
 
-        return val
+        return numberValue
     }
 
     private func _fetchValue<T>(_ type: T.Type) throws -> Sexp {
@@ -192,6 +190,6 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
                                                           at: codingPath + [SexpCodingKey(currentIndex)],
                                                           message: "Unkeyed decoding container is at end") }
 
-        return array[currentIndex]
+        return arrayValue[currentIndex]
     }
 }

@@ -10,18 +10,18 @@ extension SexpEncoderImpl {
 
         // MARK: Internal Initializers
 
-        internal init(impl: SexpEncoderImpl,
+        internal init(encoderImpl: SexpEncoderImpl,
                       codingPath: [any CodingKey]) {
             self.codingPath = codingPath
             self.containerKeys = []
             self.containers = [:]
-            self.impl = impl
+            self.encoderImpl = encoderImpl
         }
 
         // MARK: Internal Instance Properties
 
         internal let codingPath: [any CodingKey]
-        internal let impl: SexpEncoderImpl
+        internal let encoderImpl: SexpEncoderImpl
 
         // MARK: Private Instance Properties
 
@@ -38,7 +38,7 @@ extension SexpEncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
 
     internal func encode<T: Encodable>(_ value: T,
                                        forKey key: Key) throws {
-        let container = SexpEncoderImpl.SingleValueContainer(impl: impl,
+        let container = SexpEncoderImpl.SingleValueContainer(encoderImpl: encoderImpl,
                                                              codingPath: codingPath + [key])
 
         let tmpKey = key.stringValue
@@ -51,7 +51,7 @@ extension SexpEncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
     }
 
     internal func encodeNil(forKey key: Key) throws {
-        let container = SexpEncoderImpl.SingleValueContainer(impl: impl,
+        let container = SexpEncoderImpl.SingleValueContainer(encoderImpl: encoderImpl,
                                                              codingPath: codingPath + [key])
 
         let tmpKey = key.stringValue
@@ -65,7 +65,7 @@ extension SexpEncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
 
     internal func nestedContainer<NestedKey: CodingKey>(keyedBy keyType: NestedKey.Type,
                                                         forKey key: Key) -> KeyedEncodingContainer<NestedKey> {
-        let container = SexpEncoderImpl.KeyedContainer<NestedKey>(impl: impl,
+        let container = SexpEncoderImpl.KeyedContainer<NestedKey>(encoderImpl: encoderImpl,
                                                                   codingPath: codingPath + [key])
 
         let tmpKey = key.stringValue
@@ -78,7 +78,7 @@ extension SexpEncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
     }
 
     internal func nestedUnkeyedContainer(forKey key: Key) -> any UnkeyedEncodingContainer {
-        let container = SexpEncoderImpl.UnkeyedContainer(impl: impl,
+        let container = SexpEncoderImpl.UnkeyedContainer(encoderImpl: encoderImpl,
                                                          codingPath: codingPath + [key])
 
         let tmpKey = key.stringValue
@@ -92,12 +92,12 @@ extension SexpEncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
 
     internal func superEncoder() -> any Encoder {
         SexpEncoderImpl(codingPath: codingPath + [SexpCodingKey("super")],
-                        userInfo: impl.userInfo)
+                        userInfo: encoderImpl.userInfo)
     }
 
     internal func superEncoder(forKey key: Key) -> any Encoder {
         SexpEncoderImpl(codingPath: codingPath + [key],
-                        userInfo: impl.userInfo)
+                        userInfo: encoderImpl.userInfo)
     }
 }
 
@@ -105,7 +105,7 @@ extension SexpEncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
 
 extension SexpEncoderImpl.KeyedContainer: SexpEncodingContainer {
     internal var sexp: Sexp {
-        Sexp(containers.mapValues { $0.sexp },
-             containerKeys)
+        Sexp(dictionaryValue: containers.mapValues { $0.sexp },
+             dictionaryKeys: containerKeys)
     }
 }

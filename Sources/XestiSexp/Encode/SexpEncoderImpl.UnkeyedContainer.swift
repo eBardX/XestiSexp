@@ -8,17 +8,17 @@ extension SexpEncoderImpl {
 
         // MARK: Internal Initializers
 
-        internal init(impl: SexpEncoderImpl,
+        internal init(encoderImpl: SexpEncoderImpl,
                       codingPath: [any CodingKey]) {
             self.codingPath = codingPath
             self.containers = []
-            self.impl = impl
+            self.encoderImpl = encoderImpl
         }
 
         // MARK: Internal Instance Properties
 
         internal let codingPath: [any CodingKey]
-        internal let impl: SexpEncoderImpl
+        internal let encoderImpl: SexpEncoderImpl
 
         // MARK: Private Instance Properties
 
@@ -30,7 +30,7 @@ extension SexpEncoderImpl {
 
 extension SexpEncoderImpl.UnkeyedContainer: SexpEncodingContainer {
     internal var sexp: Sexp {
-        Sexp(containers.map { $0.sexp })
+        Sexp(vector: containers.map { $0.sexp })
     }
 }
 
@@ -47,7 +47,7 @@ extension SexpEncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
     // MARK: Internal Instance Methods
 
     internal func encode<T: Encodable>(_ value: T) throws {
-        let container = SexpEncoderImpl.SingleValueContainer(impl: impl,
+        let container = SexpEncoderImpl.SingleValueContainer(encoderImpl: encoderImpl,
                                                              codingPath: codingPath + [SexpCodingKey(count)])
 
         try container.encode(value)
@@ -56,7 +56,7 @@ extension SexpEncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
     }
 
     internal func encodeNil() throws {
-        let container = SexpEncoderImpl.SingleValueContainer(impl: impl,
+        let container = SexpEncoderImpl.SingleValueContainer(encoderImpl: encoderImpl,
                                                              codingPath: codingPath + [SexpCodingKey(count)])
 
         try container.encodeNil()
@@ -65,7 +65,7 @@ extension SexpEncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
     }
 
     internal func nestedContainer<NestedKey: CodingKey>(keyedBy keyType: NestedKey.Type) -> KeyedEncodingContainer<NestedKey> {
-        let container = SexpEncoderImpl.KeyedContainer<NestedKey>(impl: impl,
+        let container = SexpEncoderImpl.KeyedContainer<NestedKey>(encoderImpl: encoderImpl,
                                                                   codingPath: codingPath + [SexpCodingKey(count)])
 
         containers.append(container)
@@ -74,7 +74,7 @@ extension SexpEncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
     }
 
     internal func nestedUnkeyedContainer() -> any UnkeyedEncodingContainer {
-        let container = SexpEncoderImpl.UnkeyedContainer(impl: impl,
+        let container = SexpEncoderImpl.UnkeyedContainer(encoderImpl: encoderImpl,
                                                          codingPath: codingPath + [SexpCodingKey(count)])
 
         containers.append(container)
@@ -84,6 +84,6 @@ extension SexpEncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
 
     internal func superEncoder() -> any Encoder {
         SexpEncoderImpl(codingPath: codingPath + [SexpCodingKey(count)],
-                        userInfo: impl.userInfo)
+                        userInfo: encoderImpl.userInfo)
     }
 }

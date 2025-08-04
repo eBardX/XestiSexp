@@ -1,0 +1,222 @@
+Lexical structure
+
+⟨Intertoken space⟩ can occur on either side of any token, but not within a
+token.
+
+Identifiers that do not begin with a vertical line are terminated by a
+⟨delimiter⟩ or by the end of the input. So are dot, numbers, characters, and
+booleans. Identifiers that begin with a vertical line are terminated by another
+vertical line.
+
+The following four characters from the ASCII repertoire are reserved for future
+extensions to the language: [ ] { }
+
+⟨token⟩ -> ⟨identifier⟩
+         | ⟨boolean⟩
+         | ⟨number⟩
+         | ⟨character⟩
+         | ⟨string⟩
+         | (
+         | )
+         | #(
+         | #u8(
+         | '
+         | `
+         | ,
+         | ,@
+         | .
+
+⟨delimiter⟩ -> ⟨whitespace⟩ | ⟨vertical-line⟩ | ( | ) | " | ;
+
+⟨intraline-whitespace⟩ -> ⟨space or tab⟩
+
+⟨whitespace⟩ -> ⟨intraline-whitespace⟩ | ⟨line-ending⟩
+
+⟨vertical-line⟩ -> |
+
+⟨line ending⟩ -> ⟨newline⟩ | ⟨return⟩ ⟨newline⟩ | ⟨return⟩
+
+⟨comment⟩ -> ; ⟨all subsequent characters up to a line ending⟩
+
+⟨atmosphere⟩ -> ⟨whitespace⟩ | ⟨comment⟩
+
+⟨intertoken-space⟩ -> ⟨atmosphere⟩*
+
+Note that +i, -i and ⟨inf-nan⟩ below are exceptions to the ⟨peculiar identifier⟩
+rule; they are parsed as numbers, not identifiers.
+
+⟨identifier⟩ -> ⟨initial⟩ ⟨subsequent⟩*
+              | ⟨vertical-line⟩ ⟨symbol-element⟩* ⟨vertical-line⟩
+              | ⟨peculiar-identifier⟩
+
+⟨initial⟩ -> ⟨letter⟩ | ⟨special-initial⟩
+
+⟨letter⟩ -> a | b | c | ... | z
+          | A | B | C | ... | Z
+
+⟨special-initial⟩ -> ! | $ | % | & | * | / | : | < | = | > | ? | ^ | _ | ~
+
+⟨subsequent⟩ -> ⟨initial⟩ | ⟨dec-digit⟩ | ⟨special-subsequent⟩
+
+⟨explicit-sign⟩ -> + | -
+
+⟨special-subsequent⟩ -> ⟨explicit-sign⟩ | . | @
+
+⟨inline-hex-escape⟩ -> \x ⟨hex-digit⟩+ ;
+
+⟨mnemonic-escape⟩ -> \a | \b | \t | \n | \r
+
+⟨peculiar-identifier⟩ -> ⟨explicit-sign⟩
+                       | ⟨explicit-sign⟩ ⟨sign-subsequent⟩ ⟨subsequent⟩*
+                       | ⟨explicit-sign⟩ . ⟨dot-subsequent⟩ ⟨subsequent⟩*
+                       | . ⟨dot-subsequent⟩ ⟨subsequent⟩*
+
+⟨dot-subsequent⟩ -> ⟨sign-subsequent⟩ | .
+
+⟨sign-subsequent⟩ -> ⟨initial⟩ | ⟨explicit-sign⟩ | @
+
+⟨symbol-element⟩ -> ⟨any character other than ⟨vertical line⟩ or \⟩
+                  | ⟨inline-hex-escape⟩
+                  | ⟨mnemonic-escape⟩
+                  | \|
+
+⟨boolean⟩ -> #t | #f | #true | #false
+
+⟨character⟩ -> #\ ⟨any character⟩
+             | #\ ⟨character-name⟩
+             | #\x ⟨hex-digit⟩+
+
+⟨character-name⟩ -> alarm
+                  | backspace
+                  | delete
+                  | escape
+                  | newline
+                  | null
+                  | return
+                  | space
+                  | tab
+
+⟨string⟩ -> " ⟨string-element⟩* "
+
+⟨string-element⟩ -> ⟨any character other than " or \⟩
+                  | ⟨mnemonic-escape⟩
+                  | \"
+                  | \\
+                  | \⟨intraline-whitespace⟩* ⟨line-ending⟩ ⟨intraline-whitespace⟩*
+                  | ⟨inline-hex-escape⟩
+
+⟨bytevector⟩ -> #u8( ⟨byte⟩* )
+
+⟨byte⟩ -> ⟨any exact integer between 0 and 255⟩
+
+⟨number⟩ -> ⟨bin-radix⟩ ⟨bin-complex⟩
+          | ⟨oct-radix⟩ ⟨oct-complex⟩
+          | ⟨dec-radix⟩ ⟨dec-complex⟩
+          | ⟨hex-radix⟩ ⟨hex-complex⟩
+
+Although not shown below, all alphabetic characters used in the grammar of
+numbers can appear in either upper or lower case.
+
+⟨bin-complex⟩ -> ⟨bin-real⟩
+               | ⟨bin-real⟩ @ ⟨bin-real⟩
+               | ⟨bin-real⟩ + ⟨bin-ureal⟩ i
+               | ⟨bin-real⟩ - ⟨bin-ureal⟩ i 
+               | ⟨bin-real⟩ + i
+               | ⟨bin-real⟩ - i
+               | ⟨bin-real⟩ ⟨inf-nan⟩ i
+               | + ⟨bin-ureal⟩ i
+               | - ⟨bin-ureal⟩ i
+               | ⟨inf-nan⟩ i
+               | + i
+               | - i
+⟨oct-complex⟩ -> ⟨oct-real⟩
+               | ⟨oct-real⟩ @ ⟨oct-real⟩
+               | ⟨oct-real⟩ + ⟨oct-ureal⟩ i
+               | ⟨oct-real⟩ - ⟨oct-ureal⟩ i 
+               | ⟨oct-real⟩ + i
+               | ⟨oct-real⟩ - i
+               | ⟨oct-real⟩ ⟨inf-nan⟩ i
+               | + ⟨oct-ureal⟩ i
+               | - ⟨oct-ureal⟩ i
+               | ⟨inf-nan⟩ i
+               | + i
+               | - i
+⟨dec-complex⟩ -> ⟨dec-real⟩
+               | ⟨dec-real⟩ @ ⟨dec-real⟩
+               | ⟨dec-real⟩ + ⟨dec-ureal⟩ i
+               | ⟨dec-real⟩ - ⟨dec-ureal⟩ i 
+               | ⟨dec-real⟩ + i
+               | ⟨dec-real⟩ - i
+               | ⟨dec-real⟩ ⟨inf-nan⟩ i
+               | + ⟨dec-ureal⟩ i
+               | - ⟨dec-ureal⟩ i
+               | ⟨inf-nan⟩ i
+               | + i
+               | - i
+⟨hex-complex⟩ -> ⟨hex-real⟩
+               | ⟨hex-real⟩ @ ⟨hex-real⟩
+               | ⟨hex-real⟩ + ⟨hex-ureal⟩ i
+               | ⟨hex-real⟩ - ⟨hex-ureal⟩ i 
+               | ⟨hex-real⟩ + i
+               | ⟨hex-real⟩ - i
+               | ⟨hex-real⟩ ⟨inf-nan⟩ i
+               | + ⟨hex-ureal⟩ i
+               | - ⟨hex-ureal⟩ i
+               | ⟨inf-nan⟩ i
+               | + i
+               | - i
+
+⟨bin-real⟩ -> ⟨sign⟩ ⟨bin-ureal⟩ | ⟨inf-nan⟩
+⟨oct-real⟩ -> ⟨sign⟩ ⟨oct-ureal⟩ | ⟨inf-nan⟩
+⟨dec-real⟩ -> ⟨sign⟩ ⟨dec-ureal⟩ | ⟨inf-nan⟩
+⟨hex-real⟩ -> ⟨sign⟩ ⟨hex-ureal⟩ | ⟨inf-nan⟩
+
+⟨bin-ureal⟩ -> ⟨bin-uinteger⟩ | ⟨bin-uinteger⟩ / ⟨bin-uinteger⟩ | ⟨decimal⟩
+⟨oct-ureal⟩ -> ⟨oct-uinteger⟩ | ⟨oct-uinteger⟩ / ⟨oct-uinteger⟩ | ⟨decimal⟩
+⟨dec-ureal⟩ -> ⟨dec-uinteger⟩ | ⟨dec-uinteger⟩ / ⟨dec-uinteger⟩ | ⟨decimal⟩
+⟨hex-ureal⟩ -> ⟨hex-uinteger⟩ | ⟨hex-uinteger⟩ / ⟨hex-uinteger⟩ | ⟨decimal⟩
+
+⟨decimal⟩ -> ⟨dec-uinteger⟩ ⟨suffix⟩
+           | . ⟨dec-uinteger⟩ ⟨suffix⟩
+           | ⟨dec-uinteger⟩ . ⟨dec-digit⟩* ⟨suffix⟩
+
+⟨bin-uinteger⟩ -> ⟨bin-digit⟩+
+⟨oct-uinteger⟩ -> ⟨oct-digit⟩+
+⟨dec-uinteger⟩ -> ⟨dec-digit⟩+
+⟨hex-uinteger⟩ -> ⟨hex-digit⟩+
+
+⟨inf-nan⟩ -> +inf.0 | -inf.0 | +nan.0 | -nan.0
+
+⟨suffix⟩ -> ⟨empty⟩ | ⟨exponent-marker⟩ ⟨sign⟩ ⟨dec-uinteger⟩
+
+⟨exponent-marker⟩ -> e
+
+⟨sign⟩ -> ⟨empty⟩ | + | -
+
+⟨bin-radix⟩ -> #b
+⟨oct-radix⟩ -> #o
+⟨dec-radix⟩ -> ⟨empty⟩ | #d
+⟨hex-radix⟩ -> #x
+
+⟨bin-digit⟩ -> 0 | 1
+⟨oct-digit⟩ -> ⟨bin-digit⟩ | 2 | 3 | 4 | 5 | 6 | 7
+⟨dec-digit⟩ -> ⟨oct-digit⟩ | 8 | 9
+⟨hex-digit⟩ -> ⟨dec-digit⟩ | a | b | c | d | e | f
+
+External representations
+
+⟨datum⟩ -> ⟨simple-datum⟩ | ⟨compound-datum⟩
+
+⟨simple-datum⟩ -> ⟨boolean⟩ | ⟨number⟩ | ⟨character⟩ | ⟨string⟩ | ⟨symbol⟩ | ⟨bytevector⟩ 
+
+⟨symbol⟩ -> ⟨identifier⟩
+
+⟨compound-datum⟩ -> ⟨list⟩ | ⟨vector⟩ | ⟨abbreviation⟩
+
+⟨list⟩ -> ( ⟨datum⟩* ) | ( ⟨datum⟩+ . ⟨datum⟩ )
+
+⟨abbreviation⟩ -> ⟨abbrev-prefix⟩ ⟨datum⟩
+
+⟨abbrev-prefix⟩ -> ' | ` | , | ,@
+
+⟨vector⟩ -> #( ⟨datum⟩* )

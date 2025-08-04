@@ -31,26 +31,26 @@ extension SexpDecoderImpl: Decoder {
                                                          at: codingPath,
                                                          message: "Expected a keyed decoding container, instead found: \(sexp)") }
 
-        return KeyedDecodingContainer(KeyedContainer<Key>(impl: self,
+        return KeyedDecodingContainer(KeyedContainer<Key>(decoderImpl: self,
                                                           codingPath: codingPath,
                                                           dictionary: dictionary,
                                                           keys: keys))
     }
 
     internal func singleValueContainer() throws -> any SingleValueDecodingContainer {
-        SingleValueContainer(impl: self,
+        SingleValueContainer(decoderImpl: self,
                              codingPath: codingPath,
                              value: sexp)
     }
 
     internal func unkeyedContainer() throws -> any UnkeyedDecodingContainer {
-        guard let array = sexp.arrayValue
+        guard let arrayValue = sexp.vectorValue
         else { throw DecodingError.makeTypeMismatchError(for: [Sexp].self,
                                                          at: codingPath,
                                                          message: "Expected an unkeyed decoding container, instead found: \(sexp)") }
 
-        return UnkeyedContainer(impl: self,
+        return UnkeyedContainer(decoderImpl: self,
                                 codingPath: codingPath,
-                                array: array)
+                                arrayValue: arrayValue)
     }
 }
