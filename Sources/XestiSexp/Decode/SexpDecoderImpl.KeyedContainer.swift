@@ -90,6 +90,12 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         try _fetchNumberValue(type, key).int64Value
     }
 
+    @available(iOS 18.0, macOS 15.0, *)
+    internal func decode(_ type: Int128.Type,
+                         forKey key: Key) throws -> Int128 {
+        try _fetchNumberValue(type, key).int128Value
+    }
+
     internal func decode(_ type: String.Type,
                          forKey key: Key) throws -> String {
         let value = try _fetchValue(key)
@@ -125,6 +131,12 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     internal func decode(_ type: UInt64.Type,
                          forKey key: Key) throws -> UInt64 {
         try _fetchNumberValue(type, key).uint64Value
+    }
+
+    @available(iOS 18.0, macOS 15.0, *)
+    internal func decode(_ type: UInt128.Type,
+                         forKey key: Key) throws -> UInt128 {
+        try _fetchNumberValue(type, key).uint128Value
     }
 
     internal func decode<T: Decodable>(_ type: T.Type,

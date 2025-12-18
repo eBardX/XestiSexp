@@ -7,7 +7,7 @@ extension Sexp.Parser {
 
     // MARK: Internal Nested Types
 
-    internal final class Matcher {
+    internal struct Matcher {
 
         // MARK: Internal Initializers
 
@@ -31,7 +31,7 @@ extension Sexp.Parser.Matcher {
 
     // MARK: Internal Instance Methods
 
-    internal func matchSexp() throws -> Sexp {
+    internal mutating func matchSexp() throws -> Sexp {
         let datum = try _matchDatum()
 
         guard !tokenReader.hasMore
@@ -42,7 +42,7 @@ extension Sexp.Parser.Matcher {
 
     // MARK: Private Instance Methods
 
-    private func _matchBoolean() throws -> Sexp {
+    private mutating func _matchBoolean() throws -> Sexp {
         let token = try tokenReader.readMustMatch(.boolean)
 
         guard let cvtValue = _convertBoolean(token.value)
@@ -51,7 +51,7 @@ extension Sexp.Parser.Matcher {
         return Sexp(boolean: cvtValue)
     }
 
-    private func _matchBytevector() throws -> Sexp {
+    private mutating func _matchBytevector() throws -> Sexp {
         try tokenReader.readMustMatch(.byteVectorBegin)
 
         var cvtValues: [UInt8] = []
@@ -71,7 +71,7 @@ extension Sexp.Parser.Matcher {
         return Sexp(bytevector: cvtValues)
     }
 
-    private func _matchCharacter() throws -> Sexp {
+    private mutating func _matchCharacter() throws -> Sexp {
         let token = try tokenReader.readMustMatch(.character)
 
         guard let cvtValue = _convertCharacter(token.value)
@@ -80,7 +80,7 @@ extension Sexp.Parser.Matcher {
         return Sexp(character: cvtValue)
     }
 
-    private func _matchDatum() throws -> Sexp {
+    private mutating func _matchDatum() throws -> Sexp {
         if tokenReader.nextMatches(.boolean) {
             return try _matchBoolean()
         }
@@ -119,7 +119,7 @@ extension Sexp.Parser.Matcher {
         fatalError("Bad logic!")
     }
 
-    private func _matchNumber() throws -> Sexp {
+    private mutating func _matchNumber() throws -> Sexp {
         let token = try tokenReader.readMustMatch(.number)
 
         guard let cvtValue = _convertNumber(token.value)
@@ -128,7 +128,7 @@ extension Sexp.Parser.Matcher {
         return Sexp(number: cvtValue)
     }
 
-    private func _matchPairOrNull() throws -> Sexp {
+    private mutating func _matchPairOrNull() throws -> Sexp {
         try tokenReader.readMustMatch(.pairBegin)
 
         var stack: [Sexp] = []
@@ -155,7 +155,7 @@ extension Sexp.Parser.Matcher {
         return list
     }
 
-    private func _matchString() throws -> Sexp {
+    private mutating func _matchString() throws -> Sexp {
         let token = try tokenReader.readMustMatch(.string)
 
         guard let cvtValue = _convertStringish(token.value)
@@ -164,7 +164,7 @@ extension Sexp.Parser.Matcher {
         return Sexp(string: cvtValue)
     }
 
-    private func _matchSymbol() throws -> Sexp {
+    private mutating func _matchSymbol() throws -> Sexp {
         let token = try tokenReader.readMustMatch(.symbol)
 
         guard let cvtValue = _convertSymbol(token.value)
@@ -173,7 +173,7 @@ extension Sexp.Parser.Matcher {
         return Sexp(symbol: cvtValue)
     }
 
-    private func _matchVector() throws -> Sexp {
+    private mutating func _matchVector() throws -> Sexp {
         try tokenReader.readMustMatch(.vectorBegin)
 
         var elements: [Sexp] = []

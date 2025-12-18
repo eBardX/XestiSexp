@@ -30,8 +30,10 @@ extension Sexp {
         // MARK: Public Instance Methods
 
         public func parse(input: String) throws -> Sexp {
-            try Matcher(parser: self,
-                        tokens: tokenizer.tokenize(input: input)).matchSexp()
+            var matcher = try Matcher(parser: self,
+                                      tokens: tokenizer.tokenize(input: input))
+
+            return try matcher.matchSexp()
         }
 
         // MARK: Internal Instance Properties

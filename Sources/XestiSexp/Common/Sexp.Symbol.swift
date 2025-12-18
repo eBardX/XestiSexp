@@ -6,7 +6,7 @@ extension Sexp {
 
     // MARK: Public Nested Types
 
-    public final class Symbol: StringRepresentable {
+    public struct Symbol: StringRepresentable {
 
         // MARK: Public Initializers
 

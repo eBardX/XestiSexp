@@ -87,10 +87,15 @@ extension SexpEncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
         storage = Sexp(number: Sexp.Number(value))
     }
 
-    internal func encode(_ value: String) throws {
+    @available(iOS 18.0, macOS 15.0, *)
+    internal func encode(_ value: Int128) throws {
         try _checkStorageEmpty(value)
 
-        // Add special handling for symbols?
+        storage = Sexp(number: Sexp.Number(value))
+    }
+
+    internal func encode(_ value: String) throws {
+        try _checkStorageEmpty(value)
 
         storage = Sexp(string: value)
     }
@@ -120,6 +125,13 @@ extension SexpEncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     }
 
     internal func encode(_ value: UInt64) throws {
+        try _checkStorageEmpty(value)
+
+        storage = Sexp(number: Sexp.Number(value))
+    }
+
+    @available(iOS 18.0, macOS 15.0, *)
+    internal func encode(_ value: UInt128) throws {
         try _checkStorageEmpty(value)
 
         storage = Sexp(number: Sexp.Number(value))

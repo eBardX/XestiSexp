@@ -48,7 +48,7 @@ extension SexpEncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
 
     internal func encode<T: Encodable>(_ value: T) throws {
         let container = SexpEncoderImpl.SingleValueContainer(encoderImpl: encoderImpl,
-                                                             codingPath: codingPath + [SexpCodingKey(count)])
+                                                             codingPath: currentCodingPath)
 
         try container.encode(value)
 
@@ -57,7 +57,7 @@ extension SexpEncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
 
     internal func encodeNil() throws {
         let container = SexpEncoderImpl.SingleValueContainer(encoderImpl: encoderImpl,
-                                                             codingPath: codingPath + [SexpCodingKey(count)])
+                                                             codingPath: currentCodingPath)
 
         try container.encodeNil()
 
@@ -66,7 +66,7 @@ extension SexpEncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
 
     internal func nestedContainer<NestedKey: CodingKey>(keyedBy keyType: NestedKey.Type) -> KeyedEncodingContainer<NestedKey> {
         let container = SexpEncoderImpl.KeyedContainer<NestedKey>(encoderImpl: encoderImpl,
-                                                                  codingPath: codingPath + [SexpCodingKey(count)])
+                                                                  codingPath: currentCodingPath)
 
         containers.append(container)
 
@@ -75,7 +75,7 @@ extension SexpEncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
 
     internal func nestedUnkeyedContainer() -> any UnkeyedEncodingContainer {
         let container = SexpEncoderImpl.UnkeyedContainer(encoderImpl: encoderImpl,
-                                                         codingPath: codingPath + [SexpCodingKey(count)])
+                                                         codingPath: currentCodingPath)
 
         containers.append(container)
 
@@ -83,7 +83,13 @@ extension SexpEncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
     }
 
     internal func superEncoder() -> any Encoder {
-        SexpEncoderImpl(codingPath: codingPath + [SexpCodingKey(count)],
+        SexpEncoderImpl(codingPath: currentCodingPath,
                         userInfo: encoderImpl.userInfo)
+    }
+
+    // MARK: Private Instance Properties
+
+    private var currentCodingPath: [any CodingKey] {
+        codingPath + [SexpCodingKey(count)]
     }
 }

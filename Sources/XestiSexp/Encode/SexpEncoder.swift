@@ -2,7 +2,7 @@
 
 import Foundation
 
-public final class SexpEncoder {
+public struct SexpEncoder {
 
     // MARK: Public Initializers
 

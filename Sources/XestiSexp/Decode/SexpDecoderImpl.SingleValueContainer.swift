@@ -67,6 +67,11 @@ extension SexpDecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
         try _fetchNumberValue(type).int64Value
     }
 
+    @available(iOS 18.0, macOS 15.0, *)
+    internal func decode(_ type: Int128.Type) throws -> Int128 {
+        try _fetchNumberValue(type).int128Value
+    }
+
     internal func decode(_ type: String.Type) throws -> String {
         guard let stringValue = value.stringValue
         else { throw DecodingError.makeTypeMismatchError(for: type,
@@ -94,6 +99,11 @@ extension SexpDecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
 
     internal func decode(_ type: UInt64.Type) throws -> UInt64 {
         try _fetchNumberValue(type).uint64Value
+    }
+
+    @available(iOS 18.0, macOS 15.0, *)
+    internal func decode(_ type: UInt128.Type) throws -> UInt128 {
+        try _fetchNumberValue(type).uint128Value
     }
 
     internal func decode<T: Decodable>(_ type: T.Type) throws -> T {

@@ -38,7 +38,7 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
 
     internal var isAtEnd: Bool {
-        currentIndex >= (count ?? 0)
+        currentIndex >= arrayValue.count
     }
 
     // MARK: Internal Instance Methods
@@ -48,7 +48,7 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
 
         guard let boolValue = value.booleanValue
         else { throw DecodingError.makeTypeMismatchError(for: type,
-                                                         at: codingPath + [SexpCodingKey(currentIndex)],
+                                                         at: currentCodingPath,
                                                          message: "Expected a boolean, instead found: \(value)") }
 
         currentIndex += 1
@@ -84,12 +84,17 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
         try _fetchNumberValue(type).int64Value
     }
 
+    @available(iOS 18.0, macOS 15.0, *)
+    internal mutating func decode(_ type: Int128.Type) throws -> Int128 {
+        try _fetchNumberValue(type).int128Value
+    }
+
     internal mutating func decode(_ type: String.Type) throws -> String {
         let value = try _fetchValue(type)
 
         guard let stringValue = value.stringValue
         else { throw DecodingError.makeTypeMismatchError(for: type,
-                                                         at: codingPath + [SexpCodingKey(currentIndex)],
+                                                         at: currentCodingPath,
                                                          message: "Expected a string, instead found: \(value)") }
 
         currentIndex += 1
@@ -119,7 +124,7 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
 
     internal mutating func decode<T: Decodable>(_ type: T.Type) throws -> T {
         let decoder = SexpDecoderImpl(from: try _fetchValue(type),
-                                      codingPath: codingPath + [SexpCodingKey(currentIndex)],
+                                      codingPath: currentCodingPath,
                                       userInfo: decoderImpl.userInfo)
         let result = try T(from: decoder)
 
@@ -139,7 +144,7 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
 
     internal mutating func nestedContainer<NestedKey: CodingKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> {
         let decoder = SexpDecoderImpl(from: try _fetchValue(KeyedDecodingContainer<NestedKey>.self),
-                                      codingPath: codingPath + [SexpCodingKey(currentIndex)],
+                                      codingPath: currentCodingPath,
                                       userInfo: decoderImpl.userInfo)
         let container = try decoder.container(keyedBy: type)
 
@@ -150,7 +155,7 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
 
     internal mutating func nestedUnkeyedContainer() throws -> any UnkeyedDecodingContainer {
         let decoder = SexpDecoderImpl(from: try _fetchValue((any UnkeyedDecodingContainer).self),
-                                      codingPath: codingPath + [SexpCodingKey(currentIndex)],
+                                      codingPath: currentCodingPath,
                                       userInfo: decoderImpl.userInfo)
         let container = try decoder.unkeyedContainer()
 
@@ -161,12 +166,18 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
 
     internal mutating func superDecoder() throws -> any Decoder {
         let decoder = SexpDecoderImpl(from: try _fetchValue((any Decoder).self),
-                                      codingPath: codingPath + [SexpCodingKey(currentIndex)],
+                                      codingPath: currentCodingPath,
                                       userInfo: decoderImpl.userInfo)
 
         currentIndex += 1
 
         return decoder
+    }
+
+    // MARK: Private Instance Properties
+
+    private var currentCodingPath: [any CodingKey] {
+        codingPath + [SexpCodingKey(currentIndex)]
     }
 
     // MARK: Private Instance Methods
