@@ -275,6 +275,11 @@ extension Sexp.Formatter {
     }
 }
 
+// MARK: - Sendable
+
+extension Sexp.Formatter: Sendable {
+}
+
 // MARK: - Private Functions
 
 private func _complexity(_ sexp: Sexp) -> Int {

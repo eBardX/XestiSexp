@@ -16,3 +16,8 @@ extension Sexp {
         case vector([Sexp])
     }
 }
+
+// MARK: - Sendable
+
+extension Sexp.Value: Sendable {
+}

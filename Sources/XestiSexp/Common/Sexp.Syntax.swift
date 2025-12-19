@@ -9,3 +9,8 @@ extension Sexp {
         case r7rsPartial
     }
 }
+
+// MARK: - Sendable
+
+extension Sexp.Syntax: Sendable {
+}

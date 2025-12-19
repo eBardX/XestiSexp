@@ -33,34 +33,34 @@ extension Sexp {
 
         // MARK: Private Type Properties
 
-        private static let rulesCommon: [Rule] = [.init(/'/, .quote),
-                                                  .init(/`/, .quasiquote),
-                                                  .init(/,/, .unquote),
-                                                  .init(/,@/, .unquoteSplicing),
-                                                  .init(/\(/, .pairBegin),
-                                                  .init(/\)/, .sequenceEnd),
-                                                  .init(/#\(/, .vectorBegin),
-                                                  .init(regex: /;.*(?=[\n\r]|$)/,
-                                                        disposition: .skip(nil)),
-                                                  .init(regex: /[ \n\r\t]+/,
-                                                        disposition: .skip(nil))]
+        nonisolated(unsafe) private static let rulesCommon: [Rule] = [.init(/'/, .quote),
+                                                                      .init(/`/, .quasiquote),
+                                                                      .init(/,/, .unquote),
+                                                                      .init(/,@/, .unquoteSplicing),
+                                                                      .init(/\(/, .pairBegin),
+                                                                      .init(/\)/, .sequenceEnd),
+                                                                      .init(/#\(/, .vectorBegin),
+                                                                      .init(regex: /;.*(?=[\n\r]|$)/,
+                                                                            disposition: .skip(nil)),
+                                                                      .init(regex: /[ \n\r\t]+/,
+                                                                            disposition: .skip(nil))]
 
-        private static let rulesR5RS: [Rule] = [.init(regexDotR5RS, .dot),
-                                                .init(regexBooleanR5RS, .boolean),
-                                                .init(regexCharacterR5RS, .character),
-                                                .init(regexNumberR5RS, .number),
-                                                .init(regexReservedR5RS, .reserved),
-                                                .init(regexStringR5RS, .string),
-                                                .init(regexSymbolR5RS, .symbol)]
+        nonisolated(unsafe) private static let rulesR5RS: [Rule] = [.init(regexDotR5RS, .dot),
+                                                                    .init(regexBooleanR5RS, .boolean),
+                                                                    .init(regexCharacterR5RS, .character),
+                                                                    .init(regexNumberR5RS, .number),
+                                                                    .init(regexReservedR5RS, .reserved),
+                                                                    .init(regexStringR5RS, .string),
+                                                                    .init(regexSymbolR5RS, .symbol)]
 
-        private static let rulesR7RS: [Rule] = [.init(regexDotR7RS, .dot),
-                                                .init(regexBooleanR7RS, .boolean),
-                                                .init(regexBytevectorR7RS, .byteVectorBegin),
-                                                .init(regexCharacterR7RS, .character),
-                                                .init(regexNumberR7RS, .number),
-                                                .init(regexReservedR7RS, .reserved),
-                                                .init(regexStringR7RS, .string),
-                                                .init(regexSymbolR7RS, .symbol)]
+        nonisolated(unsafe) private static let rulesR7RS: [Rule] = [.init(regexDotR7RS, .dot),
+                                                                    .init(regexBooleanR7RS, .boolean),
+                                                                    .init(regexBytevectorR7RS, .byteVectorBegin),
+                                                                    .init(regexCharacterR7RS, .character),
+                                                                    .init(regexNumberR7RS, .number),
+                                                                    .init(regexReservedR7RS, .reserved),
+                                                                    .init(regexStringR7RS, .string),
+                                                                    .init(regexSymbolR7RS, .symbol)]
 
         // MARK: Private Type Methods
 

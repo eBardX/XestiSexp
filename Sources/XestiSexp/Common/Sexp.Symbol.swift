@@ -30,6 +30,11 @@ extension Sexp.Symbol: Hashable {
     }
 }
 
+// MARK: - Sendable
+
+extension Sexp.Symbol: Sendable {
+}
+
 // MARK: - Private Functions
 
 private func _isSpecial(_ stringValue: String) -> Bool {

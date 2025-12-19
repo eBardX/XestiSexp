@@ -231,3 +231,8 @@ extension Sexp: Equatable {
         }
     }
 }
+
+// MARK: - Sendable
+
+extension Sexp: Sendable {
+}

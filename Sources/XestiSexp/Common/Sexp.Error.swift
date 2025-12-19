@@ -45,3 +45,8 @@ extension Sexp.Error: EnhancedError {
         }
     }
 }
+
+// MARK: - Sendable
+
+extension Sexp.Error: Sendable {
+}

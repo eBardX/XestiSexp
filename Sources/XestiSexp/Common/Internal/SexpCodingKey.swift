@@ -59,3 +59,8 @@ extension SexpCodingKey: CustomStringConvertible {
 
 extension SexpCodingKey: Hashable {
 }
+
+// MARK: - Sendable
+
+extension SexpCodingKey: Sendable {
+}
