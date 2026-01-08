@@ -1,4 +1,4 @@
-// © 2025 John Gary Pusey (see LICENSE.md)
+// © 2025—2026 John Gary Pusey (see LICENSE.md)
 
 import XestiTools
 
@@ -10,9 +10,9 @@ extension Sexp {
 
         // MARK: Internal Nested Types
 
-        internal typealias BaseTokenizer = XestiTools.Tokenizer // swiftlint:disable:this nesting
-        internal typealias Rule          = BaseTokenizer.Rule   // swiftlint:disable:this nesting
-        internal typealias Token         = BaseTokenizer.Token  // swiftlint:disable:this nesting
+        internal typealias BaseTokenizer = XestiTools.Tokenizer
+        internal typealias Rule          = BaseTokenizer.Rule
+        internal typealias Token         = BaseTokenizer.Token
 
         // MARK: Internal Initializers
 
@@ -33,34 +33,34 @@ extension Sexp {
 
         // MARK: Private Type Properties
 
-        nonisolated(unsafe) private static let rulesCommon: [Rule] = [.init(/'/, .quote),
-                                                                      .init(/`/, .quasiquote),
-                                                                      .init(/,/, .unquote),
-                                                                      .init(/,@/, .unquoteSplicing),
-                                                                      .init(/\(/, .pairBegin),
-                                                                      .init(/\)/, .sequenceEnd),
-                                                                      .init(/#\(/, .vectorBegin),
-                                                                      .init(regex: /;.*(?=[\n\r]|$)/,
-                                                                            disposition: .skip(nil)),
-                                                                      .init(regex: /[ \n\r\t]+/,
-                                                                            disposition: .skip(nil))]
+        nonisolated(unsafe) private static let rulesCommon: [Rule] = [Rule(/'/, .quote),
+                                                                      Rule(/`/, .quasiquote),
+                                                                      Rule(/,/, .unquote),
+                                                                      Rule(/,@/, .unquoteSplicing),
+                                                                      Rule(/\(/, .pairBegin),
+                                                                      Rule(/\)/, .sequenceEnd),
+                                                                      Rule(/#\(/, .vectorBegin),
+                                                                      Rule(regex: /;.*(?=[\n\r]|$)/,
+                                                                           disposition: .skip(nil)),
+                                                                      Rule(regex: /[ \n\r\t]+/,
+                                                                           disposition: .skip(nil))]
 
-        nonisolated(unsafe) private static let rulesR5RS: [Rule] = [.init(regexDotR5RS, .dot),
-                                                                    .init(regexBooleanR5RS, .boolean),
-                                                                    .init(regexCharacterR5RS, .character),
-                                                                    .init(regexNumberR5RS, .number),
-                                                                    .init(regexReservedR5RS, .reserved),
-                                                                    .init(regexStringR5RS, .string),
-                                                                    .init(regexSymbolR5RS, .symbol)]
+        nonisolated(unsafe) private static let rulesR5RS: [Rule] = [Rule(regexDotR5RS, .dot),
+                                                                    Rule(regexBooleanR5RS, .boolean),
+                                                                    Rule(regexCharacterR5RS, .character),
+                                                                    Rule(regexNumberR5RS, .number),
+                                                                    Rule(regexReservedR5RS, .reserved),
+                                                                    Rule(regexStringR5RS, .string),
+                                                                    Rule(regexSymbolR5RS, .symbol)]
 
-        nonisolated(unsafe) private static let rulesR7RS: [Rule] = [.init(regexDotR7RS, .dot),
-                                                                    .init(regexBooleanR7RS, .boolean),
-                                                                    .init(regexBytevectorR7RS, .byteVectorBegin),
-                                                                    .init(regexCharacterR7RS, .character),
-                                                                    .init(regexNumberR7RS, .number),
-                                                                    .init(regexReservedR7RS, .reserved),
-                                                                    .init(regexStringR7RS, .string),
-                                                                    .init(regexSymbolR7RS, .symbol)]
+        nonisolated(unsafe) private static let rulesR7RS: [Rule] = [Rule(regexDotR7RS, .dot),
+                                                                    Rule(regexBooleanR7RS, .boolean),
+                                                                    Rule(regexBytevectorR7RS, .byteVectorBegin),
+                                                                    Rule(regexCharacterR7RS, .character),
+                                                                    Rule(regexNumberR7RS, .number),
+                                                                    Rule(regexReservedR7RS, .reserved),
+                                                                    Rule(regexStringR7RS, .string),
+                                                                    Rule(regexSymbolR7RS, .symbol)]
 
         // MARK: Private Type Methods
 

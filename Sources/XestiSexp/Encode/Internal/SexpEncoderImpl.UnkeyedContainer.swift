@@ -1,4 +1,4 @@
-// © 2024 John Gary Pusey (see LICENSE.md)
+// © 2024—2026 John Gary Pusey (see LICENSE.md)
 
 extension SexpEncoderImpl {
 
@@ -30,7 +30,7 @@ extension SexpEncoderImpl {
 
 extension SexpEncoderImpl.UnkeyedContainer: SexpEncodingContainer {
     internal var sexp: Sexp {
-        Sexp(vector: containers.map { $0.sexp })
+        Sexp(array: containers.map { $0.sexp })
     }
 }
 

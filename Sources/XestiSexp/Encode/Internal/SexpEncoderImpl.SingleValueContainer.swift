@@ -1,4 +1,4 @@
-// © 2024–2025 John Gary Pusey (see LICENSE.md)
+// © 2024–2026 John Gary Pusey (see LICENSE.md)
 
 extension SexpEncoderImpl {
 
@@ -97,7 +97,11 @@ extension SexpEncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     internal func encode(_ value: String) throws {
         try _checkStorageEmpty(value)
 
-        storage = Sexp(string: value)
+        if Sexp.Symbol.isSpecial(value) {
+            storage = Sexp(string: value)
+        } else {
+            storage = Sexp(symbol: Sexp.Symbol(value, false))
+        }
     }
 
     internal func encode(_ value: UInt) throws {

@@ -1,4 +1,4 @@
-// © 2024–2025 John Gary Pusey (see LICENSE.md)
+// © 2024–2026 John Gary Pusey (see LICENSE.md)
 
 public struct Sexp {
 
@@ -113,48 +113,120 @@ public struct Sexp {
 
     // MARK: Internal Initializers
 
-    internal init(dictionaryValue: [String: Self],
-                  dictionaryKeys: [String]) {
-        self.value = .vector(dictionaryKeys.compactMap {
-            if let sexpValue = dictionaryValue[$0] {
-                return Self(head: Self(symbol: Symbol($0)),
-                            tail: sexpValue)
+    internal init(array: [Self]) {
+        var list = Self()
+
+        for element in array.reversed() {
+            list = Self(head: element,
+                        tail: list)
+        }
+
+        self = list
+    }
+
+    internal init(dictionary: [String: Self],
+                  orderedKeys: [String]) {
+        let pairs = orderedKeys.compactMap {
+            if let sexpValue = dictionary[$0] {
+                if Symbol.isSpecial($0) {
+                    Self(head: Self(string: $0),
+                         tail: Self(head: sexpValue))
+                } else {
+                    Self(head: Self(symbol: Symbol($0, false)),
+                         tail: Self(head: sexpValue))
+                }
             } else {
-                return nil
+                nil
             }
-        })
+        }
+
+        self = Self(array: pairs)
     }
 
     // MARK: Internal Instance Properties
 
     internal let value: Value
 
-    internal var dictionaryValue: ([String: Self], [String])? {
-        var dict: [String: Self] = [:]
-        var keys: [String] = []
+    internal var arrayValue: [Self]? {
+        var array: [Self] = []
 
-        guard case let .vector(sexpValues) = value
-        else { return nil }
+        var sexp = self
 
-        for sexpValue in sexpValues {
-            switch sexpValue.value {
-            case let .pair(sexpKey, value):
-                switch sexpKey.value {
-                case let .symbol(key):
-                    dict[key.stringValue] = value
+    loop:
+        while true {
+            switch sexp.value {
+            case .null:
+                break loop
 
-                    keys.append(key.stringValue)
+            case let .pair(head, tail):
+                array.append(head)
 
-                default:
-                    return nil
-                }
+                sexp = tail
 
             default:
                 return nil
             }
         }
 
+        return array
+    }
+
+    internal var dictionaryValue: ([String: Self], [String])? {
+        var dict: [String: Self] = [:]
+        var keys: [String] = []
+
+        guard let pairs = arrayValue
+        else { return nil }
+
+        for pair in pairs {
+            guard let (key, value) = Self._extractKeyValue(pair)
+            else { return nil }
+
+            dict[key] = value
+
+            keys.append(key)
+        }
+
         return (dict, keys)
+    }
+
+    // MARK: Private Instance Methods
+
+    private static func _extractKeyValue(_ sexp: Self) -> (String, Self)? {
+        switch sexp.value {
+        case let .pair(head, tail):
+            guard let key = _extractKey(head),
+                  let value = _extractValue(tail)
+            else { return nil }
+
+            return (key, value)
+
+        default:
+            return nil
+        }
+    }
+
+    private static func _extractKey(_ sexp: Self) -> String? {
+        switch sexp.value {
+        case let .string(key):
+            key
+
+        case let .symbol(key):
+            key.stringValue
+
+        default:
+            nil
+        }
+    }
+
+    private static func _extractValue(_ sexp: Self) -> Self? {
+        switch sexp.value {
+        case let .pair(head, tail) where tail.isNullValue:
+            head
+
+        default:
+            nil
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-// © 2024 John Gary Pusey (see LICENSE.md)
+// © 2024—2026 John Gary Pusey (see LICENSE.md)
 
 internal struct SexpDecoderImpl {
 
@@ -26,7 +26,7 @@ extension SexpDecoderImpl: Decoder {
     // MARK: Internal Instance Methods
 
     internal func container<Key: CodingKey>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> {
-        guard let (dictionary, keys) = sexp.dictionaryValue
+        guard let (dictionary, orderedKeys) = sexp.dictionaryValue
         else { throw DecodingError.makeTypeMismatchError(for: [String: Sexp].self,
                                                          at: codingPath,
                                                          message: "Expected a keyed decoding container, instead found: \(sexp)") }
@@ -34,7 +34,7 @@ extension SexpDecoderImpl: Decoder {
         return KeyedDecodingContainer(KeyedContainer<Key>(decoderImpl: self,
                                                           codingPath: codingPath,
                                                           dictionary: dictionary,
-                                                          keys: keys))
+                                                          keys: orderedKeys))
     }
 
     internal func singleValueContainer() throws -> any SingleValueDecodingContainer {
@@ -44,7 +44,7 @@ extension SexpDecoderImpl: Decoder {
     }
 
     internal func unkeyedContainer() throws -> any UnkeyedDecodingContainer {
-        guard let arrayValue = sexp.vectorValue
+        guard let arrayValue = sexp.arrayValue
         else { throw DecodingError.makeTypeMismatchError(for: [Sexp].self,
                                                          at: codingPath,
                                                          message: "Expected an unkeyed decoding container, instead found: \(sexp)") }

@@ -1,4 +1,4 @@
-// © 2024–2025 John Gary Pusey (see LICENSE.md)
+// © 2024–2026 John Gary Pusey (see LICENSE.md)
 
 extension SexpDecoderImpl {
 
@@ -73,10 +73,10 @@ extension SexpDecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     }
 
     internal func decode(_ type: String.Type) throws -> String {
-        guard let stringValue = value.stringValue
+        guard let stringValue = value.symbolValue?.stringValue ?? value.stringValue
         else { throw DecodingError.makeTypeMismatchError(for: type,
                                                          at: codingPath,
-                                                         message: "Expected a string, instead found: \(value)") }
+                                                         message: "Expected a string or symbol, instead found: \(value)") }
 
         return stringValue
     }

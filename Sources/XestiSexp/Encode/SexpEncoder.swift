@@ -1,17 +1,25 @@
-// © 2024 John Gary Pusey (see LICENSE.md)
+// © 2024—2026 John Gary Pusey (see LICENSE.md)
 
 import Foundation
+import XestiTools
 
 public struct SexpEncoder {
 
     // MARK: Public Initializers
 
     public init() {
+        self.prettyPrint = true
+        self.syntax = .r7rsPartial
+        self.tracing = .silent
+        self.userInfo = [:]
     }
 
     // MARK: Public Instance Properties
 
-    public var userInfo: [CodingUserInfoKey: Any] = [:]
+    public var prettyPrint: Bool
+    public var syntax: Sexp.Syntax
+    public var tracing: Verbosity
+    public var userInfo: [CodingUserInfoKey: Any]
 
     // MARK: Public Instance Methods
 
@@ -21,16 +29,15 @@ public struct SexpEncoder {
 
         try value.encode(to: encoder)
 
-        return try Self._format(encoder.sexp,
-                                prettyPrint: true)
+        return try _format(encoder.sexp)
     }
 
-    // MARK: Private Type Methods
+    // MARK: Private Instance Methods
 
-    private static func _format(_ sexp: Sexp,
-                                prettyPrint: Bool) throws -> Data {
-        let string = Sexp.Formatter.format(sexp,
-                                           prettyPrint: prettyPrint)
+    private func _format(_ sexp: Sexp) throws -> Data {
+        let string = try Sexp.Formatter(prettyPrint: prettyPrint,
+                                        syntax: syntax,
+                                        tracing: tracing).format(sexp)
 
         guard let data = string.data(using: .utf8)
         else { throw EncodingError.makeInvalidValueError(for: string,

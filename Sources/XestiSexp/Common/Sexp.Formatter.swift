@@ -1,4 +1,6 @@
-// © 2024–2025 John Gary Pusey (see LICENSE.md)
+// © 2024–2026 John Gary Pusey (see LICENSE.md)
+
+import XestiTools
 
 extension Sexp {
 
@@ -6,31 +8,31 @@ extension Sexp {
 
     public struct Formatter {
 
-        // MARK: Public Type Methods
+        // MARK: Public Initializers
 
-        public static func format(_ sexp: Sexp,
-                                  prettyPrint: Bool) -> String {
-            var formatter = Self(prettyPrint: prettyPrint)
-
-            formatter._formatDatum(sexp)
-
-            return formatter.workBuffer
-        }
-
-        // MARK: Private Initializers
-
-        private init(prettyPrint: Bool) {
-            self.position = 0
+        public init(prettyPrint: Bool,
+                    syntax: Syntax,
+                    tracing: Verbosity) {
             self.prettyPrint = prettyPrint
-            self.workBuffer = ""
+            self.syntax = syntax
+            self.tracing = tracing
         }
 
-        // MARK: Private Instance Properties
+        // MARK: Public Instance Properties
 
-        private let prettyPrint: Bool
+        public let prettyPrint: Bool
+        public let syntax: Syntax
+        public let tracing: Verbosity
 
-        private var position: Int
-        private var workBuffer: String
+        // MARK: Public Instance Methods
+
+        public func format(_ sexp: Sexp) throws -> String {
+            var context = Self.Context()
+
+            try _formatDatum(sexp, &context)
+
+            return context.workBuffer
+        }
     }
 }
 
@@ -40,132 +42,150 @@ extension Sexp.Formatter {
 
     // MARK: Private Instance Methods
 
-    private mutating func _emit(_ string: String) {
-        workBuffer.append(string)
-
-        position += string.count
+    private func _formatBoolean(_ value: Bool,
+                                _ context: inout Context) throws {
+        context.emit(value ? "#t" : "#f")
     }
 
-    private mutating func _emitln(_ string: String? = nil) {
-        if let string {
-            workBuffer.append(string)
-        }
+    private func _formatBytevector(_ value: [UInt8],
+                                   _ context: inout Context) throws {
+        guard syntax == .r7rsPartial
+        else { throw Sexp.Error.formatFailed(value, syntax) }
 
-        workBuffer.append("\n")
-
-        position = 0
-    }
-
-    private mutating func _formatBoolean(_ value: Bool) {
-        _emit(value ? "#t" : "#f")
-    }
-
-    private mutating func _formatBytevector(_ value: [UInt8]) {
-        _emit("#u8(")
+        context.emit("#u8(")
 
         var firstDone = false
 
         for byte in value {
             if firstDone {
-                _emit(" ")
+                context.emit(" ")
             } else {
                 firstDone = true
             }
 
-            _emit(byte.description)
+            context.emit(byte.description)
         }
 
-        _emit(")")
+        context.emit(")")
     }
 
-    private mutating func _formatCharacter(_ value: Character) {
-        if ("!"..."~").contains(value) {
-            _emit("#\\")
-            _emit(String(value))
-        } else if let name = value.sexpName {
-            _emit("#\\")
-            _emit(name)
-        } else if let hex = value.sexpHexScalarValues.first {
-            _emit("#\\x")
-            _emit(hex)
-        } else {
-            fatalError("Internal formatter inconsistency")
+    private func _formatCharacter(_ value: Character,
+                                  _ context: inout Context) throws {
+        switch syntax {
+        case .r7rsPartial:
+            if let name = value.sexpNameR7RS {
+                context.emit("#\\")
+                context.emit(name)
+            } else if value.isSexpVisible {
+                context.emit("#\\")
+                context.emit(String(value))
+            } else if let hex = value.sexpHexScalarValues.first {
+                context.emit("#\\x")
+                context.emit(hex)
+            } else {
+                throw Sexp.Error.formatFailed(value, syntax)
+            }
+
+        default:
+            if let name = value.sexpNameR5RS {
+                context.emit("#\\")
+                context.emit(name)
+            } else {
+                guard value.isSexpVisible
+                else { throw Sexp.Error.formatFailed(value, syntax) }
+
+                context.emit("#\\")
+                context.emit(String(value))
+            }
         }
     }
 
-    private mutating func _formatDatum(_ sexp: Sexp) {
+    private func _formatDatum(_ sexp: Sexp,
+                              _ context: inout Context) throws {
         let isSimple = prettyPrint ? _complexity(sexp) < 5 : true
 
         switch sexp.value {
         case let .boolean(value):
-            _formatBoolean(value)
+            try _formatBoolean(value, &context)
 
         case let .bytevector(value):
-            _formatBytevector(value)
+            try _formatBytevector(value, &context)
 
         case let .character(value):
-            _formatCharacter(value)
+            try _formatCharacter(value, &context)
 
         case .null:
-            _formatNull()
+            try _formatNull(&context)
 
         case let .number(value):
-            _formatNumber(value)
+            try _formatNumber(value, &context)
 
         case let .pair(hvalue, tvalue):
-            _formatPair(hvalue, tvalue, isSimple)
+            try _formatPair(hvalue, tvalue, isSimple, &context)
 
         case let .string(value):
-            _formatString(value)
+            try _formatString(value, &context)
 
         case let .symbol(value):
-            _formatSymbol(value)
+            try _formatSymbol(value, &context)
 
         case let .vector(value):
-            _formatVector(value, isSimple)
+            try _formatVector(value, isSimple, &context)
         }
     }
 
-    private mutating func _formatNull() {
-        _emit("()")
+    private func _formatNull(_ context: inout Context) throws {
+        context.emit("()")
     }
 
-    private mutating func _formatNumber(_ value: Sexp.Number) {
-        if value.isInfinite {
-            _emit(value.isNegative ? "-inf.0" : "+inf.0")
-        } else if value.isNaN {
-            _emit("+nan.0")
-        } else {
-            _emit(value.description)
+    private func _formatNumber(_ value: Sexp.Number,
+                               _ context: inout Context) throws {
+        switch syntax {
+        case .r7rsPartial:
+            if value.isInfinite {
+                context.emit(value.isNegative ? "-inf.0" : "+inf.0")
+            } else if value.isNaN {
+                context.emit("+nan.0")
+            } else {
+                context.emit(value.description)
+            }
+
+        default:
+            guard !value.isInfinite,
+                  !value.isNaN
+            else { throw Sexp.Error.formatFailed(value, syntax) }
+
+            context.emit(value.description)
         }
     }
 
-    private mutating func _formatPair(_ hvalue: Sexp,
-                                      _ tvalue: Sexp,
-                                      _ isSimple: Bool) {
-        _emit("(")
+    private func _formatPair(_ hvalue: Sexp,
+                             _ tvalue: Sexp,
+                             _ isSimple: Bool,
+                             _ context: inout Context) throws {
+        context.emit("(")
 
-        let pos = position
+        let pos = context.position
 
         var head = hvalue
         var tail = tvalue
 
         while true {
             if !isSimple {
-                _indent(to: pos)
+                context.indent(to: pos)
             }
 
-            _formatDatum(head)
+            try _formatDatum(head, &context)
 
             switch tail.value {
             case .null:
-                _emit(")")
+                context.emit(")")
 
             case let .pair(hd, tl):
                 if isSimple {
-                    _emit(" ")
+                    context.emit(" ")
                 } else {
-                    _emitln()
+                    context.emitln()
                 }
 
                 head = hd
@@ -174,104 +194,112 @@ extension Sexp.Formatter {
                 continue
 
             default:
-                _emit(" . ")
-                _formatDatum(tail)
-                _emit(")")
+                context.emit(" . ")
+                try _formatDatum(tail, &context)
+                context.emit(")")
             }
 
             break
         }
     }
 
-    private mutating func _formatString(_ value: String) {
-        _emit("\"")
+    private func _formatString(_ value: String,
+                               _ context: inout Context) throws {
+        context.emit("\"")
 
         for chr in value {
-            _formatStringElement(chr)
+            try _formatStringElement(chr, &context)
         }
 
-        _emit("\"")
+        context.emit("\"")
     }
 
-    private mutating func _formatStringElement(_ value: Character) {
+    private func _formatStringElement(_ value: Character,
+                                      _ context: inout Context) throws {
         switch value {
         case "\"":
-            _emit("\\\"")
+            context.emit("\\\"")
 
         case "\\":
-            _emit("\\\\")
-
-        case " "..."~":
-            _emit(String(value))
+            context.emit("\\\\")
 
         default:
-            _emit(_escape(value))
+            switch syntax {
+            case .r7rsPartial:
+                if value.isSexpVisible {
+                    context.emit(String(value))
+                } else {
+                    context.emit(_escape(value))
+                }
+
+            default:
+                context.emit(String(value))
+            }
         }
     }
 
-    private mutating func _formatSymbol(_ value: Sexp.Symbol) {
+    private func _formatSymbol(_ value: Sexp.Symbol,
+                               _ context: inout Context) throws {
         if value.isSpecial {
-            _emit("|")
+            guard syntax == .r7rsPartial
+            else { throw Sexp.Error.formatFailed(value, syntax) }
+
+            context.emit("|")
 
             for chr in value.stringValue {
-                _formatSymbolElement(chr)
+                try _formatSymbolElement(chr, &context)
             }
 
-            _emit("|")
+            context.emit("|")
         } else {
-            _emit(value.stringValue)
+            context.emit(value.stringValue)
         }
     }
 
-    private mutating func _formatSymbolElement(_ value: Character) {
+    private func _formatSymbolElement(_ value: Character,
+                                      _ context: inout Context) throws {
         switch value {
         case "|":
-            _emit("\\|")
+            context.emit("\\|")
 
         case "\\":
-            _emit("\\\\")
-
-        case " "..."~":
-            _emit(String(value))
+            context.emit("\\\\")
 
         default:
-            _emit(_escape(value))
+            if value.isSexpVisible {
+                context.emit(String(value))
+            } else {
+                context.emit(_escape(value))
+            }
         }
     }
 
-    private mutating func _formatVector(_ value: [Sexp],
-                                        _ isSimple: Bool) {
-        _emit("#(")
+    private func _formatVector(_ value: [Sexp],
+                               _ isSimple: Bool,
+                               _ context: inout Context) throws {
+        context.emit("#(")
 
-        let pos = position
+        let pos = context.position
 
         var firstDone = false
 
         for sexp in value {
             if !isSimple {
-                _indent(to: pos)
+                context.indent(to: pos)
             } else if firstDone {
-                _emit(" ")
+                context.emit(" ")
             }
 
-            _formatDatum(sexp)
+            try _formatDatum(sexp, &context)
 
             if !isSimple {
-                _emitln()
+                context.emitln()
             }
 
             firstDone = true
         }
 
-        _emit(")")
-    }
-
-    private mutating func _indent(to pos: Int) {
-        guard pos > position
-        else { return }
-
-        _emit(String(repeating: " " as Character,
-                     count: pos - position))
+        context.emit(")")
     }
 }
 

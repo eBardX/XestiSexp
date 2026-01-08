@@ -1,40 +1,46 @@
-// © 2024 John Gary Pusey (see LICENSE.md)
+// © 2024–2026 John Gary Pusey (see LICENSE.md)
 
 import Foundation
+import XestiTools
 
 public struct SexpDecoder {
 
     // MARK: Public Initializers
 
     public init() {
+        self.syntax = .r7rsPartial
+        self.tracing = .silent
+        self.userInfo = [:]
     }
 
     // MARK: Public Instance Properties
 
-    public var userInfo: [CodingUserInfoKey: Any] = [:]
+    public var syntax: Sexp.Syntax
+    public var tracing: Verbosity
+    public var userInfo: [CodingUserInfoKey: Any]
 
     // MARK: Public Instance Methods
 
     public func decode<T: Decodable>(_ type: T.Type,
                                      from data: Data) throws -> T {
-        let decoder = SexpDecoderImpl(from: try Self._parse(data),
-                                      codingPath: [],
-                                      userInfo: userInfo)
+        let decoder = try SexpDecoderImpl(from: _parse(data),
+                                          codingPath: [],
+                                          userInfo: userInfo)
 
         return try T(from: decoder)
     }
 
-    // MARK: Private Type Methods
+    // MARK: Private Instance Methods
 
-    private static func _parse(_ data: Data) throws -> Sexp {
+    private func _parse(_ data: Data) throws -> Sexp {
         guard let string = String(data: data,
                                   encoding: .utf8)
         else { throw DecodingError.makeDataCorruptedError(at: [],
                                                           message: "Invalid UTF-8 in data") }
 
         do {
-            return try Sexp.Parser(syntax: .r7rsPartial,
-                                   tracing: .silent).parse(input: string)
+            return try Sexp.Parser(syntax: syntax,
+                                   tracing: tracing).parse(input: string)
         } catch let error as Sexp.Error {
             throw DecodingError.makeDataCorruptedError(at: [],
                                                        message: "Invalid S-expression in data",

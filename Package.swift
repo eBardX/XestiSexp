@@ -1,6 +1,6 @@
 // swift-tools-version: 6.2
 
-// © 2024—2025 John Gary Pusey (see LICENSE.md)
+// © 2024—2026 John Gary Pusey (see LICENSE.md)
 
 import PackageDescription
 
@@ -10,7 +10,7 @@ let package = Package(name: "XestiSexp",
                       products: [.library(name: "XestiSexp",
                                           targets: ["XestiSexp"])],
                       dependencies: [.package(url: "https://github.com/eBardX/XestiMath.git",
-                                              .upToNextMajor(from: "3.0.0")),
+                                              branch: "v3-rewrite"),
                                      .package(url: "https://github.com/eBardX/XestiTools.git",
                                               .upToNextMajor(from: "6.0.0"))],
                       targets: [.target(name: "XestiSexp",

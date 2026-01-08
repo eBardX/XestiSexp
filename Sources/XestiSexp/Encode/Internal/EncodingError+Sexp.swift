@@ -1,4 +1,4 @@
-// © 2024 John Gary Pusey (see LICENSE.md)
+// © 2024—2026 John Gary Pusey (see LICENSE.md)
 
 extension EncodingError {
 
@@ -8,7 +8,7 @@ extension EncodingError {
                                                at path: [any CodingKey],
                                                message: String) -> EncodingError {
         .invalidValue(value,
-                      .init(codingPath: path,
-                            debugDescription: message))
+                      Context(codingPath: path,
+                              debugDescription: message))
     }
 }

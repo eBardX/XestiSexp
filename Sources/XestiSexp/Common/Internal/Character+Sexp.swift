@@ -1,4 +1,4 @@
-// © 2024 John Gary Pusey (see LICENSE.md)
+// © 2024—2026 John Gary Pusey (see LICENSE.md)
 
 extension Character {
 
@@ -23,6 +23,18 @@ extension Character {
 
         default:
             return isSexpSymbolHead
+        }
+    }
+
+    internal var isSexpVisible: Bool {
+        switch self {
+        case "\u{00}"..."\u{1f}",
+            "\u{7f}"..."\u{a0}",
+            "\u{034f}":
+            false
+
+        default:
+            true
         }
     }
 
@@ -55,7 +67,20 @@ extension Character {
         }
     }
 
-    internal var sexpName: String? {
+    internal var sexpNameR5RS: String? {
+        switch self {
+        case "\u{0a}":
+            "newline"
+
+        case "\u{20}":
+            "space"
+
+        default:
+            nil
+        }
+    }
+
+    internal var sexpNameR7RS: String? {
         switch self {
         case "\u{00}":
             "null"

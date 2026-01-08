@@ -1,4 +1,4 @@
-// © 2024–2025 John Gary Pusey (see LICENSE.md)
+// © 2024–2026 John Gary Pusey (see LICENSE.md)
 
 import XestiTools
 
@@ -7,6 +7,7 @@ extension Sexp {
     // MARK: Public Nested Types
 
     public enum Error {
+        case formatFailed(any Sendable, Syntax)
         case invalidBoolean(Substring)
         case invalidBytevectorElement(Sexp.Number)
         case invalidCharacter(Substring)
@@ -22,6 +23,9 @@ extension Sexp {
 extension Sexp.Error: EnhancedError {
     public var message: String {
         switch self {
+        case let .formatFailed(value, syntax):
+            "Failed to format value in \(syntax) syntax: \(value)"
+
         case let .invalidBoolean(value):
             "Invalid boolean: \(value)"
 

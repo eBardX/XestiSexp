@@ -1,4 +1,4 @@
-// © 2025 John Gary Pusey (see LICENSE.md)
+// © 2025—2026 John Gary Pusey (see LICENSE.md)
 
 import XestiTools
 
@@ -11,14 +11,40 @@ extension Sexp {
         // MARK: Public Initializers
 
         public init(_ stringValue: String) {
-            self.isSpecial = _isSpecial(stringValue)
-            self.stringValue = Self.requireValid(stringValue)
+            self.init(stringValue,
+                      Self.isSpecial(stringValue))
         }
 
         // MARK: Public Instance Properties
 
         public let isSpecial: Bool
         public let stringValue: String
+
+        // MARK: Internal Initializers
+
+        internal init(_ stringValue: String,
+                      _ isSpecial: Bool) {
+            self.isSpecial = isSpecial
+            self.stringValue = Self.requireValid(stringValue)
+        }
+    }
+}
+
+// MARK: -
+
+extension Sexp.Symbol {
+
+    // MARK: Internal Type Methods
+
+    internal static func isSpecial(_ stringValue: String) -> Bool {
+        guard stringValue.first?.isSexpSymbolHead ?? false // empty string is special
+        else { return true }
+
+        for chr in stringValue.dropFirst() where !chr.isSexpSymbolTail {
+            return true
+        }
+
+        return false
     }
 }
 
@@ -33,17 +59,4 @@ extension Sexp.Symbol: Hashable {
 // MARK: - Sendable
 
 extension Sexp.Symbol: Sendable {
-}
-
-// MARK: - Private Functions
-
-private func _isSpecial(_ stringValue: String) -> Bool {
-    guard stringValue.first?.isSexpSymbolHead ?? false // empty string is special
-    else { return true }
-
-    for chr in stringValue.dropFirst() where !chr.isSexpSymbolTail {
-        return true
-    }
-
-    return false
 }
