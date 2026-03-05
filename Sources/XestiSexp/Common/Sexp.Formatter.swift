@@ -6,10 +6,20 @@ extension Sexp {
 
     // MARK: Public Nested Types
 
+    /// An S-expression formatter.
     public struct Formatter {
 
         // MARK: Public Initializers
 
+        /// Creates a new, reusable S-expression formatter with the provided
+        /// pretty-print, syntax standard, and tracing verbosity.
+        ///
+        /// - Parameter prettyPrint:    Specifies whether formatting should
+        ///                             pretty-print the S-expression.
+        /// - Parameter syntax:         The syntax standard to apply when
+        ///                             formatting an S-expression.
+        /// - Parameter tracing:        The tracing verbosity to use when
+        ///                             formatting an S-expression.
         public init(prettyPrint: Bool,
                     syntax: Syntax,
                     tracing: Verbosity) {
@@ -20,12 +30,22 @@ extension Sexp {
 
         // MARK: Public Instance Properties
 
+        /// Specifies whether formatting will pretty-print the S-expression.
         public let prettyPrint: Bool
+
+        /// The syntax standard to apply when formatting an S-expression.
         public let syntax: Syntax
+
+        /// The tracing verbosity to use when formatting an S-expression.
         public let tracing: Verbosity
 
         // MARK: Public Instance Methods
 
+        /// Formats the provided S-expression into a string.
+        ///
+        /// - Parameter sexp:   The S-expression to format.
+        ///
+        /// - Returns:  The formatted S-expression.
         public func format(_ sexp: Sexp) throws -> String {
             var context = Self.Context()
 

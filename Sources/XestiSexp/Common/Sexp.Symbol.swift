@@ -6,24 +6,43 @@ extension Sexp {
 
     // MARK: Public Nested Types
 
+    /// An S-expression symbol value.
     public struct Symbol: StringRepresentable {
 
         // MARK: Public Type Methods
 
+        /// Determines if the provided string value is a valid representation
+        /// for a symbol value.
+        ///
+        /// - Parameter stringValue:    The string value to check for validity.
+        ///
+        /// - Returns:  `true` when the provided string value is a valid
+        ///             representation for a symbol value; `false` otherwise.
         public static func isValid(_ stringValue: String) -> Bool {
             true
         }
 
         // MARK: Public Initializers
 
-        public init(_ stringValue: String) {
+        /// Creates a new symbol value with the provided string value.
+        ///
+        /// If the provided string value is determined to be invalid, this
+        /// initializer stops program execution.
+        ///
+        /// - Parameter stringValue:    The string value to use for the new
+        ///                             symbol value.
+      public init(_ stringValue: String) {
             self.init(stringValue,
                       Self.isSpecial(stringValue))
         }
 
         // MARK: Public Instance Properties
 
+        /// A Boolean value indicating whether this symbol value contains any
+        /// special characters in its string value.
         public let isSpecial: Bool
+
+        /// The string value that represents this symbol value.
         public let stringValue: String
 
         // MARK: Internal Initializers

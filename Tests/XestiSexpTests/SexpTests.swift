@@ -123,7 +123,7 @@ extension SexpTests {
     }
 
     @Test
-    func test_vector() {
+    func test_vector() {    // should add test for empty vector
         #expect(Sexp(vector: []).vectorValue?.isEmpty ?? false)
         #expect(Sexp(vector: [Sexp(symbol: "x"),
                               Sexp()]).vectorValue == [Sexp(symbol: "x"),

@@ -6,5 +6,6 @@ extension Sexp {
 
     // MARK: Public Nested Types
 
+    /// An S-expression number value.
     public typealias Number = XestiMath.Number
 }

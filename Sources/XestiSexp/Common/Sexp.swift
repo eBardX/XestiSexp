@@ -1,49 +1,88 @@
 // © 2024–2026 John Gary Pusey (see LICENSE.md)
 
+/// An S-expression.
 public struct Sexp {
 
     // MARK: Public Initializers
 
+    /// Creates an S-expression null.
     public init() {
         self.value = .null
     }
 
+    /// Creates an S-expression boolean with the provided `Bool` value.
+    ///
+    /// - Parameter value:  The `Bool` value to use for the new S-expression
+    ///                     boolean.
     public init(boolean value: Bool) {
         self.value = .boolean(value)
     }
 
+    /// Create an S-expression bytevector with the provided array of `UInt8`
+    /// values.
+    ///
+    /// - Parameter value:  The array of `UInt8` values to use for the new
+    ///                     S-expression bytevector.
     public init(bytevector value: [UInt8]) {
         self.value = .bytevector(value)
     }
 
+    /// Create an S-expression character with the provided `Character` value.
+    ///
+    /// - Parameter value:  The `Character` value to use for the new
+    ///                     S-expression character.
     public init(character value: Character) {
         self.value = .character(value)
     }
 
+    /// Create an S-expression pair with the provided head and tail
+    /// S-expressions.
+    ///
+    /// - Parameter hdValue:    The head S-expression to use for the new
+    ///                         S-expression pair.
+    /// - Parameter tlValue:    The optional tail S-expression to use for the
+    ///                         new S-expression pair.
     public init(head hdValue: Self,
                 tail tlValue: Self? = nil) {
         self.value = .pair(hdValue,
                            tlValue ?? Self())
     }
 
+    /// Create an S-expression number with the provided ``Number`` value.
+    ///
+    /// - Parameter value:  The ``Number`` value to use for the new S-expression
+    ///                     number.
     public init(number value: Number) {
         self.value = .number(value)
     }
 
+    /// Create an S-expression string with the provided `String` value.
+    ///
+    /// - Parameter value:  The `String` value to use for the new S-expression
+    ///                     string.
     public init(string value: String) {
         self.value = .string(value)
     }
 
+    /// Create an S-expression symbol with the provided ``Symbol`` value.
+    ///
+    /// - Parameter value:  The ``Symbol`` value to use for the new S-expression
+    ///                     symbol.
     public init(symbol value: Symbol) {
         self.value = .symbol(value)
     }
 
+    /// Create an S-expression vector with the provided array of S-expressions.
+    ///
+    /// - Parameter value:  The array of S-expressions to use for the new
+    ///                     S-expression vector.
     public init(vector value: [Self]) {
         self.value = .vector(value)
     }
 
     // MARK: Public Instance Properties
 
+    /// A `Bool` value, if this is an S-expression boolean; otherwise, `nil`.
     public var booleanValue: Bool? {
         guard case let .boolean(rawValue) = value
         else { return nil }
@@ -51,6 +90,8 @@ public struct Sexp {
         return rawValue
     }
 
+    /// An array of `UInt8` values, if this is an S-expression bytevector;
+    /// otherwise, `nil`.
     public var bytevectorValue: [UInt8]? {
         guard case let .bytevector(rawValue) = value
         else { return nil }
@@ -58,6 +99,8 @@ public struct Sexp {
         return rawValue
     }
 
+    /// A `Character` value, if this is an S-expression character; otherwise,
+    /// `nil`.
     public var characterValue: Character? {
         guard case let .character(rawValue) = value
         else { return nil }
@@ -65,6 +108,7 @@ public struct Sexp {
         return rawValue
     }
 
+    /// A Boolean value indicating whether this is an S-expression null.
     public var isNull: Bool {
         switch value {
         case .null:
@@ -75,6 +119,7 @@ public struct Sexp {
         }
     }
 
+    /// A ``Number`` value, if this is an S-expression number; otherwise, `nil`.
     public var numberValue: Number? {
         guard case let .number(rawValue) = value
         else { return nil }
@@ -82,6 +127,8 @@ public struct Sexp {
         return rawValue
     }
 
+    /// A tuple of S-expressions (head and optional tail), if this is an
+    /// S-expression pair; otherwise, `nil`.
     public var pairValue: (Self, Self?)? {
         guard case let .pair(hdValue, tlValue) = value
         else { return nil }
@@ -90,6 +137,7 @@ public struct Sexp {
                 tlValue.isNull ? nil : tlValue)
     }
 
+    /// A `String` value, if this is an S-expression string; otherwise, `nil`.
     public var stringValue: String? {
         guard case let .string(rawValue) = value
         else { return nil }
@@ -97,6 +145,7 @@ public struct Sexp {
         return rawValue
     }
 
+    /// A ``Symbol`` value, if this is an S-expression symbol; otherwise, `nil`.
     public var symbolValue: Symbol? {
         guard case let .symbol(rawValue) = value
         else { return nil }
@@ -104,6 +153,8 @@ public struct Sexp {
         return rawValue
     }
 
+    /// An array of S-expressions, if this is an S-expression vector; otherwise,
+    /// `nil`.
     public var vectorValue: [Self]? {
         guard case let .vector(rawValue) = value
         else { return nil }
