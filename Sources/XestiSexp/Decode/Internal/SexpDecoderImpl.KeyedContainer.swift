@@ -1,4 +1,4 @@
-// © 2024–2025 John Gary Pusey (see LICENSE.md)
+// © 2024–2026 John Gary Pusey (see LICENSE.md)
 
 extension SexpDecoderImpl {
 
@@ -100,10 +100,10 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                          forKey key: Key) throws -> String {
         let value = try _fetchValue(key)
 
-        guard let stringValue = value.stringValue
+        guard let stringValue = value.symbolValue?.stringValue ?? value.stringValue
         else { throw DecodingError.makeTypeMismatchError(for: type,
                                                          at: codingPath + [key],
-                                                         message: "Expected a string, instead found: \(value)") }
+                                                         message: "Expected a string or symbol, instead found: \(value)") }
 
         return stringValue
     }

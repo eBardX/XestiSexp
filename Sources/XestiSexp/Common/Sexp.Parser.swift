@@ -1,4 +1,4 @@
-// © 2024–2025 John Gary Pusey (see LICENSE.md)
+// © 2024–2026 John Gary Pusey (see LICENSE.md)
 
 import XestiMath
 import XestiTools
@@ -13,8 +13,8 @@ extension Sexp {
 
         public init(syntax: Syntax,
                     tracing: Verbosity) {
-            self.tokenizer = .init(syntax: syntax,
-                                   tracing: tracing)
+            self.tokenizer = Sexp.Tokenizer(syntax: syntax,
+                                            tracing: tracing)
         }
 
         // MARK: Public Instance Properties

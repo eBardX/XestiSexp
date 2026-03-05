@@ -1,5 +1,5 @@
 {
-  "originHash" : "926e4a3e8b5eb265dd1e15b462317b66443a830ef371991e5f5b272e437afab4",
+  "originHash" : "90240bfab28bcaae93c0fe6c6d4cec1f53f97554fbb45c13e325ec5736b9aecb",
   "pins" : [
     {
       "identity" : "bigint",
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eBardX/XestiMath.git",
       "state" : {
-        "revision" : "3324da2f362225815b988c7fbb8c27914bec2e11",
-        "version" : "3.0.0"
+        "revision" : "43ec744cd223ccd9ac3280187c614a2880615ff2",
+        "version" : "4.0.0"
       }
     },
     {

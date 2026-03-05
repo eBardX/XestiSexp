@@ -1,4 +1,4 @@
-// © 2024 John Gary Pusey (see LICENSE.md)
+// © 2024—2026 John Gary Pusey (see LICENSE.md)
 
 import XestiTools
 
@@ -105,7 +105,7 @@ extension SexpEncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
 
 extension SexpEncoderImpl.KeyedContainer: SexpEncodingContainer {
     internal var sexp: Sexp {
-        Sexp(dictionaryValue: containers.mapValues { $0.sexp },
-             dictionaryKeys: containerKeys)
+        Sexp(dictionary: containers.mapValues { $0.sexp },
+             orderedKeys: containerKeys)
     }
 }

@@ -1,4 +1,4 @@
-// © 2025 John Gary Pusey (see LICENSE.md)
+// © 2025—2026 John Gary Pusey (see LICENSE.md)
 
 import XestiMath
 import XestiTools
@@ -292,7 +292,7 @@ private func _convertHexString(_ hexString: String) -> Character? {
 }
 
 private func _convertNumber(_ value: Substring) -> Sexp.Number? {
-    Sexp.Number.parse(value)
+    Sexp.Number.parse(input: value)
 }
 
 private func _convertStringish(_ value: Substring) -> String? {

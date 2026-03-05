@@ -1,4 +1,4 @@
-// © 2025 John Gary Pusey (see LICENSE.md)
+// © 2025—2026 John Gary Pusey (see LICENSE.md)
 
 import Foundation
 import Testing
@@ -11,18 +11,14 @@ struct SexpEncoderTests {
 
 extension SexpEncoderTests {
     @Test
-    func encode_custom() throws {
+    func test_encode_custom() throws {
         let manifest = Manifest(name: "foobar")
-        let expectedData = Data("#((version . 666) (name . \"foobar\"))".utf8)
-        let actualData = try SexpEncoder().encode(manifest)
+        let expectedValue = "((version 666) (name foobar))"
+        let actualValue = try String(data: SexpEncoder().encode(manifest),
+                                     encoding: .utf8)
 
-        #expect(actualData == expectedData)
+        #expect(actualValue == expectedValue)
     }
-}
-
-// MARK: -
-
-extension SexpEncoderTests {
 }
 
 // MARK: -
