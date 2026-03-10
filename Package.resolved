@@ -1,5 +1,5 @@
 {
-  "originHash" : "0eb5fb75bc20642e6a353e54d152ed4169566ea9afba901661236b962fecf34a",
+  "originHash" : "2d287b8007e1ae61fd20df7a4fed7c0a6e2164ee79858f836bad43292172d420",
   "pins" : [
     {
       "identity" : "bigint",
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eBardX/XestiMath.git",
       "state" : {
-        "revision" : "43ec744cd223ccd9ac3280187c614a2880615ff2",
-        "version" : "4.0.0"
+        "branch" : "update-dependencies",
+        "revision" : "b82fa673e061aca2a00c05eb92969b8db6fea498"
       }
     },
     {
@@ -69,8 +69,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eBardX/XestiTools.git",
       "state" : {
-        "revision" : "03c2040ffd0aa966c5e0db032c2d8be7b976c71a",
-        "version" : "6.0.0"
+        "branch" : "v7-rewrite",
+        "revision" : "cd4a9076bc3a4997c4beeb049661334ca37bde0b"
       }
     },
     {
