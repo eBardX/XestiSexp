@@ -1,6 +1,7 @@
 // © 2025—2026 John Gary Pusey (see LICENSE.md)
 
 import XestiMath
+import XestiTokens
 import XestiTools
 
 extension Sexp.Parser {

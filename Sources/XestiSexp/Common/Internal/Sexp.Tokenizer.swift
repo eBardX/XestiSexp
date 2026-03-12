@@ -1,5 +1,6 @@
 // © 2025—2026 John Gary Pusey (see LICENSE.md)
 
+import XestiTokens
 import XestiTools
 
 extension Sexp {
@@ -10,7 +11,7 @@ extension Sexp {
 
         // MARK: Internal Nested Types
 
-        internal typealias BaseTokenizer = XestiTools.Tokenizer
+        internal typealias BaseTokenizer = XestiTokens.Tokenizer
         internal typealias Rule          = BaseTokenizer.Rule
         internal typealias Token         = BaseTokenizer.Token
 
