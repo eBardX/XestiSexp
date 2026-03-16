@@ -27,11 +27,14 @@ extension Sexp {
         /// Creates a new symbol value with the provided string value.
         ///
         /// If the provided string value is determined to be invalid, this
-        /// initializer stops program execution.
+        /// initializer returns `nil`.
         ///
         /// - Parameter stringValue:    The string value to use for the new
         ///                             symbol value.
-      public init(_ stringValue: String) {
+        public init?(stringValue: String) {
+            guard Self.isValid(stringValue)
+            else { return nil }
+
             self.init(stringValue,
                       Self.isSpecial(stringValue))
         }
@@ -50,7 +53,7 @@ extension Sexp {
         internal init(_ stringValue: String,
                       _ isSpecial: Bool) {
             self.isSpecial = isSpecial
-            self.stringValue = Self.requireValid(stringValue)
+            self.stringValue = stringValue
         }
     }
 }

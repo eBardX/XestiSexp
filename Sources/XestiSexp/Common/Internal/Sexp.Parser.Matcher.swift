@@ -1,6 +1,7 @@
 // © 2025—2026 John Gary Pusey (see LICENSE.md)
 
 import XestiMath
+import XestiTokens
 import XestiTools
 
 extension Sexp.Parser {
@@ -14,14 +15,14 @@ extension Sexp.Parser {
         internal init(parser: Sexp.Parser,
                       tokens: [Tokenizer.Token]) {
             self.parser = parser
-            self.tokenReader = TokenReader(tokens)
+            self.tokenMatcher = TokenMatcher(tokens)
         }
 
         // MARK: Internal Instance Properties
 
         private let parser: Sexp.Parser
 
-        private var tokenReader: TokenReader
+        private var tokenMatcher: TokenMatcher<[Tokenizer.Token]>
     }
 }
 
@@ -34,7 +35,7 @@ extension Sexp.Parser.Matcher {
     internal mutating func matchSexp() throws -> Sexp {
         let datum = try _matchDatum()
 
-        guard !tokenReader.hasMore
+        guard !tokenMatcher.hasMore
         else { throw Sexp.Error.trailingGarbage }
 
         return datum
@@ -43,7 +44,7 @@ extension Sexp.Parser.Matcher {
     // MARK: Private Instance Methods
 
     private mutating func _matchBoolean() throws -> Sexp {
-        let token = try tokenReader.readMustMatch(.boolean)
+        let token = try tokenMatcher.readMustMatch(.boolean)
 
         guard let cvtValue = _convertBoolean(token.value)
         else { throw Sexp.Error.invalidBoolean(token.value) }
@@ -52,11 +53,11 @@ extension Sexp.Parser.Matcher {
     }
 
     private mutating func _matchBytevector() throws -> Sexp {
-        try tokenReader.readMustMatch(.byteVectorBegin)
+        try tokenMatcher.readMustMatch(.byteVectorBegin)
 
         var cvtValues: [UInt8] = []
 
-        while let token = tokenReader.readIfMatches(.number) {
+        while let token = tokenMatcher.readIfMatches(.number) {
             guard let cvtValue = _convertNumber(token.value)
             else { throw Sexp.Error.invalidNumber(token.value) }
 
@@ -66,13 +67,13 @@ extension Sexp.Parser.Matcher {
             cvtValues.append(cvtValue.uint8Value)
         }
 
-        try tokenReader.readMustMatch(.sequenceEnd)
+        try tokenMatcher.readMustMatch(.sequenceEnd)
 
         return Sexp(bytevector: cvtValues)
     }
 
     private mutating func _matchCharacter() throws -> Sexp {
-        let token = try tokenReader.readMustMatch(.character)
+        let token = try tokenMatcher.readMustMatch(.character)
 
         guard let cvtValue = _convertCharacter(token.value)
         else { throw Sexp.Error.invalidCharacter(token.value) }
@@ -81,46 +82,46 @@ extension Sexp.Parser.Matcher {
     }
 
     private mutating func _matchDatum() throws -> Sexp {
-        if tokenReader.nextMatches(.boolean) {
+        if tokenMatcher.nextMatches(.boolean) {
             return try _matchBoolean()
         }
 
-        if tokenReader.nextMatches(.byteVectorBegin),
+        if tokenMatcher.nextMatches(.byteVectorBegin),
            parser.syntax == .r7rsPartial {
             return try _matchBytevector()
         }
 
-        if tokenReader.nextMatches(.character) {
+        if tokenMatcher.nextMatches(.character) {
             return try _matchCharacter()
         }
 
-        if tokenReader.nextMatches(.number) {
+        if tokenMatcher.nextMatches(.number) {
             return try _matchNumber()
         }
 
-        if tokenReader.nextMatches(.pairBegin) {
+        if tokenMatcher.nextMatches(.pairBegin) {
             return try _matchPairOrNull()
         }
 
-        if tokenReader.nextMatches(.string) {
+        if tokenMatcher.nextMatches(.string) {
             return try _matchString()
         }
 
-        if tokenReader.nextMatches(.symbol) {
+        if tokenMatcher.nextMatches(.symbol) {
             return try _matchSymbol()
         }
 
-        if tokenReader.nextMatches(.vectorBegin) {
+        if tokenMatcher.nextMatches(.vectorBegin) {
             return try _matchVector()
         }
 
-        try tokenReader.failOnNext()
+        try tokenMatcher.failOnNext()
 
         fatalError("Bad logic!")
     }
 
     private mutating func _matchNumber() throws -> Sexp {
-        let token = try tokenReader.readMustMatch(.number)
+        let token = try tokenMatcher.readMustMatch(.number)
 
         guard let cvtValue = _convertNumber(token.value)
         else { throw Sexp.Error.invalidNumber(token.value) }
@@ -129,13 +130,13 @@ extension Sexp.Parser.Matcher {
     }
 
     private mutating func _matchPairOrNull() throws -> Sexp {
-        try tokenReader.readMustMatch(.pairBegin)
+        try tokenMatcher.readMustMatch(.pairBegin)
 
         var stack: [Sexp] = []
         var last = Sexp()
 
-        while !tokenReader.nextMatches(.sequenceEnd) {
-            if tokenReader.readIfMatches(.dot) != nil {
+        while !tokenMatcher.nextMatches(.sequenceEnd) {
+            if tokenMatcher.readIfMatches(.dot) != nil {
                 last = try _matchDatum()
                 break
             }
@@ -143,7 +144,7 @@ extension Sexp.Parser.Matcher {
             try stack.push(_matchDatum())
         }
 
-        try tokenReader.readMustMatch(.sequenceEnd)
+        try tokenMatcher.readMustMatch(.sequenceEnd)
 
         var list = last
 
@@ -156,7 +157,7 @@ extension Sexp.Parser.Matcher {
     }
 
     private mutating func _matchString() throws -> Sexp {
-        let token = try tokenReader.readMustMatch(.string)
+        let token = try tokenMatcher.readMustMatch(.string)
 
         guard let cvtValue = _convertStringish(token.value)
         else { throw Sexp.Error.invalidString(token.value) }
@@ -165,7 +166,7 @@ extension Sexp.Parser.Matcher {
     }
 
     private mutating func _matchSymbol() throws -> Sexp {
-        let token = try tokenReader.readMustMatch(.symbol)
+        let token = try tokenMatcher.readMustMatch(.symbol)
 
         guard let cvtValue = _convertSymbol(token.value)
         else { throw Sexp.Error.invalidSymbol(token.value) }
@@ -174,15 +175,15 @@ extension Sexp.Parser.Matcher {
     }
 
     private mutating func _matchVector() throws -> Sexp {
-        try tokenReader.readMustMatch(.vectorBegin)
+        try tokenMatcher.readMustMatch(.vectorBegin)
 
         var elements: [Sexp] = []
 
-        while !tokenReader.nextMatches(.sequenceEnd) {
+        while !tokenMatcher.nextMatches(.sequenceEnd) {
             try elements.append(_matchDatum())
         }
 
-        try tokenReader.readMustMatch(.sequenceEnd)
+        try tokenMatcher.readMustMatch(.sequenceEnd)
 
         return Sexp(vector: elements)
     }
