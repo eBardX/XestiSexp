@@ -12,11 +12,11 @@ let package = Package(name: "XestiSexp",
                       dependencies: [.package(url: "https://github.com/swiftlang/swift-docc-plugin.git",
                                               .upToNextMajor(from: "1.1.0")),
                                      .package(url: "https://github.com/eBardX/XestiMath.git",
-                                              .upToNextMajor(from: "4.1.0")),
+                                              .upToNextMajor(from: "4.2.0")),
                                      .package(url: "https://github.com/eBardX/XestiTokens.git",
-                                              .upToNextMajor(from: "1.0.0")),
+                                              .upToNextMajor(from: "1.1.0")),
                                      .package(url: "https://github.com/eBardX/XestiTools.git",
-                                              .upToNextMajor(from: "7.0.0"))],
+                                              .upToNextMajor(from: "7.1.0"))],
                       targets: [.target(name: "XestiSexp",
                                         dependencies: [.product(name: "XestiMath",
                                                                 package: "XestiMath"),
@@ -31,7 +31,12 @@ let package = Package(name: "XestiSexp",
                       swiftLanguageModes: [.v6])
 
 let swiftSettings: [SwiftSetting] = [.defaultIsolation(nil),
-                                     .enableUpcomingFeature("ExistentialAny")]
+                                     .enableUpcomingFeature("ExistentialAny"),
+                                     .enableUpcomingFeature("ImmutableWeakCaptures"),
+                                     .enableUpcomingFeature("InferIsolatedConformances"),
+                                     .enableUpcomingFeature("InternalImportsByDefault"),
+                                     .enableUpcomingFeature("MemberImportVisibility"),
+                                     .enableUpcomingFeature("NonisolatedNonsendingByDefault")]
 
 for target in package.targets {
     var settings = target.swiftSettings ?? []

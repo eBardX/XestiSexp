@@ -1,5 +1,8 @@
 // © 2024–2026 John Gary Pusey (see LICENSE.md)
 
+private import XestiMath
+private import XestiTools
+
 extension SexpEncoderImpl {
 
     // MARK: Internal Nested Types

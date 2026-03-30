@@ -1,6 +1,6 @@
 // © 2025–2026 John Gary Pusey (see LICENSE.md)
 
-import XestiTools
+public import XestiTools
 
 extension Sexp {
 

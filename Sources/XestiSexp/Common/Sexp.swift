@@ -1,5 +1,7 @@
 // © 2024–2026 John Gary Pusey (see LICENSE.md)
 
+public import XestiMath
+
 /// An S-expression.
 public struct Sexp {
 

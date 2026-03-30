@@ -1,7 +1,7 @@
 // © 2024–2026 John Gary Pusey (see LICENSE.md)
 
-import Foundation
-import XestiTools
+public import Foundation
+public import XestiTools
 
 /// An encoder that encodes instances of a data type as S-expressions.
 public struct SexpEncoder {

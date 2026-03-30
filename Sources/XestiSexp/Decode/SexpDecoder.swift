@@ -1,7 +1,7 @@
 // © 2024–2026 John Gary Pusey (see LICENSE.md)
 
-import Foundation
-import XestiTools
+public import Foundation
+public import XestiTools
 
 /// A decoder that decodes instances of a data type from S-expressions.
 public struct SexpDecoder {

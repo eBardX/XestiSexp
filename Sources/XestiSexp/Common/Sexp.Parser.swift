@@ -1,7 +1,8 @@
 // © 2024–2026 John Gary Pusey (see LICENSE.md)
 
-import XestiMath
-import XestiTools
+public import XestiTools
+
+private import XestiMath
 
 extension Sexp {
 

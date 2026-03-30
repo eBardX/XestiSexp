@@ -1,6 +1,6 @@
 // © 2026 John Gary Pusey (see LICENSE.md)
 
-import XestiTools
+private import XestiTools
 
 extension Sexp.Formatter {
 

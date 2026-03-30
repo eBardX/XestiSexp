@@ -1,7 +1,9 @@
 // © 2024–2026 John Gary Pusey (see LICENSE.md)
 
 import Testing
+import XestiMath
 @testable import XestiSexp
+import XestiTools
 
 struct SexpParserR7RSTests {
 }

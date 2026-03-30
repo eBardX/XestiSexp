@@ -1,5 +1,7 @@
 // © 2024–2026 John Gary Pusey (see LICENSE.md)
 
+private import Foundation
+
 extension Character {
 
     // MARK: Internal Instance Properties
