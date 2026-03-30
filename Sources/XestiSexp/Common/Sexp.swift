@@ -337,7 +337,7 @@ extension Sexp: Equatable {
             true
 
         case let (.number(lvalue), .number(rvalue)):
-            lvalue.isNaN == rvalue.isNaN || lvalue == rvalue
+            (lvalue.isNaN && rvalue.isNaN) || lvalue == rvalue  // NaN is not really equatable, but we adapt
 
         case let (.pair(lhval, ltval), .pair(rhval, rtval)):
             lhval == rhval && ltval == rtval

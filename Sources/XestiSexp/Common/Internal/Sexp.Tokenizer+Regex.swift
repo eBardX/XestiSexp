@@ -238,7 +238,7 @@ extension Sexp.Tokenizer {
             Optionally {
                 sign
             }
-            binURealR7RS
+            binURealR5RS
         }
     }
 
@@ -678,7 +678,7 @@ extension Sexp.Tokenizer {
     }
 
     nonisolated(unsafe) private static let hexRadix = Regex<Substring> {
-        "#h"
+        "#x"
     }.ignoresCase()
 
     nonisolated(unsafe) private static let hexRealR5RS = Regex<Substring> {

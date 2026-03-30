@@ -42,7 +42,7 @@ extension Sexp {
         /// An invalid number was encountered while parsing an S-expression.
         ///
         /// As an associated value, this case contains the substring comprising
-        /// the invalid numbe.
+        /// the invalid number.
         case invalidNumber(Substring)
 
         /// An invalid string was encountered while parsing an S-expression.

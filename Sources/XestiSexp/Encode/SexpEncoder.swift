@@ -65,7 +65,7 @@ public struct SexpEncoder {
         guard let data = string.data(using: .utf8)
         else { throw EncodingError.makeInvalidValueError(for: string,
                                                          at: [],
-                                                         message: "") }
+                                                         message: "Invalid UTF-8 in string") }
 
         return data
     }

@@ -48,13 +48,6 @@ extension SexpEquatableTests {
     }
 
     @Test
-    func test_nan() {
-        let sexp = Sexp(number: .nan)
-
-        #expect(sexp == Sexp(number: .nan))
-    }
-
-    @Test
     func test_null() {
         let sexp = Sexp()
 
@@ -72,6 +65,16 @@ extension SexpEquatableTests {
         #expect(sexpPi == Sexp(number: 3.14))
         #expect(sexpPosInf == Sexp(number: .positiveInfinity))
         #expect(sexpNegInf == Sexp(number: .negativeInfinity))
+        #expect(sexp42 != sexpPi)
+        #expect(sexpPosInf != sexpNegInf)
+        #expect(sexp42 != Sexp(number: 0))
+    }
+
+    @Test
+    func test_nan() {
+        let sexp = Sexp(number: .nan)
+
+        #expect(sexp == Sexp(number: .nan))
     }
 
     @Test

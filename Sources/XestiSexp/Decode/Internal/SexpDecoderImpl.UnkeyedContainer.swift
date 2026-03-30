@@ -124,6 +124,11 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
         try _fetchNumberValue(type).uint64Value
     }
 
+    @available(iOS 18.0, macOS 15.0, *)
+    internal mutating func decode(_ type: UInt128.Type) throws -> UInt128 {
+        try _fetchNumberValue(type).uint128Value
+    }
+
     internal mutating func decode<T: Decodable>(_ type: T.Type) throws -> T {
         let decoder = SexpDecoderImpl(from: try _fetchValue(type),
                                       codingPath: currentCodingPath,

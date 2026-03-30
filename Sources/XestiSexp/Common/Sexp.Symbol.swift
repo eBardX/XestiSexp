@@ -14,6 +14,9 @@ extension Sexp {
         /// Determines if the provided string value is a valid representation
         /// for a symbol value.
         ///
+        /// - Note: _Any_ string value is considered a valid representation for
+        ///         a symbol value. Even an empty string.
+        ///
         /// - Parameter stringValue:    The string value to check for validity.
         ///
         /// - Returns:  `true` when the provided string value is a valid

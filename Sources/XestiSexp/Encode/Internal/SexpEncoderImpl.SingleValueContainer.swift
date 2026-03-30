@@ -150,8 +150,8 @@ extension SexpEncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
         if let numberValue = value as? Sexp.Number {
             storage = Sexp(number: numberValue)
         } else {
-            let encoder = SexpEncoderImpl(codingPath: [],
-                                          userInfo: [:])
+            let encoder = SexpEncoderImpl(codingPath: codingPath,
+                                          userInfo: encoderImpl.userInfo)
 
             try value.encode(to: encoder)
 

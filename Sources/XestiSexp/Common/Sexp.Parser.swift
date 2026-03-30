@@ -52,7 +52,7 @@ extension Sexp {
             return try matcher.matchSexp()
         }
 
-        // MARK: Internal Instance Properties
+        // MARK: Private Instance Properties
 
         private let tokenizer: Sexp.Tokenizer
     }
