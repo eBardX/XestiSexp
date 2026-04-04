@@ -1,11 +1,11 @@
 # XestiSexp
 
-An S-expression encoder/decoder.
+An S-expression encoder and decoder.
 
 ## <a name="overview">Overview</a>
 
-The XestiSexp framework provides a Swift encoder/decoder that represents values
-as S-expressions a la Scheme.
+The XestiSexp framework provides a Swift encoder and decoder that represents
+values as S-expressions like in Scheme.
 
 ## <a name="reference_documentation">Reference Documentation</a>
 
