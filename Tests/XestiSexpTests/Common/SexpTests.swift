@@ -69,11 +69,6 @@ extension SexpTests {
     }
 
     @Test
-    func test_null() {
-        #expect(Sexp().isNull)
-    }
-
-    @Test
     func test_init_number() {
         #expect(Sexp(number: 3.141592).numberValue == 3.141592)
         #expect(Sexp(number: -12_345).numberValue == -12_345)
@@ -84,6 +79,11 @@ extension SexpTests {
         #expect(Sexp(number: .negativeInfinity).numberValue == .negativeInfinity)
         #expect(Sexp(number: .positiveInfinity).numberValue == .positiveInfinity)
         #expect(Sexp(number: .nan).numberValue?.isNaN ?? false)
+    }
+
+    @Test
+    func test_null() {
+        #expect(Sexp().isNull)
     }
 
     @Test

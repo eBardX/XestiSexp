@@ -4,12 +4,12 @@ import Testing
 @testable import XestiSexp
 import XestiTools
 
-struct SexpFormatterPrettyPrintTests {
+struct SexpFormatterR7RSppTests {
 }
 
 // MARK: -
 
-extension SexpFormatterPrettyPrintTests {
+extension SexpFormatterR7RSppTests {
     @Test
     func test_format_complex_list() throws {
         let sexp = Sexp(array: [Sexp(symbol: "a"),
@@ -18,7 +18,7 @@ extension SexpFormatterPrettyPrintTests {
                                 Sexp(symbol: "d"),
                                 Sexp(symbol: "e")])
 
-        let result = try _fmt(sexp)
+        let result = try fmt7pp(sexp)
 
         #expect(result == "(a\n b\n c\n d\n e)")
     }
@@ -32,7 +32,7 @@ extension SexpFormatterPrettyPrintTests {
                                 Sexp(array: [Sexp(symbol: "e"),
                                              Sexp(symbol: "f")])])
 
-        let result = try _fmt(sexp)
+        let result = try fmt7pp(sexp)
 
         #expect(result == "((a b)\n (c d)\n (e f))")
     }
@@ -43,7 +43,7 @@ extension SexpFormatterPrettyPrintTests {
                                 Sexp(symbol: "b"),
                                 Sexp(symbol: "c")])
 
-        let result = try _fmt(sexp)
+        let result = try fmt7pp(sexp)
 
         #expect(result == "(a b c)")
     }
@@ -53,7 +53,7 @@ extension SexpFormatterPrettyPrintTests {
         let sexp = Sexp(head: Sexp(symbol: "x"),
                         tail: Sexp(symbol: "y"))
 
-        let result = try _fmt(sexp)
+        let result = try fmt7pp(sexp)
 
         #expect(result == "(x . y)")
     }
@@ -66,7 +66,7 @@ extension SexpFormatterPrettyPrintTests {
                                  Sexp(symbol: "d"),
                                  Sexp(symbol: "e")])
 
-        let result = try _fmt(sexp)
+        let result = try fmt7pp(sexp)
 
         #expect(result == "#(a\n  b\n  c\n  d\n  e\n)")
     }
@@ -76,18 +76,8 @@ extension SexpFormatterPrettyPrintTests {
         let sexp = Sexp(vector: [Sexp(symbol: "x"),
                                  Sexp(symbol: "y")])
 
-        let result = try _fmt(sexp)
+        let result = try fmt7pp(sexp)
 
         #expect(result == "#(x y)")
-    }
-}
-
-// MARK: -
-
-extension SexpFormatterPrettyPrintTests {
-    private func _fmt(_ sexp: Sexp) throws -> String {
-        try Sexp.Formatter(prettyPrint: true,
-                           syntax: .r7rsPartial,
-                           tracing: .silent).format(sexp)
     }
 }
