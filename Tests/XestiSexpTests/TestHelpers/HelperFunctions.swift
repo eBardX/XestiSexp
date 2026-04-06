@@ -1,3 +1,5 @@
+// © 2026 John Gary Pusey (see LICENSE.md)
+
 import Foundation
 @testable import XestiSexp
 import XestiTools

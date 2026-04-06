@@ -1,3 +1,5 @@
+// © 2026 John Gary Pusey (see LICENSE.md)
+
 struct BoolRecord: Decodable {
     let flag: Bool
 }
