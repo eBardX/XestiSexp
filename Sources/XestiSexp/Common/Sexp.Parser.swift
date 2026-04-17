@@ -45,6 +45,9 @@ extension Sexp {
         /// - Parameter input:  The input string to parse.
         ///
         /// - Returns:  The parsed S-expression.
+        ///
+        /// - Throws:   A ``Sexp/Error`` if the input string cannot be parsed as
+        ///             an S-expression.
         public func parse(input: String) throws -> Sexp {
             var matcher = try Matcher(parser: self,
                                       tokens: tokenizer.tokenize(input: input))

@@ -48,6 +48,9 @@ extension Sexp {
         /// - Parameter sexp:   The S-expression to format.
         ///
         /// - Returns:  The formatted S-expression.
+        ///
+        /// - Throws:   A ``Sexp/Error`` if the S-expression cannot be formatted
+        ///             in the current syntax standard.
         public func format(_ sexp: Sexp) throws -> String {
             var context = Self.Context()
 

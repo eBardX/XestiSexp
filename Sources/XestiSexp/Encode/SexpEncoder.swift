@@ -46,6 +46,9 @@ public struct SexpEncoder {
     /// - Parameter value:  The value to encode as an S-expression.
     ///
     /// - Returns:  The encoded S-expression.
+    ///
+    /// - Throws:   An `EncodingError` if the value cannot be encoded as an
+    ///             S-expression.
     public func encode(_ value: any Encodable) throws -> Data {
         let encoder = SexpEncoderImpl(codingPath: [],
                                       userInfo: userInfo)

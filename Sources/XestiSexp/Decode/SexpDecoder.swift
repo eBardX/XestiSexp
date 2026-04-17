@@ -41,6 +41,9 @@ public struct SexpDecoder {
     /// - Parameter data:   The S-expression to decode.
     ///
     /// - Returns:  A value of the specified type.
+    ///
+    /// - Throws:   A `DecodingError` if the data cannot be decoded as a value
+    ///             of the specified type.
     public func decode<T: Decodable>(_ type: T.Type,
                                      from data: Data) throws -> T {
         let decoder = try SexpDecoderImpl(from: _parse(data),
