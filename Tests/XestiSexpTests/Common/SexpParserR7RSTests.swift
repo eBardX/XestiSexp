@@ -1,7 +1,7 @@
 // © 2024–2026 John Gary Pusey (see LICENSE.md)
 
 import Testing
-import XestiMath
+import XestiNumbers
 @testable import XestiSexp
 import XestiTools
 

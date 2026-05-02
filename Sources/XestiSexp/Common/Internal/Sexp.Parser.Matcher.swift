@@ -2,7 +2,7 @@
 
 internal import XestiTokens
 
-private import XestiMath
+private import XestiNumbers
 private import XestiTools
 
 extension Sexp.Parser {

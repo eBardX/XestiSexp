@@ -2,7 +2,7 @@
 
 public import XestiTools
 
-private import XestiMath
+private import XestiNumbers
 
 extension Sexp {
 

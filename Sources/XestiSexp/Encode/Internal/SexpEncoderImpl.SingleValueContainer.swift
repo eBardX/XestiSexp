@@ -1,6 +1,6 @@
 // © 2024–2026 John Gary Pusey (see LICENSE.md)
 
-private import XestiMath
+private import XestiNumbers
 private import XestiTools
 
 extension SexpEncoderImpl {

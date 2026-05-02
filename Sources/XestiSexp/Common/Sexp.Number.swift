@@ -1,11 +1,11 @@
 // © 2025–2026 John Gary Pusey (see LICENSE.md)
 
-public import XestiMath
+public import XestiNumbers
 
 extension Sexp {
 
     // MARK: Public Nested Types
 
     /// An S-expression number value.
-    public typealias Number = XestiMath.Number
+    public typealias Number = XestiNumbers.Number
 }
