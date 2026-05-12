@@ -130,9 +130,9 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
 
     internal mutating func decode<T: Decodable>(_ type: T.Type) throws -> T {
-        let decoder = SexpDecoderImpl(from: try _fetchValue(type),
-                                      codingPath: currentCodingPath,
-                                      userInfo: decoderImpl.userInfo)
+        let decoder = try SexpDecoderImpl(from: _fetchValue(type),
+                                          codingPath: currentCodingPath,
+                                          userInfo: decoderImpl.userInfo)
         let result = try T(from: decoder)
 
         currentIndex += 1
@@ -150,9 +150,9 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
 
     internal mutating func nestedContainer<NestedKey: CodingKey>(keyedBy type: NestedKey.Type) throws -> KeyedDecodingContainer<NestedKey> {
-        let decoder = SexpDecoderImpl(from: try _fetchValue(KeyedDecodingContainer<NestedKey>.self),
-                                      codingPath: currentCodingPath,
-                                      userInfo: decoderImpl.userInfo)
+        let decoder = try SexpDecoderImpl(from: _fetchValue(KeyedDecodingContainer<NestedKey>.self),
+                                          codingPath: currentCodingPath,
+                                          userInfo: decoderImpl.userInfo)
         let container = try decoder.container(keyedBy: type)
 
         currentIndex += 1
@@ -161,9 +161,9 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
 
     internal mutating func nestedUnkeyedContainer() throws -> any UnkeyedDecodingContainer {
-        let decoder = SexpDecoderImpl(from: try _fetchValue((any UnkeyedDecodingContainer).self),
-                                      codingPath: currentCodingPath,
-                                      userInfo: decoderImpl.userInfo)
+        let decoder = try SexpDecoderImpl(from: _fetchValue((any UnkeyedDecodingContainer).self),
+                                          codingPath: currentCodingPath,
+                                          userInfo: decoderImpl.userInfo)
         let container = try decoder.unkeyedContainer()
 
         currentIndex += 1
@@ -172,9 +172,9 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
 
     internal mutating func superDecoder() throws -> any Decoder {
-        let decoder = SexpDecoderImpl(from: try _fetchValue((any Decoder).self),
-                                      codingPath: currentCodingPath,
-                                      userInfo: decoderImpl.userInfo)
+        let decoder = try SexpDecoderImpl(from: _fetchValue((any Decoder).self),
+                                          codingPath: currentCodingPath,
+                                          userInfo: decoderImpl.userInfo)
 
         currentIndex += 1
 
@@ -189,7 +189,7 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
 
     // MARK: Private Instance Methods
 
-    private mutating func _fetchNumberValue<T>(_ type: T.Type) throws -> Sexp.Number {
+    private mutating func _fetchNumberValue(_ type: (some Any).Type) throws -> Sexp.Number {
         let value = try _fetchValue(type)
 
         guard let numberValue = value.numberValue
@@ -202,7 +202,7 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
         return numberValue
     }
 
-    private func _fetchValue<T>(_ type: T.Type) throws -> Sexp {
+    private func _fetchValue(_ type: (some Any).Type) throws -> Sexp {
         guard !isAtEnd
         else { throw DecodingError.makeValueNotFoundError(for: type,
                                                           at: codingPath + [SexpCodingKey(currentIndex)],

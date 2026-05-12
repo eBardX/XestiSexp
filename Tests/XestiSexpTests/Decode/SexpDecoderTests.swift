@@ -11,7 +11,7 @@ struct SexpDecoderTests {
 
 extension SexpDecoderTests {
     @Test
-    func test_decode_boolean() throws {
+    func decode_boolean() throws {
         let record = try decodeText(BoolRecord.self,
                                     from: "((flag #t))")
 
@@ -19,8 +19,8 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func test_decode_error_invalid_data() {
-        let data = Data([0xFF])
+    func decode_error_invalid_data() {
+        let data = Data([0xff])
 
         #expect(throws: DecodingError.self) {
             try SexpDecoder().decode(BoolRecord.self, from: data)
@@ -28,7 +28,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func test_decode_error_invalid_sexp() {
+    func decode_error_invalid_sexp() {
         let data = Data("((((".utf8)
 
         #expect(throws: (any Error).self) {
@@ -37,7 +37,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func test_decode_error_key_not_found() {
+    func decode_error_key_not_found() {
         let data = Data("((name Alice))".utf8)
 
         #expect(throws: DecodingError.self) {
@@ -46,7 +46,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func test_decode_error_type_mismatch() {
+    func decode_error_type_mismatch() {
         let data = Data("((name 42) (age 30))".utf8)
 
         #expect(throws: DecodingError.self) {
@@ -55,7 +55,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func test_decode_keyed() throws {
+    func decode_keyed() throws {
         let record = try decodeText(SimpleRecord.self,
                                     from: "((name Alice) (age 30))")
 
@@ -64,7 +64,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func test_decode_nested() throws {
+    func decode_nested() throws {
         let record = try decodeText(NestedRecord.self,
                                     from: "((label outer) (inner ((name Bob) (age 25))))")
 
@@ -74,7 +74,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func test_decode_nil() throws {
+    func decode_nil() throws {
         let record = try decodeText(OptionalRecord.self,
                                     from: "((value ()))")
 
@@ -82,7 +82,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func test_decode_number_double() throws {
+    func decode_number_double() throws {
         let record = try decodeText(DoubleRecord.self,
                                     from: "((value 3.14))")
 
@@ -90,7 +90,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func test_decode_string_quoted() throws {
+    func decode_string_quoted() throws {
         let record = try decodeText(SimpleRecord.self,
                                     from: "((name \"hello world\") (age 1))")
 
@@ -98,7 +98,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func test_decode_unkeyed() throws {
+    func decode_unkeyed() throws {
         let data = Data("(1 2 3)".utf8)
 
         let values = try SexpDecoder().decode([Int].self, from: data)
@@ -107,7 +107,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func test_roundtrip() throws {
+    func roundtrip() throws {
         let original = CodableRecord(name: "Alice",
                                      age: 30,
                                      active: true)

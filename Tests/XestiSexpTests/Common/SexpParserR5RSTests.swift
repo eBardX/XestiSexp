@@ -12,7 +12,7 @@ struct SexpParserR5RSTests {
 
 extension SexpParserR5RSTests {
     @Test
-    func test_parse_boolean() throws {
+    func parse_boolean() throws {
         #expect(try prs5("#f") == Sexp(boolean: false))
         #expect(throws: (any Error).self) { try prs5("#false") }
         #expect(try prs5("#t") == Sexp(boolean: true))
@@ -20,14 +20,14 @@ extension SexpParserR5RSTests {
     }
 
     @Test
-    func test_parse_bytevector() throws {
+    func parse_bytevector() throws {
         #expect(throws: (any Error).self) { try prs5("#u8()") }
         #expect(throws: (any Error).self) { try prs5("#u8(255)") }
         #expect(throws: (any Error).self) { try prs5("#u8(123 45 6)") }
     }
 
     @Test
-    func test_parse_character() throws {
+    func parse_character() throws {
         #expect(try prs5("#\\z") == Sexp(character: "z"))
         #expect(throws: (any Error).self) { try prs5("#\\alarm") }
         #expect(try prs5("#\\newline") == Sexp(character: "\n"))
@@ -36,21 +36,21 @@ extension SexpParserR5RSTests {
     }
 
     @Test
-    func test_parse_null() throws {
+    func parse_null() throws {
         #expect(try prs5("()") == Sexp())
         #expect(try prs5("  (  )     ") == Sexp())
         #expect(try prs5("""
-                       (
-                       )
-                       """) == Sexp())
+            (
+            )
+            """) == Sexp())
         #expect(try prs5("""
-                       (    ; this is an empty list
-                       )
-                       """) == Sexp())
+            (    ; this is an empty list
+            )
+            """) == Sexp())
     }
 
     @Test
-    func test_parse_number() throws {
+    func parse_number() throws {
         #expect(try prs5("3.141592") == Sexp(number: 3.141592))
         #expect(try prs5("-12345") == Sexp(number: -12_345))
         #expect(try prs5("+12345") == Sexp(number: 12_345))
@@ -64,7 +64,7 @@ extension SexpParserR5RSTests {
     }
 
     @Test
-    func test_parse_pair() throws {
+    func parse_pair() throws {
         #expect(try prs5("(x . ())") == Sexp(head: Sexp(symbol: "x")))
         #expect(try prs5("(x)") == Sexp(head: Sexp(symbol: "x")))
         #expect(try prs5("(x . y)") == Sexp(head: Sexp(symbol: "x"),
@@ -80,7 +80,7 @@ extension SexpParserR5RSTests {
     }
 
     @Test
-    func test_parse_string() throws {
+    func parse_string() throws {
         #expect(try prs5("\"\"") == Sexp(string: ""))
         #expect(try prs5("\"Bilbo\"") == Sexp(string: "Bilbo"))
         #expect(try prs5("\"Bilbo Baggins\"") == Sexp(string: "Bilbo Baggins"))
@@ -88,7 +88,7 @@ extension SexpParserR5RSTests {
     }
 
     @Test
-    func test_parse_symbol() throws {
+    func parse_symbol() throws {
         #expect(throws: (any Error).self) { try prs5("||") }
         #expect(try prs5("Frodo") == Sexp(symbol: "Frodo"))
         #expect(throws: (any Error).self) { try prs5("|Frodo Baggins|") }
@@ -96,7 +96,7 @@ extension SexpParserR5RSTests {
     }
 
     @Test
-    func test_parse_vector() throws {
+    func parse_vector() throws {
         #expect(try prs5("#()") == Sexp(vector: []))
         #expect(try prs5("#(x ())") == Sexp(vector: [Sexp(symbol: "x"),
                                                      Sexp()]))

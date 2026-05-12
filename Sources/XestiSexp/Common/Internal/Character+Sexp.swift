@@ -8,31 +8,47 @@ extension Character {
 
     internal var isSexpSymbolHead: Bool {
         switch self {
-        case "A"..."Z", "a"..."z",
-            "_", ":", "!", "?", "*", "/", "&",
-            "%", "^", "<", "=", ">", "~", "$":
-            return true
+        case "_",
+             ":",
+             "!",
+             "?",
+             "*",
+             "/",
+             "&",
+             "%",
+             "^",
+             "<",
+             "=",
+             ">",
+             "~",
+             "$",
+             "a"..."z",
+             "A"..."Z":
+            true
 
         default:
-            return false
+            false
         }
     }
 
     internal var isSexpSymbolTail: Bool {
         switch self {
-        case "0"..."9", "-", ".", "+":
-            return true
+        case "-",
+             ".",
+             "+",
+             "0"..."9":
+            true
 
         default:
-            return isSexpSymbolHead
+            isSexpSymbolHead
         }
     }
 
     internal var isSexpVisible: Bool {
         switch self {
         case "\u{00}"..."\u{1f}",
-            "\u{7f}"..."\u{a0}",
-            "\u{034f}":
+             "\u{7f}"..."\u{a0}",
+             "\u{034f}":
             false
 
         default:

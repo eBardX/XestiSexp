@@ -36,8 +36,8 @@ extension SexpEncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
 
     // MARK: Internal Instance Methods
 
-    internal func encode<T: Encodable>(_ value: T,
-                                       forKey key: Key) throws {
+    internal func encode(_ value: some Encodable,
+                         forKey key: Key) throws {
         let container = SexpEncoderImpl.SingleValueContainer(encoderImpl: encoderImpl,
                                                              codingPath: codingPath + [key])
 

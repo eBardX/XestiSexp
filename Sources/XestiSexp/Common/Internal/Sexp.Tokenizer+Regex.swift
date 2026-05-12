@@ -8,13 +8,13 @@ extension Sexp.Tokenizer {
 
     // MARK: Internal Type Properties
 
-    nonisolated(unsafe) internal static let regexBooleanR5RS = Regex<Substring> {
+    internal nonisolated(unsafe) static let regexBooleanR5RS = Regex<Substring> {
         "#"
         boolean
         delimiterLookaheadR5RS
     }.ignoresCase()
 
-    nonisolated(unsafe) internal static let regexBooleanR7RS = Regex<Substring> {
+    internal nonisolated(unsafe) static let regexBooleanR7RS = Regex<Substring> {
         "#"
         ChoiceOf {
             boolean
@@ -24,11 +24,11 @@ extension Sexp.Tokenizer {
         delimiterLookaheadR7RS
     }.ignoresCase()
 
-    nonisolated(unsafe) internal static let regexBytevectorR7RS = Regex<Substring> {
+    internal nonisolated(unsafe) static let regexBytevectorR7RS = Regex<Substring> {
         "#u8("
     }.ignoresCase()
 
-    nonisolated(unsafe) internal static let regexCharacterR5RS = Regex<Substring> {
+    internal nonisolated(unsafe) static let regexCharacterR5RS = Regex<Substring> {
         ChoiceOf {
             charAny
             charNameR5RS
@@ -36,7 +36,7 @@ extension Sexp.Tokenizer {
         delimiterLookaheadR5RS
     }
 
-    nonisolated(unsafe) internal static let regexCharacterR7RS = Regex<Substring> {
+    internal nonisolated(unsafe) static let regexCharacterR7RS = Regex<Substring> {
         ChoiceOf {
             charAny
             charNameR7RS
@@ -45,17 +45,17 @@ extension Sexp.Tokenizer {
         delimiterLookaheadR7RS
     }
 
-    nonisolated(unsafe) internal static let regexDotR5RS = Regex<Substring> {
+    internal nonisolated(unsafe) static let regexDotR5RS = Regex<Substring> {
         "."
         delimiterLookaheadR5RS
     }
 
-    nonisolated(unsafe) internal static let regexDotR7RS = Regex<Substring> {
+    internal nonisolated(unsafe) static let regexDotR7RS = Regex<Substring> {
         "."
         delimiterLookaheadR7RS
     }
 
-    nonisolated(unsafe) internal static let regexNumberR5RS = Regex<Substring> {
+    internal nonisolated(unsafe) static let regexNumberR5RS = Regex<Substring> {
         ChoiceOf {
             binNumberR5RS
             octNumberR5RS
@@ -65,7 +65,7 @@ extension Sexp.Tokenizer {
         delimiterLookaheadR5RS
     }.ignoresCase()
 
-    nonisolated(unsafe) internal static let regexNumberR7RS = Regex<Substring> {
+    internal nonisolated(unsafe) static let regexNumberR7RS = Regex<Substring> {
         ChoiceOf {
             binNumberR7RS
             octNumberR7RS
@@ -75,15 +75,15 @@ extension Sexp.Tokenizer {
         delimiterLookaheadR7RS
     }.ignoresCase()
 
-    nonisolated(unsafe) internal static let regexReservedR5RS = Regex<Substring> {
+    internal nonisolated(unsafe) static let regexReservedR5RS = Regex<Substring> {
         reservedR5RS
     }
 
-    nonisolated(unsafe) internal static let regexReservedR7RS = Regex<Substring> {
+    internal nonisolated(unsafe) static let regexReservedR7RS = Regex<Substring> {
         reservedR7RS
     }
 
-    nonisolated(unsafe) internal static let regexStringR5RS = Regex<Substring> {
+    internal nonisolated(unsafe) static let regexStringR5RS = Regex<Substring> {
         "\""
         ZeroOrMore {
             strElementR5RS
@@ -91,7 +91,7 @@ extension Sexp.Tokenizer {
         "\""
     }
 
-    nonisolated(unsafe) internal static let regexStringR7RS = Regex<Substring> {
+    internal nonisolated(unsafe) static let regexStringR7RS = Regex<Substring> {
         "\""
         ZeroOrMore {
             strElementR7RS
@@ -99,7 +99,7 @@ extension Sexp.Tokenizer {
         "\""
     }
 
-    nonisolated(unsafe) internal static let regexSymbolR5RS = Regex<Substring> {
+    internal nonisolated(unsafe) static let regexSymbolR5RS = Regex<Substring> {
         ChoiceOf {
             "..."
             sign
@@ -113,7 +113,7 @@ extension Sexp.Tokenizer {
         delimiterLookaheadR5RS
     }
 
-    nonisolated(unsafe) internal static let regexSymbolR7RS = Regex<Substring> {
+    internal nonisolated(unsafe) static let regexSymbolR7RS = Regex<Substring> {
         ChoiceOf {
             symPeculiarR7RS
             Regex<Substring> {
@@ -140,7 +140,7 @@ extension Sexp.Tokenizer {
 
     // MARK: Private Type Properties
 
-    nonisolated(unsafe) private static let binComplexR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let binComplexR5RS = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 binRealR5RS
@@ -170,7 +170,7 @@ extension Sexp.Tokenizer {
         }
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let binComplexR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let binComplexR7RS = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 binRealR7RS
@@ -206,17 +206,17 @@ extension Sexp.Tokenizer {
         }
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let binNumberR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let binNumberR5RS = Regex<Substring> {
         binPrefix
         binComplexR5RS
     }
 
-    nonisolated(unsafe) private static let binNumberR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let binNumberR7RS = Regex<Substring> {
         binPrefix
         binComplexR7RS
     }
 
-    nonisolated(unsafe) private static let binPrefix = Regex<Substring> {
+    private nonisolated(unsafe) static let binPrefix = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 binRadix
@@ -229,11 +229,11 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let binRadix = Regex<Substring> {
+    private nonisolated(unsafe) static let binRadix = Regex<Substring> {
         "#b"
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let binRealR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let binRealR5RS = Regex<Substring> {
         Regex<Substring> {
             Optionally {
                 sign
@@ -242,7 +242,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let binRealR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let binRealR7RS = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 Optionally {
@@ -257,7 +257,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let binUIntegerR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let binUIntegerR5RS = Regex<Substring> {
         OneOrMore {
             binDigit
         }
@@ -266,13 +266,13 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let binUIntegerR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let binUIntegerR7RS = Regex<Substring> {
         OneOrMore {
             binDigit
         }
     }
 
-    nonisolated(unsafe) private static let binURealR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let binURealR5RS = Regex<Substring> {
         binUIntegerR5RS
         Optionally {
             "/"
@@ -280,7 +280,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let binURealR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let binURealR7RS = Regex<Substring> {
         binUIntegerR7RS
         Optionally {
             "/"
@@ -288,17 +288,17 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let charAny = Regex<Substring> {
+    private nonisolated(unsafe) static let charAny = Regex<Substring> {
         "#\\"
         /./
     }
 
-    nonisolated(unsafe) private static let charHexScalarValueR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let charHexScalarValueR7RS = Regex<Substring> {
         "#\\x"
         hexUIntegerR7RS
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let charNameR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let charNameR5RS = Regex<Substring> {
         "#\\"
         ChoiceOf {
             "newline"
@@ -306,7 +306,7 @@ extension Sexp.Tokenizer {
         }
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let charNameR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let charNameR7RS = Regex<Substring> {
         "#\\"
         ChoiceOf {
             "alarm"
@@ -321,7 +321,7 @@ extension Sexp.Tokenizer {
         }
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let decComplexR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let decComplexR5RS = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 decRealR5RS
@@ -351,7 +351,7 @@ extension Sexp.Tokenizer {
         }
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let decComplexR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let decComplexR7RS = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 decRealR7RS
@@ -387,17 +387,17 @@ extension Sexp.Tokenizer {
         }
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let decNumberR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let decNumberR5RS = Regex<Substring> {
         decPrefix
         decComplexR5RS
     }
 
-    nonisolated(unsafe) private static let decNumberR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let decNumberR7RS = Regex<Substring> {
         decPrefix
         decComplexR7RS
     }
 
-    nonisolated(unsafe) private static let decPrefix = Regex<Substring> {
+    private nonisolated(unsafe) static let decPrefix = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 decRadix
@@ -410,13 +410,13 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let decRadix = Regex<Substring> {
+    private nonisolated(unsafe) static let decRadix = Regex<Substring> {
         Optionally {
             "#d"
         }
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let decRealR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let decRealR5RS = Regex<Substring> {
         Regex<Substring> {
             Optionally {
                 sign
@@ -425,7 +425,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let decRealR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let decRealR7RS = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 Optionally {
@@ -440,7 +440,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let decSuffixR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let decSuffixR5RS = Regex<Substring> {
         exponentR5RS
         Optionally {
             sign
@@ -450,7 +450,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let decSuffixR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let decSuffixR7RS = Regex<Substring> {
         exponentR7RS
         Optionally {
             sign
@@ -458,7 +458,7 @@ extension Sexp.Tokenizer {
         decUIntegerR7RS
     }
 
-    nonisolated(unsafe) private static let decUIntegerR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let decUIntegerR5RS = Regex<Substring> {
         OneOrMore {
             decDigit
         }
@@ -467,13 +467,13 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let decUIntegerR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let decUIntegerR7RS = Regex<Substring> {
         OneOrMore {
             decDigit
         }
     }
 
-    nonisolated(unsafe) private static let decUFloatR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let decUFloatR5RS = Regex<Substring> {
         ChoiceOf {
             decUIntegerR5RS
             Regex<Substring> {
@@ -515,7 +515,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let decUFloatR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let decUFloatR7RS = Regex<Substring> {
         ChoiceOf {
             decUIntegerR7RS
             Regex<Substring> {
@@ -535,7 +535,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let decURealR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let decURealR5RS = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 decUIntegerR5RS
@@ -548,7 +548,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let decURealR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let decURealR7RS = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 decUIntegerR7RS
@@ -561,7 +561,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let delimiterLookaheadR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let delimiterLookaheadR5RS = Regex<Substring> {
         Lookahead {
             ChoiceOf {
                 delimiterR5RS
@@ -570,7 +570,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let delimiterLookaheadR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let delimiterLookaheadR7RS = Regex<Substring> {
         Lookahead {
             ChoiceOf {
                 delimiterR7RS
@@ -579,7 +579,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let exactness = Regex<Substring> {
+    private nonisolated(unsafe) static let exactness = Regex<Substring> {
         Optionally {
             Regex<Substring> {
                 "#"
@@ -588,7 +588,7 @@ extension Sexp.Tokenizer {
         }
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let hexComplexR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let hexComplexR5RS = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 hexRealR5RS
@@ -618,7 +618,7 @@ extension Sexp.Tokenizer {
         }
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let hexComplexR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let hexComplexR7RS = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 hexRealR7RS
@@ -654,17 +654,17 @@ extension Sexp.Tokenizer {
         }
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let hexNumberR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let hexNumberR5RS = Regex<Substring> {
         hexPrefix
         hexComplexR5RS
     }
 
-    nonisolated(unsafe) private static let hexNumberR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let hexNumberR7RS = Regex<Substring> {
         hexPrefix
         hexComplexR7RS
     }
 
-    nonisolated(unsafe) private static let hexPrefix = Regex<Substring> {
+    private nonisolated(unsafe) static let hexPrefix = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 hexRadix
@@ -677,11 +677,11 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let hexRadix = Regex<Substring> {
+    private nonisolated(unsafe) static let hexRadix = Regex<Substring> {
         "#x"
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let hexRealR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let hexRealR5RS = Regex<Substring> {
         Regex<Substring> {
             Optionally {
                 sign
@@ -690,7 +690,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let hexRealR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let hexRealR7RS = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 Optionally {
@@ -705,7 +705,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let hexUIntegerR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let hexUIntegerR5RS = Regex<Substring> {
         OneOrMore {
             hexDigit
         }
@@ -714,13 +714,13 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let hexUIntegerR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let hexUIntegerR7RS = Regex<Substring> {
         OneOrMore {
             hexDigit
         }
     }
 
-    nonisolated(unsafe) private static let hexURealR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let hexURealR5RS = Regex<Substring> {
         hexUIntegerR5RS
         Optionally {
             "/"
@@ -728,7 +728,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let hexURealR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let hexURealR7RS = Regex<Substring> {
         hexUIntegerR7RS
         Optionally {
             "/"
@@ -736,7 +736,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let infnanR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let infnanR7RS = Regex<Substring> {
         ChoiceOf {
             "inf"
             "nan"
@@ -744,18 +744,18 @@ extension Sexp.Tokenizer {
         ".0"
     }
 
-    nonisolated(unsafe) private static let inlineHexEscapeR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let inlineHexEscapeR7RS = Regex<Substring> {
         "\\x"
         hexUIntegerR7RS
         ";"
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let mnemonicEscapeR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let mnemonicEscapeR7RS = Regex<Substring> {
         "\\"
         mnemonic
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let octComplexR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let octComplexR5RS = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 octRealR5RS
@@ -785,7 +785,7 @@ extension Sexp.Tokenizer {
         }
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let octComplexR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let octComplexR7RS = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 octRealR7RS
@@ -821,17 +821,17 @@ extension Sexp.Tokenizer {
         }
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let octNumberR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let octNumberR5RS = Regex<Substring> {
         octPrefix
         octComplexR5RS
     }
 
-    nonisolated(unsafe) private static let octNumberR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let octNumberR7RS = Regex<Substring> {
         octPrefix
         octComplexR7RS
     }
 
-    nonisolated(unsafe) private static let octPrefix = Regex<Substring> {
+    private nonisolated(unsafe) static let octPrefix = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 octRadix
@@ -844,11 +844,11 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let octRadix = Regex<Substring> {
+    private nonisolated(unsafe) static let octRadix = Regex<Substring> {
         "#o"
     }.ignoresCase()
 
-    nonisolated(unsafe) private static let octRealR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let octRealR5RS = Regex<Substring> {
         Regex<Substring> {
             Optionally {
                 sign
@@ -857,7 +857,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let octRealR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let octRealR7RS = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
                 Optionally {
@@ -872,7 +872,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let octUIntegerR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let octUIntegerR5RS = Regex<Substring> {
         OneOrMore {
             octDigit
         }
@@ -881,13 +881,13 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let octUIntegerR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let octUIntegerR7RS = Regex<Substring> {
         OneOrMore {
             octDigit
         }
     }
 
-    nonisolated(unsafe) private static let octURealR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let octURealR5RS = Regex<Substring> {
         octUIntegerR5RS
         Optionally {
             "/"
@@ -895,7 +895,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let octURealR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let octURealR7RS = Regex<Substring> {
         octUIntegerR7RS
         Optionally {
             "/"
@@ -903,7 +903,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let strElementR5RS = Regex<Substring> {
+    private nonisolated(unsafe) static let strElementR5RS = Regex<Substring> {
         ChoiceOf {
             CharacterClass.anyOf("\"\\").inverted
             "\\\""
@@ -911,7 +911,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let strElementR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let strElementR7RS = Regex<Substring> {
         ChoiceOf {
             CharacterClass.anyOf("\"\\").inverted
             inlineHexEscapeR7RS
@@ -930,7 +930,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let symElementR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let symElementR7RS = Regex<Substring> {
         ChoiceOf {
             CharacterClass.anyOf("|\\").inverted
             inlineHexEscapeR7RS
@@ -940,7 +940,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let symPeculiarR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let symPeculiarR7RS = Regex<Substring> {
         ChoiceOf {
             sign
             Regex<Substring> {
@@ -966,7 +966,7 @@ extension Sexp.Tokenizer {
         }
     }
 
-    nonisolated(unsafe) private static let symSignSubsequentR7RS = Regex<Substring> {
+    private nonisolated(unsafe) static let symSignSubsequentR7RS = Regex<Substring> {
         ChoiceOf {
             symInitial
             sign
@@ -982,7 +982,7 @@ extension Sexp.Tokenizer {
     private static let mnemonic: CharacterClass   = .anyOf("abnrt")
     private static let octDigit: CharacterClass   = "0"..."7"
     private static let sign: CharacterClass       = .anyOf("-+")
-    private static let whitespace: CharacterClass = .anyOf(" \t")
+    // private static let whitespace: CharacterClass = .anyOf(" \t")
 
     private static let delimiterR5RS: CharacterClass = .anyOf(" \n\r\t;\"()")
     private static let delimiterR7RS: CharacterClass = delimiterR5RS.union(.anyOf("|"))

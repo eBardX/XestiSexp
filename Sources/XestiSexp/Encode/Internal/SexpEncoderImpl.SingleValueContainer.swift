@@ -100,10 +100,10 @@ extension SexpEncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
     internal func encode(_ value: String) throws {
         try _checkStorageEmpty(value)
 
-        if Sexp.Symbol.isSpecial(value) {
-            storage = Sexp(string: value)
+        storage = if Sexp.Symbol.isSpecial(value) {
+            Sexp(string: value)
         } else {
-            storage = Sexp(symbol: Sexp.Symbol(value, false))
+            Sexp(symbol: Sexp.Symbol(value, false))
         }
     }
 
@@ -144,7 +144,7 @@ extension SexpEncoderImpl.SingleValueContainer: SingleValueEncodingContainer {
         storage = Sexp(number: Sexp.Number(value))
     }
 
-    internal func encode<T: Encodable>(_ value: T) throws {
+    internal func encode(_ value: some Encodable) throws {
         try _checkStorageEmpty(value)
 
         if let numberValue = value as? Sexp.Number {

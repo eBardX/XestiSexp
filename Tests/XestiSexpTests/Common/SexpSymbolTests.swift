@@ -10,7 +10,7 @@ struct SexpSymbolTests {
 
 extension SexpSymbolTests {
     @Test
-    func test_equality() {
+    func equality() {
         let sym1 = Sexp.Symbol("foo", false)
         let sym2 = Sexp.Symbol("foo", false)
         let sym3 = Sexp.Symbol("bar", false)
@@ -20,7 +20,7 @@ extension SexpSymbolTests {
     }
 
     @Test
-    func test_hashable() {
+    func hashable() {
         let sym1 = Sexp.Symbol("foo", false)
         let sym2 = Sexp.Symbol("foo", false)
 
@@ -36,7 +36,7 @@ extension SexpSymbolTests {
     }
 
     @Test
-    func test_init_special() {
+    func init_special() {
         let sym = Sexp.Symbol("hello world", true)
 
         #expect(sym.stringValue == "hello world")
@@ -44,7 +44,7 @@ extension SexpSymbolTests {
     }
 
     @Test
-    func test_init_stringValue() throws {
+    func init_stringValue() throws {
         let sym = try #require(Sexp.Symbol(stringValue: "foo"))
 
         #expect(sym.stringValue == "foo")
@@ -52,7 +52,7 @@ extension SexpSymbolTests {
     }
 
     @Test
-    func test_init_stringValue_special() throws {
+    func init_stringValue_special() throws {
         let sym = try #require(Sexp.Symbol(stringValue: "foo bar"))
 
         #expect(sym.stringValue == "foo bar")
@@ -60,7 +60,7 @@ extension SexpSymbolTests {
     }
 
     @Test
-    func test_isSpecial_false() {
+    func isSpecial_false() {
         #expect(!Sexp.Symbol.isSpecial("foo"))
         #expect(!Sexp.Symbol.isSpecial("foo-bar"))
         #expect(!Sexp.Symbol.isSpecial("foo.bar"))
@@ -69,7 +69,7 @@ extension SexpSymbolTests {
     }
 
     @Test
-    func test_isSpecial_true() {
+    func isSpecial_true() {
         #expect(Sexp.Symbol.isSpecial(""))
         #expect(Sexp.Symbol.isSpecial("foo bar"))
         #expect(Sexp.Symbol.isSpecial("123"))

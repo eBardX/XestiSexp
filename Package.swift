@@ -35,5 +35,5 @@ let package = Package(name: "XestiSexp",
                                             dependencies: [.product(name: "XestiNumbers",
                                                                     package: "XestiNumbers"),
                                                            .target(name: "XestiSexp")],
-                                        swiftSettings: swiftSettings)],
+                                            swiftSettings: swiftSettings)],
                       swiftLanguageModes: [.v6])

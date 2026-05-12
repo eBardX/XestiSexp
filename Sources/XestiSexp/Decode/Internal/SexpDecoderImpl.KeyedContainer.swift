@@ -150,8 +150,8 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         try _fetchValue(key) == Sexp()
     }
 
-    internal func nestedContainer<NestedKey>(keyedBy type: NestedKey.Type,
-                                             forKey key: Key) throws -> KeyedDecodingContainer<NestedKey> where NestedKey: CodingKey {
+    internal func nestedContainer<NestedKey: CodingKey>(keyedBy type: NestedKey.Type,
+                                                        forKey key: Key) throws -> KeyedDecodingContainer<NestedKey> {
         try _decoderForKey(key).container(keyedBy: type)
     }
 
@@ -170,9 +170,9 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
     // MARK: Private Instance Methods
 
     private func _decoderForKey(_ key: any CodingKey) throws -> SexpDecoderImpl {
-        SexpDecoderImpl(from: try _fetchValue(key),
-                        codingPath: codingPath + [key],
-                        userInfo: decoderImpl.userInfo)
+        try SexpDecoderImpl(from: _fetchValue(key),
+                            codingPath: codingPath + [key],
+                            userInfo: decoderImpl.userInfo)
     }
 
     private func _decoderForKeyNoThrow(_ key: any CodingKey) -> SexpDecoderImpl {
@@ -189,8 +189,8 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                                userInfo: decoderImpl.userInfo)
     }
 
-    private func _fetchNumberValue<T>(_ type: T.Type,
-                                      _ key: any CodingKey) throws -> Sexp.Number {
+    private func _fetchNumberValue(_ type: (some Any).Type,
+                                   _ key: any CodingKey) throws -> Sexp.Number {
         let value = try _fetchValue(key)
 
         guard let numberValue = value.numberValue

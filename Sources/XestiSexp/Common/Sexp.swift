@@ -202,7 +202,6 @@ public struct Sexp {
 
     internal var arrayValue: [Self]? {
         var array: [Self] = []
-
         var sexp = self
 
     loop:

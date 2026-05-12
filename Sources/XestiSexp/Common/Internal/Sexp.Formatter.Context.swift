@@ -10,8 +10,8 @@ extension Sexp.Formatter {
 
         // MARK: Internal Instance Properties
 
-        internal var position: Int = 0
-        internal var workBuffer: String = ""
+        internal var position = 0
+        internal var workBuffer = ""
     }
 }
 
@@ -36,6 +36,7 @@ extension Sexp.Formatter.Context {
 
         position = 0
     }
+
     internal mutating func indent(to pos: Int) {
         guard pos > position
         else { return }

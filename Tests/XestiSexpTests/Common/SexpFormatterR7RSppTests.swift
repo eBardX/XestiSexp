@@ -11,7 +11,7 @@ struct SexpFormatterR7RSppTests {
 
 extension SexpFormatterR7RSppTests {
     @Test
-    func test_format_complex_list() throws {
+    func format_complex_list() throws {
         let sexp = Sexp(array: [Sexp(symbol: "a"),
                                 Sexp(symbol: "b"),
                                 Sexp(symbol: "c"),
@@ -24,7 +24,7 @@ extension SexpFormatterR7RSppTests {
     }
 
     @Test
-    func test_format_nested_complex() throws {
+    func format_nested_complex() throws {
         let sexp = Sexp(array: [Sexp(array: [Sexp(symbol: "a"),
                                              Sexp(symbol: "b")]),
                                 Sexp(array: [Sexp(symbol: "c"),
@@ -38,7 +38,7 @@ extension SexpFormatterR7RSppTests {
     }
 
     @Test
-    func test_format_simple_list() throws {
+    func format_simple_list() throws {
         let sexp = Sexp(array: [Sexp(symbol: "a"),
                                 Sexp(symbol: "b"),
                                 Sexp(symbol: "c")])
@@ -49,7 +49,7 @@ extension SexpFormatterR7RSppTests {
     }
 
     @Test
-    func test_format_simple_pair() throws {
+    func format_simple_pair() throws {
         let sexp = Sexp(head: Sexp(symbol: "x"),
                         tail: Sexp(symbol: "y"))
 
@@ -59,7 +59,7 @@ extension SexpFormatterR7RSppTests {
     }
 
     @Test
-    func test_format_vector_complex() throws {
+    func format_vector_complex() throws {
         let sexp = Sexp(vector: [Sexp(symbol: "a"),
                                  Sexp(symbol: "b"),
                                  Sexp(symbol: "c"),
@@ -72,7 +72,7 @@ extension SexpFormatterR7RSppTests {
     }
 
     @Test
-    func test_format_vector_simple() throws {
+    func format_vector_simple() throws {
         let sexp = Sexp(vector: [Sexp(symbol: "x"),
                                  Sexp(symbol: "y")])
 

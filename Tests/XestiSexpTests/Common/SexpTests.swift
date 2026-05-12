@@ -69,7 +69,7 @@ extension SexpTests {
     }
 
     @Test
-    func test_init_number() {
+    func init_number() {
         #expect(Sexp(number: 3.141592).numberValue == 3.141592)
         #expect(Sexp(number: -12_345).numberValue == -12_345)
         #expect(Sexp(number: 12_345).numberValue == 12_345)
@@ -82,12 +82,12 @@ extension SexpTests {
     }
 
     @Test
-    func test_null() {
+    func null() {
         #expect(Sexp().isNull)
     }
 
     @Test
-    func test_pair() {
+    func pair() {
         #expect(Sexp(head: Sexp(symbol: "x")).pairValue.require() == (Sexp(symbol: "x"), nil))
         #expect(Sexp(head: Sexp(symbol: "x"),
                      tail: Sexp(symbol: "y")).pairValue.require() == (Sexp(symbol: "x"),

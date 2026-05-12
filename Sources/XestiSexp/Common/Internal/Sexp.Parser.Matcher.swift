@@ -248,25 +248,33 @@ private func _convertEscapedCharacter(_ reader: inout SequenceReader<Substring>)
     else { return nil }
 
     switch chr {
-    case "\"", "\\", "|":
+    case "\"",
+         "\\",
+         "|":
         return chr
 
-    case "a", "A":
+    case "a",
+         "A":
         return "\u{07}"
 
-    case "b", "B":
+    case "b",
+         "B":
         return "\u{08}"
 
-    case "n", "N":
+    case "n",
+         "N":
         return "\u{0a}"
 
-    case "r", "R":
+    case "r",
+         "R":
         return "\u{0d}"
 
-    case "t", "T":
+    case "t",
+         "T":
         return "\u{09}"
 
-    case "x", "X":
+    case "x",
+         "X":
         var hexStr = ""
 
         while let hexChr = reader.read() {

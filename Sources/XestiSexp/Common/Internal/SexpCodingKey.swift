@@ -6,7 +6,7 @@ internal struct SexpCodingKey: CodingKey {
 
     init?(intValue: Int) {
         self.init(intValue)
-     }
+    }
 
     init?(stringValue: String) {
         self.init(stringValue)

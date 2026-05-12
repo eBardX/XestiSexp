@@ -12,20 +12,20 @@ struct SexpFormatterR5RSTests {
 
 extension SexpFormatterR5RSTests {
     @Test
-    func test_format_boolean() throws {
+    func format_boolean() throws {
         #expect(try fmt5(Sexp(boolean: true)) == "#t")
         #expect(try fmt5(Sexp(boolean: false)) == "#f")
     }
 
     @Test
-    func test_format_bytevector() throws {
+    func format_bytevector() throws {
         #expect(throws: (any Error).self) { try fmt5(Sexp(bytevector: [])) }
         #expect(throws: (any Error).self) { try fmt5(Sexp(bytevector: [255])) }
         #expect(throws: (any Error).self) { try fmt5(Sexp(bytevector: [1, 2, 3])) }
     }
 
     @Test
-    func test_format_character() throws {
+    func format_character() throws {
         #expect(try fmt5(Sexp(character: "z")) == "#\\z")
         #expect(throws: (any Error).self) { try fmt5(Sexp(character: "\u{07}")) }
         #expect(try fmt5(Sexp(character: "\u{0a}")) == "#\\newline")
@@ -34,12 +34,12 @@ extension SexpFormatterR5RSTests {
     }
 
     @Test
-    func test_format_null() throws {
+    func format_null() throws {
         #expect(try fmt5(Sexp()) == "()")
     }
 
     @Test
-    func test_format_number() throws {
+    func format_number() throws {
         #expect(try fmt5(Sexp(number: 3.141592)) == "3.141592")
         #expect(try fmt5(Sexp(number: -12_345)) == "-12345")
         #expect(try fmt5(Sexp(number: 12_345)) == "12345")
@@ -49,7 +49,7 @@ extension SexpFormatterR5RSTests {
     }
 
     @Test
-    func test_format_pair() throws {
+    func format_pair() throws {
         #expect(try fmt5(Sexp(head: Sexp(symbol: "x"))) == "(x)")
         #expect(try fmt5(Sexp(head: Sexp(symbol: "x"),
                               tail: Sexp(symbol: "y"))) == "(x . y)")
@@ -64,7 +64,7 @@ extension SexpFormatterR5RSTests {
     }
 
     @Test
-    func test_format_string() throws {
+    func format_string() throws {
         #expect(try fmt5(Sexp(string: "")) == "\"\"")
         #expect(try fmt5(Sexp(string: "Bilbo")) == "\"Bilbo\"")
         #expect(try fmt5(Sexp(string: "Bilbo Baggins")) == "\"Bilbo Baggins\"")
@@ -72,7 +72,7 @@ extension SexpFormatterR5RSTests {
     }
 
     @Test
-    func test_format_symbol() throws {
+    func format_symbol() throws {
         #expect(throws: (any Error).self) { try fmt5(Sexp(symbol: "")) }
         #expect(try fmt5(Sexp(symbol: "Frodo")) == "Frodo")
         #expect(throws: (any Error).self) { try fmt5(Sexp(symbol: "Frodo Baggins")) }
@@ -80,7 +80,7 @@ extension SexpFormatterR5RSTests {
     }
 
     @Test
-    func test_format_vector() throws {
+    func format_vector() throws {
         #expect(try fmt5(Sexp(vector: [])) == "#()")
         #expect(try fmt5(Sexp(vector: [Sexp(symbol: "x"),
                                        Sexp()])) == "#(x ())")

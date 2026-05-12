@@ -122,7 +122,7 @@ extension SexpDecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
 
     // MARK: Private Instance Methods
 
-    private func _fetchNumberValue<T>(_ type: T.Type) throws -> Sexp.Number {
+    private func _fetchNumberValue(_ type: (some Any).Type) throws -> Sexp.Number {
         guard let numberValue = value.numberValue
         else { throw DecodingError.makeTypeMismatchError(for: type,
                                                          at: codingPath,

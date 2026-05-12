@@ -29,7 +29,7 @@ extension SexpDescriptionTests {
     }
 
     @Test
-    func test_null() {
+    func null() {
         #expect(Sexp().description == "null")
     }
 
@@ -39,7 +39,7 @@ extension SexpDescriptionTests {
     }
 
     @Test
-    func test_pair() {
+    func pair() {
         #expect(Sexp(head: Sexp(symbol: "x")).description == "pair(symbol(x),null)")
         #expect(Sexp(head: Sexp(symbol: "x"),
                      tail: Sexp(symbol: "y")).description == "pair(symbol(x),symbol(y))")

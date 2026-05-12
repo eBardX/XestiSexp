@@ -22,7 +22,7 @@ extension SexpCodingKeyTests {
     }
 
     @Test
-    func test_hashable() {
+    func hashable() {
         let key1 = SexpCodingKey("name")
         let key2 = SexpCodingKey("name")
         let key3 = SexpCodingKey("age")
@@ -32,7 +32,7 @@ extension SexpCodingKeyTests {
     }
 
     @Test
-    func test_init_codingKey() {
+    func init_codingKey() {
         let original = SexpCodingKey("test")
         let copy = SexpCodingKey(original)
 
@@ -41,7 +41,7 @@ extension SexpCodingKeyTests {
     }
 
     @Test
-    func test_init_codingKey_int() {
+    func init_codingKey_int() {
         let original = SexpCodingKey(42)
         let copy = SexpCodingKey(original)
 
@@ -50,7 +50,7 @@ extension SexpCodingKeyTests {
     }
 
     @Test
-    func test_init_int() {
+    func init_int() {
         let key = SexpCodingKey(42)
 
         #expect(key.stringValue == "42")
@@ -58,7 +58,7 @@ extension SexpCodingKeyTests {
     }
 
     @Test
-    func test_init_intValue() throws {
+    func init_intValue() throws {
         let key = try #require(SexpCodingKey(intValue: 7))
 
         #expect(key.stringValue == "7")
@@ -66,7 +66,7 @@ extension SexpCodingKeyTests {
     }
 
     @Test
-    func test_init_string() {
+    func init_string() {
         let key = SexpCodingKey("name")
 
         #expect(key.stringValue == "name")
@@ -74,7 +74,7 @@ extension SexpCodingKeyTests {
     }
 
     @Test
-    func test_init_stringValue() throws {
+    func init_stringValue() throws {
         let key = try #require(SexpCodingKey(stringValue: "age"))
 
         #expect(key.stringValue == "age")

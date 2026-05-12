@@ -34,7 +34,7 @@ extension Sexp {
 
         // MARK: Private Type Properties
 
-        nonisolated(unsafe) private static let rulesCommon: [Rule] = [Rule(/'/, .quote),
+        private nonisolated(unsafe) static let rulesCommon: [Rule] = [Rule(/'/, .quote),
                                                                       Rule(/`/, .quasiquote),
                                                                       Rule(/,/, .unquote),
                                                                       Rule(/,@/, .unquoteSplicing),
@@ -46,7 +46,7 @@ extension Sexp {
                                                                       Rule(regex: /[ \n\r\t]+/,
                                                                            disposition: .skip(nil))]
 
-        nonisolated(unsafe) private static let rulesR5RS: [Rule] = [Rule(regexDotR5RS, .dot),
+        private nonisolated(unsafe) static let rulesR5RS: [Rule] = [Rule(regexDotR5RS, .dot),
                                                                     Rule(regexBooleanR5RS, .boolean),
                                                                     Rule(regexCharacterR5RS, .character),
                                                                     Rule(regexNumberR5RS, .number),
@@ -54,7 +54,7 @@ extension Sexp {
                                                                     Rule(regexStringR5RS, .string),
                                                                     Rule(regexSymbolR5RS, .symbol)]
 
-        nonisolated(unsafe) private static let rulesR7RS: [Rule] = [Rule(regexDotR7RS, .dot),
+        private nonisolated(unsafe) static let rulesR7RS: [Rule] = [Rule(regexDotR7RS, .dot),
                                                                     Rule(regexBooleanR7RS, .boolean),
                                                                     Rule(regexBytevectorR7RS, .byteVectorBegin),
                                                                     Rule(regexCharacterR7RS, .character),

@@ -11,7 +11,7 @@ struct SexpEncoderTests {
 
 extension SexpEncoderTests {
     @Test
-    func test_encode_custom() throws {
+    func encode_custom() throws {
         let manifest = MixedRecord(name: "foobar")
         let expectedValue = "((version 666) (name foobar))"
         let actualValue = try String(data: SexpEncoder().encode(manifest),

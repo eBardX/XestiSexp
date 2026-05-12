@@ -40,7 +40,7 @@ extension SexpEquatableTests {
     }
 
     @Test
-    func test_different_types() {
+    func different_types() {
         #expect(Sexp(boolean: true) != Sexp(string: "true"))
         #expect(Sexp(number: 0) != Sexp(boolean: false))
         #expect(Sexp() != Sexp(string: ""))
@@ -55,7 +55,7 @@ extension SexpEquatableTests {
     }
 
     @Test
-    func test_null() {
+    func null() {
         let sexp = Sexp()
 
         #expect(sexp == Sexp())
@@ -78,7 +78,7 @@ extension SexpEquatableTests {
     }
 
     @Test
-    func test_pair() {
+    func pair() {
         let sexpX = Sexp(head: Sexp(symbol: "x"))
         let sexpXY = Sexp(head: Sexp(symbol: "x"),
                           tail: Sexp(symbol: "y"))
