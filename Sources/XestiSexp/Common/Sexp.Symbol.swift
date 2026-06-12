@@ -78,16 +78,3 @@ extension Sexp.Symbol {
         return false
     }
 }
-
-// MARK: - Hashable
-
-extension Sexp.Symbol: Hashable {
-    public func hash(into hasher: inout Hasher) {
-        stringValue.hash(into: &hasher)
-    }
-}
-
-// MARK: - Sendable
-
-extension Sexp.Symbol: Sendable {
-}
