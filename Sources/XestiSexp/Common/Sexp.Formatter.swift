@@ -32,7 +32,8 @@ extension Sexp {
 
         // MARK: Public Instance Properties
 
-        /// Specifies whether formatting will pretty-print the S-expression.
+        /// A Boolean value indicating whether formatting will pretty-print the
+        /// S-expression.
         public let prettyPrint: Bool
 
         /// The syntax standard to apply when formatting an S-expression.
@@ -40,30 +41,30 @@ extension Sexp {
 
         /// The tracing verbosity to use when formatting an S-expression.
         public let tracing: Verbosity
-
-        // MARK: Public Instance Methods
-
-        /// Formats the provided S-expression into a string.
-        ///
-        /// - Parameter sexp:   The S-expression to format.
-        ///
-        /// - Returns:  The formatted S-expression.
-        ///
-        /// - Throws:   A ``Sexp/Error`` if the S-expression cannot be formatted
-        ///             in the current syntax standard.
-        public func format(_ sexp: Sexp) throws -> String {
-            var context = Self.Context()
-
-            try _formatDatum(sexp, &context)
-
-            return context.workBuffer
-        }
     }
 }
 
 // MARK: -
 
 extension Sexp.Formatter {
+
+    // MARK: Public Instance Methods
+
+    /// Formats the provided S-expression into a string.
+    ///
+    /// - Parameter sexp:   The S-expression to format.
+    ///
+    /// - Returns:  The formatted S-expression.
+    ///
+    /// - Throws:   A ``Sexp/Error`` if the S-expression cannot be formatted
+    ///             in the current syntax standard.
+    public func format(_ sexp: Sexp) throws -> String {
+        var context = Self.Context()
+
+        try _formatDatum(sexp, &context)
+
+        return context.workBuffer
+    }
 
     // MARK: Private Instance Methods
 

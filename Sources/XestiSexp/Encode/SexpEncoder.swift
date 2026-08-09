@@ -19,7 +19,8 @@ public struct SexpEncoder {
 
     // MARK: Public Instance Properties
 
-    /// Specifies whether encoding should pretty-print the S-expression.
+    /// A Boolean value indicating whether encoding should pretty-print the
+    /// S-expression.
     ///
     /// By default, pretty-printing is enabled.
     public var prettyPrint: Bool
@@ -37,15 +38,20 @@ public struct SexpEncoder {
     /// A dictionary you use to customize the encoding process by providing
     /// contextual information.
     public var userInfo: [CodingUserInfoKey: Any]
+}
+
+// MARK: -
+
+extension SexpEncoder {
 
     // MARK: Public Instance Methods
 
-    /// Returns an S-expression that represents an encoded version of the
-    /// provided value.
+    /// Returns the S-expression-encoded data representation of the provided
+    /// value.
     ///
     /// - Parameter value:  The value to encode as an S-expression.
     ///
-    /// - Returns:  The encoded S-expression.
+    /// - Returns:  The S-expression-encoded data.
     ///
     /// - Throws:   An `EncodingError` if the value cannot be encoded as an
     ///             S-expression.

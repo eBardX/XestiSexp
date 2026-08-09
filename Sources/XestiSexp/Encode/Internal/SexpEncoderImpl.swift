@@ -15,13 +15,20 @@ internal final class SexpEncoderImpl {
     internal let codingPath: [any CodingKey]
     internal let userInfo: [CodingUserInfoKey: Any]
 
-    internal var sexp: Sexp {
-        container?.sexp ?? Sexp()
-    }
-
     // MARK: Private Instance Properties
 
     private var container: (any SexpEncodingContainer)?
+}
+
+// MARK: -
+
+extension SexpEncoderImpl {
+
+    // MARK: Internal Instance Properties
+
+    internal var sexp: Sexp {
+        container?.sexp ?? Sexp()
+    }
 }
 
 // MARK: - Encoder

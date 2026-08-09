@@ -20,7 +20,7 @@ public struct Sexp {
         self.value = .boolean(value)
     }
 
-    /// Create an S-expression bytevector with the provided array of `UInt8`
+    /// Creates an S-expression bytevector with the provided array of `UInt8`
     /// values.
     ///
     /// - Parameter value:  The array of `UInt8` values to use for the new
@@ -29,7 +29,7 @@ public struct Sexp {
         self.value = .bytevector(value)
     }
 
-    /// Create an S-expression character with the provided `Character` value.
+    /// Creates an S-expression character with the provided `Character` value.
     ///
     /// - Parameter value:  The `Character` value to use for the new
     ///                     S-expression character.
@@ -37,7 +37,7 @@ public struct Sexp {
         self.value = .character(value)
     }
 
-    /// Create an S-expression pair with the provided head and tail
+    /// Creates an S-expression pair with the provided head and tail
     /// S-expressions.
     ///
     /// - Parameter hdValue:    The head S-expression to use for the new
@@ -50,7 +50,7 @@ public struct Sexp {
                            tlValue ?? Self())
     }
 
-    /// Create an S-expression number with the provided ``Number`` value.
+    /// Creates an S-expression number with the provided ``Number`` value.
     ///
     /// - Parameter value:  The ``Number`` value to use for the new S-expression
     ///                     number.
@@ -58,7 +58,7 @@ public struct Sexp {
         self.value = .number(value)
     }
 
-    /// Create an S-expression string with the provided `String` value.
+    /// Creates an S-expression string with the provided `String` value.
     ///
     /// - Parameter value:  The `String` value to use for the new S-expression
     ///                     string.
@@ -66,7 +66,7 @@ public struct Sexp {
         self.value = .string(value)
     }
 
-    /// Create an S-expression symbol with the provided ``Symbol`` value.
+    /// Creates an S-expression symbol with the provided ``Symbol`` value.
     ///
     /// - Parameter value:  The ``Symbol`` value to use for the new S-expression
     ///                     symbol.
@@ -74,13 +74,54 @@ public struct Sexp {
         self.value = .symbol(value)
     }
 
-    /// Create an S-expression vector with the provided array of S-expressions.
+    /// Creates an S-expression vector with the provided array of S-expressions.
     ///
     /// - Parameter value:  The array of S-expressions to use for the new
     ///                     S-expression vector.
     public init(vector value: [Self]) {
         self.value = .vector(value)
     }
+
+    // MARK: Internal Initializers
+
+    internal init(array: [Self]) {
+        var list = Self()
+
+        for element in array.reversed() {
+            list = Self(head: element,
+                        tail: list)
+        }
+
+        self = list
+    }
+
+    internal init(dictionary: [String: Self],
+                  orderedKeys: [String]) {
+        let pairs = orderedKeys.compactMap {
+            if let sexpValue = dictionary[$0] {
+                if Symbol.isSpecial($0) {
+                    Self(head: Self(string: $0),
+                         tail: Self(head: sexpValue))
+                } else {
+                    Self(head: Self(symbol: Symbol($0, false)),
+                         tail: Self(head: sexpValue))
+                }
+            } else {
+                nil
+            }
+        }
+
+        self = Self(array: pairs)
+    }
+
+    // MARK: Internal Instance Properties
+
+    internal let value: Value
+}
+
+// MARK: -
+
+extension Sexp {
 
     // MARK: Public Instance Properties
 
@@ -164,41 +205,7 @@ public struct Sexp {
         return rawValue
     }
 
-    // MARK: Internal Initializers
-
-    internal init(array: [Self]) {
-        var list = Self()
-
-        for element in array.reversed() {
-            list = Self(head: element,
-                        tail: list)
-        }
-
-        self = list
-    }
-
-    internal init(dictionary: [String: Self],
-                  orderedKeys: [String]) {
-        let pairs = orderedKeys.compactMap {
-            if let sexpValue = dictionary[$0] {
-                if Symbol.isSpecial($0) {
-                    Self(head: Self(string: $0),
-                         tail: Self(head: sexpValue))
-                } else {
-                    Self(head: Self(symbol: Symbol($0, false)),
-                         tail: Self(head: sexpValue))
-                }
-            } else {
-                nil
-            }
-        }
-
-        self = Self(array: pairs)
-    }
-
     // MARK: Internal Instance Properties
-
-    internal let value: Value
 
     internal var arrayValue: [Self]? {
         var array: [Self] = []
@@ -242,7 +249,20 @@ public struct Sexp {
         return (dict, keys)
     }
 
-    // MARK: Private Instance Methods
+    // MARK: Private Type Methods
+
+    private static func _extractKey(_ sexp: Self) -> String? {
+        switch sexp.value {
+        case let .string(key):
+            key
+
+        case let .symbol(key):
+            key.stringValue
+
+        default:
+            nil
+        }
+    }
 
     private static func _extractKeyValue(_ sexp: Self) -> (String, Self)? {
         switch sexp.value {
@@ -255,19 +275,6 @@ public struct Sexp {
 
         default:
             return nil
-        }
-    }
-
-    private static func _extractKey(_ sexp: Self) -> String? {
-        switch sexp.value {
-        case let .string(key):
-            key
-
-        case let .symbol(key):
-            key.stringValue
-
-        default:
-            nil
         }
     }
 

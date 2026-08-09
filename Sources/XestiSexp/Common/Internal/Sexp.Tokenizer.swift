@@ -28,10 +28,6 @@ extension Sexp {
 
         internal let syntax: Syntax
 
-        internal var tracing: Verbosity {
-            baseTokenizer.tracing
-        }
-
         // MARK: Private Type Properties
 
         private nonisolated(unsafe) static let rulesCommon: [Rule] = [Rule(/'/, .quote),
@@ -63,18 +59,6 @@ extension Sexp {
                                                                     Rule(regexStringR7RS, .string),
                                                                     Rule(regexSymbolR7RS, .symbol)]
 
-        // MARK: Private Type Methods
-
-        private static func _makeRules(_ syntax: Syntax) -> [Rule] {
-            switch syntax {
-            case .r5rs:
-                rulesCommon + rulesR5RS
-
-            case .r7rsPartial:
-                rulesCommon + rulesR7RS
-            }
-        }
-
         // MARK: Private Instance Properties
 
         private let baseTokenizer: BaseTokenizer
@@ -85,16 +69,37 @@ extension Sexp {
 
 extension Sexp.Tokenizer {
 
+    // MARK: Internal Instance Properties
+
+    internal var tracing: Verbosity {
+        baseTokenizer.tracing
+    }
+
     // MARK: Internal Instance Methods
 
     internal func tokenize(input: String) throws -> [Token] {
         try baseTokenizer.tokenize(input: input)
+    }
+
+    // MARK: Private Type Methods
+
+    private static func _makeRules(_ syntax: Sexp.Syntax) -> [Rule] {
+        switch syntax {
+        case .r5rs:
+            rulesCommon + rulesR5RS
+
+        case .r7rsPartial:
+            rulesCommon + rulesR7RS
+        }
     }
 }
 
 // MARK: -
 
 extension Tokenizer.Token.Kind {
+
+    // MARK: Internal Type Properties
+
     internal static let boolean         = Self("boolean")
     internal static let byteVectorBegin = Self("byteVectorBegin")
     internal static let character       = Self("character")

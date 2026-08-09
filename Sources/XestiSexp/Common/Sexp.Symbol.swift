@@ -9,22 +9,6 @@ extension Sexp {
     /// An S-expression symbol value.
     public struct Symbol: StringRepresentable {
 
-        // MARK: Public Type Methods
-
-        /// Determines if the provided string value is a valid representation
-        /// for a symbol value.
-        ///
-        /// - Note: _Any_ string value is considered a valid representation for
-        ///         a symbol value. Even an empty string.
-        ///
-        /// - Parameter stringValue:    The string value to check for validity.
-        ///
-        /// - Returns:  `true` when the provided string value is a valid
-        ///             representation for a symbol value; `false` otherwise.
-        public static func isValid(_ stringValue: String) -> Bool {
-            true
-        }
-
         // MARK: Public Initializers
 
         /// Creates a new symbol value with the provided string value.
@@ -64,6 +48,22 @@ extension Sexp {
 // MARK: -
 
 extension Sexp.Symbol {
+
+    // MARK: Public Type Methods
+
+    /// Determines if the provided string value is a valid representation
+    /// for a symbol value.
+    ///
+    /// - Note: _Any_ string value is considered a valid representation for
+    ///         a symbol value. Even an empty string.
+    ///
+    /// - Parameter stringValue:    The string value to check for validity.
+    ///
+    /// - Returns:  `true` when the provided string value is a valid
+    ///             representation for a symbol value; `false` otherwise.
+    public static func isValid(_ stringValue: String) -> Bool {
+        true
+    }
 
     // MARK: Internal Type Methods
 

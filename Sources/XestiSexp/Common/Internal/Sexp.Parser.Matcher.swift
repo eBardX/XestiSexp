@@ -19,7 +19,7 @@ extension Sexp.Parser {
             self.tokenMatcher = TokenMatcher(tokens)
         }
 
-        // MARK: Internal Instance Properties
+        // MARK: Private Instance Properties
 
         private let parser: Sexp.Parser
 

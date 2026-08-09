@@ -26,37 +26,42 @@ extension Sexp {
                                             tracing: tracing)
         }
 
-        // MARK: Public Instance Properties
-
-        /// The syntax standard applied when parsing an S-expression.
-        public var syntax: Syntax {
-            tokenizer.syntax
-        }
-
-        /// The tracing verbosity used when parsing an S-expression.
-        public var tracing: Verbosity {
-            tokenizer.tracing
-        }
-
-        // MARK: Public Instance Methods
-
-        /// Parses the provided input string into an S-expression.
-        ///
-        /// - Parameter input:  The input string to parse.
-        ///
-        /// - Returns:  The parsed S-expression.
-        ///
-        /// - Throws:   A ``Sexp/Error`` if the input string cannot be parsed as
-        ///             an S-expression.
-        public func parse(input: String) throws -> Sexp {
-            var matcher = try Matcher(parser: self,
-                                      tokens: tokenizer.tokenize(input: input))
-
-            return try matcher.matchSexp()
-        }
-
         // MARK: Private Instance Properties
 
         private let tokenizer: Sexp.Tokenizer
+    }
+}
+
+// MARK: -
+
+extension Sexp.Parser {
+
+    // MARK: Public Instance Properties
+
+    /// The syntax standard applied when parsing an S-expression.
+    public var syntax: Sexp.Syntax {
+        tokenizer.syntax
+    }
+
+    /// The tracing verbosity used when parsing an S-expression.
+    public var tracing: Verbosity {
+        tokenizer.tracing
+    }
+
+    // MARK: Public Instance Methods
+
+    /// Parses the provided input string into an S-expression.
+    ///
+    /// - Parameter input:  The input string to parse.
+    ///
+    /// - Returns:  The parsed S-expression.
+    ///
+    /// - Throws:   A ``Sexp/Error`` if the input string cannot be parsed as
+    ///             an S-expression.
+    public func parse(input: String) throws -> Sexp {
+        var matcher = try Matcher(parser: self,
+                                  tokens: tokenizer.tokenize(input: input))
+
+        return try matcher.matchSexp()
     }
 }

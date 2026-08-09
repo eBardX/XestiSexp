@@ -28,7 +28,7 @@ extension SexpSymbolTests {
     }
 
     @Test
-    func test_init() {
+    func init_notSpecial() {
         let sym = Sexp.Symbol("hello", false)
 
         #expect(sym.stringValue == "hello")
@@ -78,7 +78,7 @@ extension SexpSymbolTests {
     }
 
     @Test
-    func test_isValid() {
+    func isValid() {
         #expect(Sexp.Symbol.isValid("anything"))
         #expect(Sexp.Symbol.isValid(""))
         #expect(Sexp.Symbol.isValid("123"))

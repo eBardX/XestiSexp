@@ -19,7 +19,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func decode_error_invalid_data() {
+    func decode_errorInvalidData() {
         let data = Data([0xff])
 
         #expect(throws: DecodingError.self) {
@@ -28,7 +28,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func decode_error_invalid_sexp() {
+    func decode_errorInvalidSexp() {
         let data = Data("((((".utf8)
 
         #expect(throws: (any Error).self) {
@@ -37,7 +37,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func decode_error_key_not_found() {
+    func decode_errorKeyNotFound() {
         let data = Data("((name Alice))".utf8)
 
         #expect(throws: DecodingError.self) {
@@ -46,7 +46,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func decode_error_type_mismatch() {
+    func decode_errorTypeMismatch() {
         let data = Data("((name 42) (age 30))".utf8)
 
         #expect(throws: DecodingError.self) {
@@ -82,7 +82,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func decode_number_double() throws {
+    func decode_numberDouble() throws {
         let record = try decodeText(DoubleRecord.self,
                                     from: "((value 3.14))")
 
@@ -90,7 +90,7 @@ extension SexpDecoderTests {
     }
 
     @Test
-    func decode_string_quoted() throws {
+    func decode_stringQuoted() throws {
         let record = try decodeText(SimpleRecord.self,
                                     from: "((name \"hello world\") (age 1))")
 

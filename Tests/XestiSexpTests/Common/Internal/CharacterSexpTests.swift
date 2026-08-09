@@ -10,7 +10,7 @@ struct CharacterSexpTests {
 
 extension CharacterSexpTests {
     @Test
-    func test_isSexpSymbolHead() {
+    func isSexpSymbolHead() {
         #expect(Character("a").isSexpSymbolHead)
         #expect(Character("Z").isSexpSymbolHead)
         #expect(Character("_").isSexpSymbolHead)
@@ -36,7 +36,7 @@ extension CharacterSexpTests {
     }
 
     @Test
-    func test_isSexpSymbolTail() {
+    func isSexpSymbolTail() {
         #expect(Character("a").isSexpSymbolTail)
         #expect(Character("Z").isSexpSymbolTail)
         #expect(Character("0").isSexpSymbolTail)
@@ -51,7 +51,7 @@ extension CharacterSexpTests {
     }
 
     @Test
-    func test_isSexpVisible() {
+    func isSexpVisible() {
         #expect(Character("a").isSexpVisible)
         #expect(Character("Z").isSexpVisible)
         #expect(Character("0").isSexpVisible)
@@ -64,14 +64,14 @@ extension CharacterSexpTests {
     }
 
     @Test
-    func test_sexpHexScalarValues() {
+    func sexpHexScalarValues() {
         #expect(Character("a").sexpHexScalarValues == ["61"])
         #expect(Character("ø").sexpHexScalarValues == ["f8"])
         #expect(Character("\u{00}").sexpHexScalarValues == ["0"])
     }
 
     @Test
-    func test_sexpMnemonicEscape() {
+    func sexpMnemonicEscape() {
         #expect(Character("\u{07}").sexpMnemonicEscape == "\\a")
         #expect(Character("\u{08}").sexpMnemonicEscape == "\\b")
         #expect(Character("\u{09}").sexpMnemonicEscape == "\\t")
@@ -82,7 +82,7 @@ extension CharacterSexpTests {
     }
 
     @Test
-    func test_sexpNameR5RS() {
+    func sexpNameR5RS() {
         #expect(Character("\u{0a}").sexpNameR5RS == "newline")
         #expect(Character("\u{20}").sexpNameR5RS == "space")
         #expect(Character("a").sexpNameR5RS == nil)
@@ -90,7 +90,7 @@ extension CharacterSexpTests {
     }
 
     @Test
-    func test_sexpNameR7RS() {
+    func sexpNameR7RS() {
         #expect(Character("\u{00}").sexpNameR7RS == "null")
         #expect(Character("\u{07}").sexpNameR7RS == "alarm")
         #expect(Character("\u{08}").sexpNameR7RS == "backspace")

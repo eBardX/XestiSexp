@@ -10,13 +10,13 @@ struct SexpCodingKeyTests {
 
 extension SexpCodingKeyTests {
     @Test
-    func test_debugDescription() {
+    func debugDescription() {
         #expect(SexpCodingKey("name").debugDescription == "name")
         #expect(SexpCodingKey(42).debugDescription == "[42]")
     }
 
     @Test
-    func test_description() {
+    func description() {
         #expect(SexpCodingKey("name").description == "name")
         #expect(SexpCodingKey(42).description == "[42]")
     }

@@ -69,7 +69,7 @@ extension SexpErrorTests {
     }
 
     @Test
-    func parse_trailing_garbage() {
+    func parse_trailingGarbage() {
         #expect(throws: (any Error).self) {
             try Sexp.Parser(syntax: .r7rsPartial,
                             tracing: .silent).parse(input: "foo bar")

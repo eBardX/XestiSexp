@@ -31,6 +31,11 @@ public struct SexpDecoder {
     /// A dictionary you use to customize the decoding process by providing
     /// contextual information.
     public var userInfo: [CodingUserInfoKey: Any]
+}
+
+// MARK: -
+
+extension SexpDecoder {
 
     // MARK: Public Instance Methods
 

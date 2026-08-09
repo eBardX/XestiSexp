@@ -64,71 +64,35 @@ extension Character {
     }
 
     internal var sexpMnemonicEscape: String? {
-        switch self {
-        case "\u{07}":
-            "\\a"
-
-        case "\u{08}":
-            "\\b"
-
-        case "\u{09}":
-            "\\t"
-
-        case "\u{0a}":
-            "\\n"
-
-        case "\u{0d}":
-            "\\r"
-
-        default:
-            nil
-        }
+        Self.mnemonicEscapesByCharacter[self]
     }
 
     internal var sexpNameR5RS: String? {
-        switch self {
-        case "\u{0a}":
-            "newline"
-
-        case "\u{20}":
-            "space"
-
-        default:
-            nil
-        }
+        Self.namesR5RSByCharacter[self]
     }
 
     internal var sexpNameR7RS: String? {
-        switch self {
-        case "\u{00}":
-            "null"
-
-        case "\u{07}":
-            "alarm"
-
-        case "\u{08}":
-            "backspace"
-
-        case "\u{09}":
-            "tab"
-
-        case "\u{0a}":
-            "newline"
-
-        case "\u{0d}":
-            "return"
-
-        case "\u{1b}":
-            "escape"
-
-        case "\u{20}":
-            "space"
-
-        case "\u{7f}":
-            "delete"
-
-        default:
-            nil
-        }
+        Self.namesR7RSByCharacter[self]
     }
+
+    // MARK: Private Type Properties
+
+    private static let mnemonicEscapesByCharacter: [Character: String] = ["\u{07}": "\\a",
+                                                                          "\u{08}": "\\b",
+                                                                          "\u{09}": "\\t",
+                                                                          "\u{0a}": "\\n",
+                                                                          "\u{0d}": "\\r"]
+
+    private static let namesR5RSByCharacter: [Character: String] = ["\u{0a}": "newline",
+                                                                    "\u{20}": "space"]
+
+    private static let namesR7RSByCharacter: [Character: String] = ["\u{00}": "null",
+                                                                    "\u{07}": "alarm",
+                                                                    "\u{08}": "backspace",
+                                                                    "\u{09}": "tab",
+                                                                    "\u{0a}": "newline",
+                                                                    "\u{0d}": "return",
+                                                                    "\u{1b}": "escape",
+                                                                    "\u{20}": "space",
+                                                                    "\u{7f}": "delete"]
 }

@@ -206,6 +206,8 @@ extension Sexp.Tokenizer {
         }
     }.ignoresCase()
 
+    private static let binDigit: CharacterClass = "0"..."1"
+
     private nonisolated(unsafe) static let binNumberR5RS = Regex<Substring> {
         binPrefix
         binComplexR5RS
@@ -287,6 +289,8 @@ extension Sexp.Tokenizer {
             binUIntegerR7RS
         }
     }
+
+    private static let boolean: CharacterClass = .anyOf("ft")
 
     private nonisolated(unsafe) static let charAny = Regex<Substring> {
         "#\\"
@@ -387,6 +391,8 @@ extension Sexp.Tokenizer {
         }
     }.ignoresCase()
 
+    private static let decDigit: CharacterClass = "0"..."9"
+
     private nonisolated(unsafe) static let decNumberR5RS = Regex<Substring> {
         decPrefix
         decComplexR5RS
@@ -458,21 +464,6 @@ extension Sexp.Tokenizer {
         decUIntegerR7RS
     }
 
-    private nonisolated(unsafe) static let decUIntegerR5RS = Regex<Substring> {
-        OneOrMore {
-            decDigit
-        }
-        ZeroOrMore {
-            "#"
-        }
-    }
-
-    private nonisolated(unsafe) static let decUIntegerR7RS = Regex<Substring> {
-        OneOrMore {
-            decDigit
-        }
-    }
-
     private nonisolated(unsafe) static let decUFloatR5RS = Regex<Substring> {
         ChoiceOf {
             decUIntegerR5RS
@@ -535,6 +526,21 @@ extension Sexp.Tokenizer {
         }
     }
 
+    private nonisolated(unsafe) static let decUIntegerR5RS = Regex<Substring> {
+        OneOrMore {
+            decDigit
+        }
+        ZeroOrMore {
+            "#"
+        }
+    }
+
+    private nonisolated(unsafe) static let decUIntegerR7RS = Regex<Substring> {
+        OneOrMore {
+            decDigit
+        }
+    }
+
     private nonisolated(unsafe) static let decURealR5RS = Regex<Substring> {
         ChoiceOf {
             Regex<Substring> {
@@ -579,6 +585,10 @@ extension Sexp.Tokenizer {
         }
     }
 
+    private static let delimiterR5RS: CharacterClass = .anyOf(" \n\r\t;\"()")
+
+    private static let delimiterR7RS: CharacterClass = delimiterR5RS.union(.anyOf("|"))
+
     private nonisolated(unsafe) static let exactness = Regex<Substring> {
         Optionally {
             Regex<Substring> {
@@ -587,6 +597,10 @@ extension Sexp.Tokenizer {
             }
         }
     }.ignoresCase()
+
+    private static let exponentR5RS: CharacterClass = .anyOf("defls")
+
+    private static let exponentR7RS: CharacterClass = .anyOf("e")
 
     private nonisolated(unsafe) static let hexComplexR5RS = Regex<Substring> {
         ChoiceOf {
@@ -653,6 +667,8 @@ extension Sexp.Tokenizer {
             }
         }
     }.ignoresCase()
+
+    private static let hexDigit: CharacterClass = decDigit.union("a"..."f")
 
     private nonisolated(unsafe) static let hexNumberR5RS = Regex<Substring> {
         hexPrefix
@@ -750,6 +766,10 @@ extension Sexp.Tokenizer {
         ";"
     }.ignoresCase()
 
+    private static let letter: CharacterClass = "a"..."z"
+
+    private static let mnemonic: CharacterClass = .anyOf("abnrt")
+
     private nonisolated(unsafe) static let mnemonicEscapeR7RS = Regex<Substring> {
         "\\"
         mnemonic
@@ -820,6 +840,8 @@ extension Sexp.Tokenizer {
             }
         }
     }.ignoresCase()
+
+    private static let octDigit: CharacterClass = "0"..."7"
 
     private nonisolated(unsafe) static let octNumberR5RS = Regex<Substring> {
         octPrefix
@@ -903,6 +925,12 @@ extension Sexp.Tokenizer {
         }
     }
 
+    private static let reservedR5RS: CharacterClass = reservedR7RS.union(.anyOf("|"))
+
+    private static let reservedR7RS: CharacterClass = .anyOf("[]{}")
+
+    private static let sign: CharacterClass = .anyOf("-+")
+
     private nonisolated(unsafe) static let strElementR5RS = Regex<Substring> {
         ChoiceOf {
             CharacterClass.anyOf("\"\\").inverted
@@ -940,6 +968,8 @@ extension Sexp.Tokenizer {
         }
     }
 
+    private static let symInitial: CharacterClass = letter.union(symSpecialInitial)
+
     private nonisolated(unsafe) static let symPeculiarR7RS = Regex<Substring> {
         ChoiceOf {
             sign
@@ -974,25 +1004,11 @@ extension Sexp.Tokenizer {
         }
     }
 
-    private static let binDigit: CharacterClass   = "0"..."1"
-    private static let boolean: CharacterClass    = .anyOf("ft")
-    private static let decDigit: CharacterClass   = "0"..."9"
-    private static let hexDigit: CharacterClass   = decDigit.union("a"..."f")
-    private static let letter: CharacterClass     = "a"..."z"
-    private static let mnemonic: CharacterClass   = .anyOf("abnrt")
-    private static let octDigit: CharacterClass   = "0"..."7"
-    private static let sign: CharacterClass       = .anyOf("-+")
-    // private static let whitespace: CharacterClass = .anyOf(" \t")
+    private static let symSpecialInitial: CharacterClass = .anyOf("_:!?*/&%^<=>~$")
 
-    private static let delimiterR5RS: CharacterClass = .anyOf(" \n\r\t;\"()")
-    private static let delimiterR7RS: CharacterClass = delimiterR5RS.union(.anyOf("|"))
-    private static let exponentR5RS: CharacterClass  = .anyOf("defls")
-    private static let exponentR7RS: CharacterClass  = .anyOf("e")
-    private static let reservedR5RS: CharacterClass  = reservedR7RS.union(.anyOf("|"))
-    private static let reservedR7RS: CharacterClass  = .anyOf("[]{}")
-
-    private static let symInitial: CharacterClass           = letter.union(symSpecialInitial)
-    private static let symSpecialInitial: CharacterClass    = .anyOf("_:!?*/&%^<=>~$")
     private static let symSpecialSubsequent: CharacterClass = sign.union(.anyOf(".@"))
-    private static let symSubsequent: CharacterClass        = symInitial.union(decDigit).union(symSpecialSubsequent)
+
+    private static let symSubsequent: CharacterClass = symInitial.union(decDigit).union(symSpecialSubsequent)
+
+    // private static let whitespace: CharacterClass = .anyOf(" \t")
 }

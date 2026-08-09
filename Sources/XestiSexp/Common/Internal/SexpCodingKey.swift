@@ -2,21 +2,6 @@
 
 internal struct SexpCodingKey: CodingKey {
 
-    // MARK: Public Initializers
-
-    init?(intValue: Int) {
-        self.init(intValue)
-    }
-
-    init?(stringValue: String) {
-        self.init(stringValue)
-    }
-
-    // MARK: Public Instance Properties
-
-    var intValue: Int?
-    var stringValue: String
-
     // MARK: Internal Initializers
 
     internal init(_ intValue: Int) {
@@ -33,6 +18,19 @@ internal struct SexpCodingKey: CodingKey {
         self.intValue = nil
         self.stringValue = stringValue
     }
+
+    internal init?(intValue: Int) {
+        self.init(intValue)
+    }
+
+    internal init?(stringValue: String) {
+        self.init(stringValue)
+    }
+
+    // MARK: Internal Instance Properties
+
+    internal var intValue: Int?
+    internal var stringValue: String
 }
 
 // MARK: - CustomDebugStringConvertible
