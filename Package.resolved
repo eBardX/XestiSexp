@@ -1,5 +1,5 @@
 {
-  "originHash" : "0590f5932299a2fe1dffdb8e9fbed3591606acea73b35602ed0573d33a33b3c3",
+  "originHash" : "15017237ed50e6cba1473c0c28d6e3f6e62e97daadd2e316b464df9576d5e72d",
   "pins" : [
     {
       "identity" : "bigint",
@@ -24,16 +24,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eBardX/XestiNumbers.git",
       "state" : {
-        "revision" : "a469c8ec4f2c853f81ea82b1c5c0ba4375165fc4",
-        "version" : "1.1.1"
-      }
-    },
-    {
-      "identity" : "xestitokens",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/eBardX/XestiTokens.git",
-      "state" : {
-        "revision" : "8666051c1c67f05dcb02f3801f160f24399eb9fb",
+        "revision" : "96eeaff8b89f5d9ff094d1a8555f3303918d8022",
         "version" : "1.1.2"
       }
     },

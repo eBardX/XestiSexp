@@ -196,29 +196,6 @@ extension SexpFormatterTests {
     }
 
     @Test
-    func format_vectorComplex_r7rsPrettyPrint() throws {
-        let sexp = Sexp(vector: [Sexp(symbol: "a"),
-                                 Sexp(symbol: "b"),
-                                 Sexp(symbol: "c"),
-                                 Sexp(symbol: "d"),
-                                 Sexp(symbol: "e")])
-
-        let result = try fmt7pp(sexp)
-
-        #expect(result == "#(a\n  b\n  c\n  d\n  e\n)")
-    }
-
-    @Test
-    func format_vectorSimple_r7rsPrettyPrint() throws {
-        let sexp = Sexp(vector: [Sexp(symbol: "x"),
-                                 Sexp(symbol: "y")])
-
-        let result = try fmt7pp(sexp)
-
-        #expect(result == "#(x y)")
-    }
-
-    @Test
     func format_vector_r5rs() throws {
         #expect(try fmt5(Sexp(vector: [])) == "#()")
         #expect(try fmt5(Sexp(vector: [Sexp(symbol: "x"),
@@ -250,5 +227,28 @@ extension SexpFormatterTests {
         #expect(try fmt7(Sexp(vector: [Sexp(symbol: "x"),
                                        Sexp(vector: [Sexp(symbol: "y"),
                                                      Sexp(head: Sexp(symbol: "z"))])])) == "#(x #(y (z)))")
+    }
+
+    @Test
+    func format_vectorComplex_r7rsPrettyPrint() throws {
+        let sexp = Sexp(vector: [Sexp(symbol: "a"),
+                                 Sexp(symbol: "b"),
+                                 Sexp(symbol: "c"),
+                                 Sexp(symbol: "d"),
+                                 Sexp(symbol: "e")])
+
+        let result = try fmt7pp(sexp)
+
+        #expect(result == "#(a\n  b\n  c\n  d\n  e\n)")
+    }
+
+    @Test
+    func format_vectorSimple_r7rsPrettyPrint() throws {
+        let sexp = Sexp(vector: [Sexp(symbol: "x"),
+                                 Sexp(symbol: "y")])
+
+        let result = try fmt7pp(sexp)
+
+        #expect(result == "#(x y)")
     }
 }

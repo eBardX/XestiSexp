@@ -4,7 +4,7 @@ public import XestiNumbers
 
 extension Sexp {
 
-    // MARK: Public Nested Types
+    // MARK: Public Type Aliases
 
     /// An S-expression number value.
     public typealias Number = XestiNumbers.Number

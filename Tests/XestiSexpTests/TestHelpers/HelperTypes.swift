@@ -46,6 +46,12 @@ struct NestedRecord: Decodable {
     let inner: SimpleRecord
 }
 
+struct NotAKeyedValueError: Error {
+}
+
+struct NotAnUnkeyedValueError: Error {
+}
+
 struct OptionalRecord: Decodable {
     let value: String?
 }

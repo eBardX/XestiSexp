@@ -9,7 +9,7 @@ extension Sexp {
 
     internal struct Tokenizer {
 
-        // MARK: Internal Nested Types
+        // MARK: Internal Type Aliases
 
         internal typealias BaseTokenizer = XestiTokens.Tokenizer
         internal typealias Rule          = BaseTokenizer.Rule
