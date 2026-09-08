@@ -1,5 +1,5 @@
 {
-  "originHash" : "70b0cd58bcfcec8b55501608d533f511f8da1bf86c341ff5d711116fdcb48749",
+  "originHash" : "b35e573cd440f39c7d0d123157fddca02e975284b1c8510a7658bad5b40e4a38",
   "pins" : [
     {
       "identity" : "bigint",
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eBardX/XestiNumbers.git",
       "state" : {
-        "revision" : "06c205b60407e3a80263b36fc720f4713880a412",
-        "version" : "1.2.0"
+        "revision" : "be06956ab8435ea8257ff038eec7a0bb65a3878d",
+        "version" : "1.3.0"
       }
     },
     {
