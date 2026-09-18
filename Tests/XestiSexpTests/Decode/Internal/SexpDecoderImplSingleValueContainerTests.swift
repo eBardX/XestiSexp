@@ -34,6 +34,13 @@ extension SexpDecoderImplSingleValueContainerTests {
     }
 
     @Test
+    func decode_int_typeMismatch() {
+        #expect(throws: DecodingError.self) {
+            try makeSingleValueDecoderContainer(Sexp(number: 3.5)).decode(Int.self)
+        }
+    }
+
+    @Test
     func decode_number() throws {
         let number = Sexp.Number(42)
 

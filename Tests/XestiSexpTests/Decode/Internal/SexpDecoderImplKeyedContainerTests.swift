@@ -39,6 +39,15 @@ extension SexpDecoderImplKeyedContainerTests {
     }
 
     @Test
+    func decode_int_typeMismatch() {
+        #expect(throws: DecodingError.self) {
+            let container = try makeKeyedDecoderContainer("((age 30.5))")
+
+            _ = try container.decode(Int.self, forKey: SexpCodingKey("age"))
+        }
+    }
+
+    @Test
     func decode_keyNotFound() {
         #expect(throws: DecodingError.self) {
             let container = try makeKeyedDecoderContainer("()")

@@ -59,36 +59,36 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
 
     internal mutating func decode(_ type: Double.Type) throws -> Double {
-        try _fetchNumberValue(type).doubleValue
+        try _fetchRealNumberValue(type).doubleValue
     }
 
     internal mutating func decode(_ type: Float.Type) throws -> Float {
-        try _fetchNumberValue(type).floatValue
+        try _fetchRealNumberValue(type).floatValue
     }
 
     internal mutating func decode(_ type: Int.Type) throws -> Int {
-        try _fetchNumberValue(type).intValue
+        try _fetchExactIntegerNumberValue(type).intValue
     }
 
     internal mutating func decode(_ type: Int8.Type) throws -> Int8 {
-        try _fetchNumberValue(type).int8Value
+        try _fetchExactIntegerNumberValue(type).int8Value
     }
 
     internal mutating func decode(_ type: Int16.Type) throws -> Int16 {
-        try _fetchNumberValue(type).int16Value
+        try _fetchExactIntegerNumberValue(type).int16Value
     }
 
     internal mutating func decode(_ type: Int32.Type) throws -> Int32 {
-        try _fetchNumberValue(type).int32Value
+        try _fetchExactIntegerNumberValue(type).int32Value
     }
 
     internal mutating func decode(_ type: Int64.Type) throws -> Int64 {
-        try _fetchNumberValue(type).int64Value
+        try _fetchExactIntegerNumberValue(type).int64Value
     }
 
     @available(iOS 18.0, macOS 15.0, *)
     internal mutating func decode(_ type: Int128.Type) throws -> Int128 {
-        try _fetchNumberValue(type).int128Value
+        try _fetchExactIntegerNumberValue(type).int128Value
     }
 
     internal mutating func decode(_ type: String.Type) throws -> String {
@@ -105,28 +105,28 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
     }
 
     internal mutating func decode(_ type: UInt.Type) throws -> UInt {
-        try _fetchNumberValue(type).uintValue
+        try _fetchExactIntegerNumberValue(type).uintValue
     }
 
     internal mutating func decode(_ type: UInt8.Type) throws -> UInt8 {
-        try _fetchNumberValue(type).uint8Value
+        try _fetchExactIntegerNumberValue(type).uint8Value
     }
 
     internal mutating func decode(_ type: UInt16.Type) throws -> UInt16 {
-        try _fetchNumberValue(type).uint16Value
+        try _fetchExactIntegerNumberValue(type).uint16Value
     }
 
     internal mutating func decode(_ type: UInt32.Type) throws -> UInt32 {
-        try _fetchNumberValue(type).uint32Value
+        try _fetchExactIntegerNumberValue(type).uint32Value
     }
 
     internal mutating func decode(_ type: UInt64.Type) throws -> UInt64 {
-        try _fetchNumberValue(type).uint64Value
+        try _fetchExactIntegerNumberValue(type).uint64Value
     }
 
     @available(iOS 18.0, macOS 15.0, *)
     internal mutating func decode(_ type: UInt128.Type) throws -> UInt128 {
-        try _fetchNumberValue(type).uint128Value
+        try _fetchExactIntegerNumberValue(type).uint128Value
     }
 
     internal mutating func decode<T: Decodable>(_ type: T.Type) throws -> T {
@@ -189,6 +189,19 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
 
     // MARK: Private Instance Methods
 
+    private mutating func _fetchExactIntegerNumberValue(_ type: (some Any).Type) throws -> Sexp.Number {
+        let path = currentCodingPath
+        let numberValue = try _fetchNumberValue(type)
+
+        guard numberValue.isExact,
+              numberValue.isInteger
+        else { throw DecodingError.makeTypeMismatchError(for: type,
+                                                         at: path,
+                                                         message: "Expected an exact integer, instead found: \(numberValue)") }
+
+        return numberValue
+    }
+
     private mutating func _fetchNumberValue(_ type: (some Any).Type) throws -> Sexp.Number {
         let value = try _fetchValue(type)
 
@@ -198,6 +211,18 @@ extension SexpDecoderImpl.UnkeyedContainer: UnkeyedDecodingContainer {
                                                          message: "Expected a number, instead found: \(value)") }
 
         currentIndex += 1
+
+        return numberValue
+    }
+
+    private mutating func _fetchRealNumberValue(_ type: (some Any).Type) throws -> Sexp.Number {
+        let path = currentCodingPath
+        let numberValue = try _fetchNumberValue(type)
+
+        guard numberValue.isReal
+        else { throw DecodingError.makeTypeMismatchError(for: type,
+                                                         at: path,
+                                                         message: "Expected a real number, instead found: \(numberValue)") }
 
         return numberValue
     }

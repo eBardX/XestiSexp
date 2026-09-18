@@ -43,6 +43,15 @@ extension SexpDecoderImplUnkeyedContainerTests {
     }
 
     @Test
+    func decode_int_typeMismatch() throws {
+        var container = try makeUnkeyedDecoderContainer("(3.5)")
+
+        #expect(throws: DecodingError.self) {
+            try container.decode(Int.self)
+        }
+    }
+
+    @Test
     func decode_string() throws {
         var container = try makeUnkeyedDecoderContainer("(x)")
 

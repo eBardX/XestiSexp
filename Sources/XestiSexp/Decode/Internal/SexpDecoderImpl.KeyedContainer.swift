@@ -59,43 +59,43 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
 
     internal func decode(_ type: Double.Type,
                          forKey key: Key) throws -> Double {
-        try _fetchNumberValue(type, key).doubleValue
+        try _fetchRealNumberValue(type, key).doubleValue
     }
 
     internal func decode(_ type: Float.Type,
                          forKey key: Key) throws -> Float {
-        try _fetchNumberValue(type, key).floatValue
+        try _fetchRealNumberValue(type, key).floatValue
     }
 
     internal func decode(_ type: Int.Type,
                          forKey key: Key) throws -> Int {
-        try _fetchNumberValue(type, key).intValue
+        try _fetchExactIntegerNumberValue(type, key).intValue
     }
 
     internal func decode(_ type: Int8.Type,
                          forKey key: Key) throws -> Int8 {
-        try _fetchNumberValue(type, key).int8Value
+        try _fetchExactIntegerNumberValue(type, key).int8Value
     }
 
     internal func decode(_ type: Int16.Type,
                          forKey key: Key) throws -> Int16 {
-        try _fetchNumberValue(type, key).int16Value
+        try _fetchExactIntegerNumberValue(type, key).int16Value
     }
 
     internal func decode(_ type: Int32.Type,
                          forKey key: Key) throws -> Int32 {
-        try _fetchNumberValue(type, key).int32Value
+        try _fetchExactIntegerNumberValue(type, key).int32Value
     }
 
     internal func decode(_ type: Int64.Type,
                          forKey key: Key) throws -> Int64 {
-        try _fetchNumberValue(type, key).int64Value
+        try _fetchExactIntegerNumberValue(type, key).int64Value
     }
 
     @available(iOS 18.0, macOS 15.0, *)
     internal func decode(_ type: Int128.Type,
                          forKey key: Key) throws -> Int128 {
-        try _fetchNumberValue(type, key).int128Value
+        try _fetchExactIntegerNumberValue(type, key).int128Value
     }
 
     internal func decode(_ type: String.Type,
@@ -112,33 +112,33 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
 
     internal func decode(_ type: UInt.Type,
                          forKey key: Key) throws -> UInt {
-        try _fetchNumberValue(type, key).uintValue
+        try _fetchExactIntegerNumberValue(type, key).uintValue
     }
 
     internal func decode(_ type: UInt8.Type,
                          forKey key: Key) throws -> UInt8 {
-        try _fetchNumberValue(type, key).uint8Value
+        try _fetchExactIntegerNumberValue(type, key).uint8Value
     }
 
     internal func decode(_ type: UInt16.Type,
                          forKey key: Key) throws -> UInt16 {
-        try _fetchNumberValue(type, key).uint16Value
+        try _fetchExactIntegerNumberValue(type, key).uint16Value
     }
 
     internal func decode(_ type: UInt32.Type,
                          forKey key: Key) throws -> UInt32 {
-        try _fetchNumberValue(type, key).uint32Value
+        try _fetchExactIntegerNumberValue(type, key).uint32Value
     }
 
     internal func decode(_ type: UInt64.Type,
                          forKey key: Key) throws -> UInt64 {
-        try _fetchNumberValue(type, key).uint64Value
+        try _fetchExactIntegerNumberValue(type, key).uint64Value
     }
 
     @available(iOS 18.0, macOS 15.0, *)
     internal func decode(_ type: UInt128.Type,
                          forKey key: Key) throws -> UInt128 {
-        try _fetchNumberValue(type, key).uint128Value
+        try _fetchExactIntegerNumberValue(type, key).uint128Value
     }
 
     internal func decode<T: Decodable>(_ type: T.Type,
@@ -189,6 +189,19 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                                userInfo: decoderImpl.userInfo)
     }
 
+    private func _fetchExactIntegerNumberValue(_ type: (some Any).Type,
+                                               _ key: any CodingKey) throws -> Sexp.Number {
+        let numberValue = try _fetchNumberValue(type, key)
+
+        guard numberValue.isExact,
+              numberValue.isInteger
+        else { throw DecodingError.makeTypeMismatchError(for: type,
+                                                         at: codingPath + [key],
+                                                         message: "Expected an exact integer, instead found: \(numberValue)") }
+
+        return numberValue
+    }
+
     private func _fetchNumberValue(_ type: (some Any).Type,
                                    _ key: any CodingKey) throws -> Sexp.Number {
         let value = try _fetchValue(key)
@@ -197,6 +210,18 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
         else { throw DecodingError.makeTypeMismatchError(for: type,
                                                          at: codingPath + [key],
                                                          message: "Expected a number, instead found: \(value)") }
+
+        return numberValue
+    }
+
+    private func _fetchRealNumberValue(_ type: (some Any).Type,
+                                       _ key: any CodingKey) throws -> Sexp.Number {
+        let numberValue = try _fetchNumberValue(type, key)
+
+        guard numberValue.isReal
+        else { throw DecodingError.makeTypeMismatchError(for: type,
+                                                         at: codingPath + [key],
+                                                         message: "Expected a real number, instead found: \(numberValue)") }
 
         return numberValue
     }
