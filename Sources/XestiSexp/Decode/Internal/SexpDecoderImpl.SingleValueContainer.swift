@@ -50,28 +50,28 @@ extension SexpDecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     }
 
     internal func decode(_ type: Int.Type) throws -> Int {
-        try _fetchExactIntegerNumberValue(type).intValue
+        try _fetchInteger(type)
     }
 
     internal func decode(_ type: Int8.Type) throws -> Int8 {
-        try _fetchExactIntegerNumberValue(type).int8Value
+        try _fetchInteger(type)
     }
 
     internal func decode(_ type: Int16.Type) throws -> Int16 {
-        try _fetchExactIntegerNumberValue(type).int16Value
+        try _fetchInteger(type)
     }
 
     internal func decode(_ type: Int32.Type) throws -> Int32 {
-        try _fetchExactIntegerNumberValue(type).int32Value
+        try _fetchInteger(type)
     }
 
     internal func decode(_ type: Int64.Type) throws -> Int64 {
-        try _fetchExactIntegerNumberValue(type).int64Value
+        try _fetchInteger(type)
     }
 
     @available(iOS 18.0, macOS 15.0, *)
     internal func decode(_ type: Int128.Type) throws -> Int128 {
-        try _fetchExactIntegerNumberValue(type).int128Value
+        try _fetchInteger(type)
     }
 
     internal func decode(_ type: String.Type) throws -> String {
@@ -84,36 +84,32 @@ extension SexpDecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
     }
 
     internal func decode(_ type: UInt.Type) throws -> UInt {
-        try _fetchExactIntegerNumberValue(type).uintValue
+        try _fetchInteger(type)
     }
 
     internal func decode(_ type: UInt8.Type) throws -> UInt8 {
-        try _fetchExactIntegerNumberValue(type).uint8Value
+        try _fetchInteger(type)
     }
 
     internal func decode(_ type: UInt16.Type) throws -> UInt16 {
-        try _fetchExactIntegerNumberValue(type).uint16Value
+        try _fetchInteger(type)
     }
 
     internal func decode(_ type: UInt32.Type) throws -> UInt32 {
-        try _fetchExactIntegerNumberValue(type).uint32Value
+        try _fetchInteger(type)
     }
 
     internal func decode(_ type: UInt64.Type) throws -> UInt64 {
-        try _fetchExactIntegerNumberValue(type).uint64Value
+        try _fetchInteger(type)
     }
 
     @available(iOS 18.0, macOS 15.0, *)
     internal func decode(_ type: UInt128.Type) throws -> UInt128 {
-        try _fetchExactIntegerNumberValue(type).uint128Value
+        try _fetchInteger(type)
     }
 
     internal func decode<T: Decodable>(_ type: T.Type) throws -> T {
-        guard type == Sexp.Number.self,
-              let value = try _fetchNumberValue(type) as? T
-        else { return try T(from: decoderImpl) }
-
-        return value
+        try decoderImpl.decodeValue(type)
     }
 
     internal func decodeNil() -> Bool {
@@ -122,7 +118,7 @@ extension SexpDecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
 
     // MARK: Private Instance Methods
 
-    private func _fetchExactIntegerNumberValue(_ type: (some Any).Type) throws -> Sexp.Number {
+    private func _fetchInteger<T: FixedWidthInteger>(_ type: T.Type) throws -> T {
         let numberValue = try _fetchNumberValue(type)
 
         guard numberValue.isExact,
@@ -131,7 +127,11 @@ extension SexpDecoderImpl.SingleValueContainer: SingleValueDecodingContainer {
                                                          at: codingPath,
                                                          message: "Expected an exact integer, instead found: \(value)") }
 
-        return numberValue
+        guard let integer = numberValue.integer(as: type)
+        else { throw DecodingError.makeDataCorruptedError(at: codingPath,
+                                                          message: "Number \(numberValue) does not fit in \(type)") }
+
+        return integer
     }
 
     private func _fetchNumberValue(_ type: (some Any).Type) throws -> Sexp.Number {

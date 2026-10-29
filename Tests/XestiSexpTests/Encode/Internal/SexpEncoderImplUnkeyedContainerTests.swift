@@ -59,9 +59,15 @@ extension SexpEncoderImplUnkeyedContainerTests {
     }
 
     @Test
-    func superEncoder() {
+    func superEncoder() throws {
         let container = makeUnkeyedEncoderContainer()
 
-        _ = container.superEncoder()
+        try container.encode(1)
+
+        var superContainer = container.superEncoder().singleValueContainer()
+
+        try superContainer.encode(2)
+
+        #expect(try fmt5(container.sexp) == "(1 2)")
     }
 }

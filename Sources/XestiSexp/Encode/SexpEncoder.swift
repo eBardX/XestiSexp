@@ -56,12 +56,17 @@ extension SexpEncoder {
     /// - Throws:   An `EncodingError` if the value cannot be encoded as an
     ///             S-expression.
     public func encode(_ value: any Encodable) throws -> Data {
-        let encoder = SexpEncoderImpl(codingPath: [],
-                                      userInfo: userInfo)
+        //
+        // Through a single-value container, as keyed and unkeyed containers encode each value, so
+        // that a `Sexp.Number` is a number atom here too, not the string its own encoding makes.
+        //
+        let container = SexpEncoderImpl.SingleValueContainer(encoderImpl: SexpEncoderImpl(codingPath: [],
+                                                                                          userInfo: userInfo),
+                                                             codingPath: [])
 
-        try value.encode(to: encoder)
+        try container.encode(value)
 
-        return try _format(encoder.sexp)
+        return try _format(container.sexp)
     }
 
     // MARK: Private Instance Methods

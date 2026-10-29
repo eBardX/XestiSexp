@@ -43,12 +43,36 @@ extension SexpDecoderImplUnkeyedContainerTests {
     }
 
     @Test
+    func decode_int_outOfRange() throws {
+        var container = try makeUnkeyedDecoderContainer("(300)")
+
+        #expect(throws: DecodingError.self) {
+            try container.decode(Int8.self)
+        }
+
+        #expect(try container.decode(Int16.self) == 300)
+    }
+
+    @Test
     func decode_int_typeMismatch() throws {
         var container = try makeUnkeyedDecoderContainer("(3.5)")
 
         #expect(throws: DecodingError.self) {
             try container.decode(Int.self)
         }
+    }
+
+    @Test
+    func decode_mismatch_doesNotAdvanceIndex() throws {
+        var container = try makeUnkeyedDecoderContainer("(2.5 7)")
+
+        #expect(throws: DecodingError.self) {
+            try container.decode(Int.self)
+        }
+
+        #expect(container.currentIndex == 0)
+        #expect(try container.decode(Double.self) == 2.5)
+        #expect(try container.decode(Int.self) == 7)
     }
 
     @Test

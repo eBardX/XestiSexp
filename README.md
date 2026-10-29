@@ -35,7 +35,7 @@ To add XestiSexp to a Swift package, add it to the `dependencies` in your
 ```swift
 dependencies: [
     .package(url: "https://github.com/eBardX/XestiSexp.git",
-             .upToNextMajor(from: "4.1.0"))
+             .upToNextMajor(from: "5.0.0"))
 ]
 ```
 
@@ -96,9 +96,9 @@ let output = try Sexp.Formatter(prettyPrint: false,
 
 ## <a name="documentation">Documentation</a>
 
-Every public declaration carries a DocC comment; `SexpEncoder`, `SexpDecoder`,
-`Sexp.Parser`, and `Sexp.Formatter` in particular describe their behavior —
-and limitations — in detail.
+Every public declaration carries a DocC comment; see `SexpEncoder`,
+`SexpDecoder`, `Sexp.Parser`, and `Sexp.Formatter` for the details of what
+each supports.
 
 ## <a name="reference_documentation">Reference Documentation</a>
 

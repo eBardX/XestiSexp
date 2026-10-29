@@ -41,11 +41,8 @@ extension SexpEncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
         let container = SexpEncoderImpl.SingleValueContainer(encoderImpl: encoderImpl,
                                                              codingPath: codingPath + [key])
 
-        let tmpKey = key.stringValue
-
-        containers[tmpKey] = container
-
-        containerKeys.append(tmpKey)
+        _register(container,
+                  forKey: key)
 
         try container.encode(value)
     }
@@ -54,11 +51,8 @@ extension SexpEncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
         let container = SexpEncoderImpl.SingleValueContainer(encoderImpl: encoderImpl,
                                                              codingPath: codingPath + [key])
 
-        let tmpKey = key.stringValue
-
-        containers[tmpKey] = container
-
-        containerKeys.append(tmpKey)
+        _register(container,
+                  forKey: key)
 
         try container.encodeNil()
     }
@@ -68,11 +62,8 @@ extension SexpEncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
         let container = SexpEncoderImpl.KeyedContainer<NestedKey>(encoderImpl: encoderImpl,
                                                                   codingPath: codingPath + [key])
 
-        let tmpKey = key.stringValue
-
-        containers[tmpKey] = container
-
-        containerKeys.append(tmpKey)
+        _register(container,
+                  forKey: key)
 
         return KeyedEncodingContainer(container)
     }
@@ -81,23 +72,48 @@ extension SexpEncoderImpl.KeyedContainer: KeyedEncodingContainerProtocol {
         let container = SexpEncoderImpl.UnkeyedContainer(encoderImpl: encoderImpl,
                                                          codingPath: codingPath + [key])
 
-        let tmpKey = key.stringValue
-
-        containers[tmpKey] = container
-
-        containerKeys.append(tmpKey)
+        _register(container,
+                  forKey: key)
 
         return container
     }
 
     internal func superEncoder() -> any Encoder {
-        SexpEncoderImpl(codingPath: codingPath + [SexpCodingKey("super")],
-                        userInfo: encoderImpl.userInfo)
+        _superEncoder(forKey: SexpCodingKey("super"))
     }
 
     internal func superEncoder(forKey key: Key) -> any Encoder {
-        SexpEncoderImpl(codingPath: codingPath + [key],
-                        userInfo: encoderImpl.userInfo)
+        _superEncoder(forKey: key)
+    }
+
+    // MARK: Private Instance Methods
+
+    //
+    // Each key appears once, where it was first encoded; encoding it again replaces its value, as
+    // `JSONEncoder` does.
+    //
+    private func _register(_ container: any SexpEncodingContainer,
+                           forKey key: any CodingKey) {
+        let tmpKey = key.stringValue
+
+        if containers.updateValue(container,
+                                  forKey: tmpKey) == nil {
+            containerKeys.append(tmpKey)
+        }
+    }
+
+    //
+    // Held under `key`, like a nested container, so that what's encoded through it isn't lost.
+    // The decoder's `superDecoder()` reads the same `super` key.
+    //
+    private func _superEncoder(forKey key: any CodingKey) -> SexpEncoderImpl {
+        let encoder = SexpEncoderImpl(codingPath: codingPath + [key],
+                                      userInfo: encoderImpl.userInfo)
+
+        _register(encoder,
+                  forKey: key)
+
+        return encoder
     }
 }
 

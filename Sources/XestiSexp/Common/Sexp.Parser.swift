@@ -56,8 +56,10 @@ extension Sexp.Parser {
     ///
     /// - Returns:  The parsed S-expression.
     ///
-    /// - Throws:   A ``Sexp/Error`` if the input string cannot be parsed as
-    ///             an S-expression.
+    /// - Throws:   A ``Sexp/Error`` if the input string contains an invalid
+    ///             datum or trailing garbage; a `Tokenizer.Error` or
+    ///             `TokenMatcher.Error` (from XestiTokens) if it contains an
+    ///             unrecognized or unexpected token, or ends prematurely.
     public func parse(input: String) throws -> Sexp {
         var matcher = try Matcher(parser: self,
                                   tokens: tokenizer.tokenize(input: input))

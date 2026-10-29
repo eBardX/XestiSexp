@@ -15,7 +15,7 @@ extension Sexp {
         /// as well as the syntax standard.
         ///
         /// For example, in the ``Sexp/Syntax/r7rsPartial`` syntax standard, a
-        /// bytevector can be formatted  as `#u8(…)`. However, in the
+        /// bytevector can be formatted as `#u8(…)`. However, in the
         /// ``Sexp/Syntax/r5rs`` syntax standard, bytevectors are not supported
         /// and therefore cannot be successfully formatted.
         case formatFailed(any Sendable, Syntax)
@@ -29,8 +29,8 @@ extension Sexp {
         /// An invalid bytevector element was encountered while parsing an
         /// S-expression.
         ///
-        /// As an associated value, this case contains the substring comprising
-        /// the invalid bytevector element.
+        /// As an associated value, this case contains the number that is not a
+        /// valid bytevector element (an exact integer from 0 through 255).
         case invalidBytevectorElement(Sexp.Number)
 
         /// An invalid character was encountered while parsing an S-expression.

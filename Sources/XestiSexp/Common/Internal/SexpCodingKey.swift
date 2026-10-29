@@ -1,6 +1,6 @@
 // © 2024–2026 John Gary Pusey (see LICENSE.md)
 
-internal struct SexpCodingKey: CodingKey {
+internal struct SexpCodingKey {
 
     // MARK: Internal Initializers
 
@@ -31,6 +31,11 @@ internal struct SexpCodingKey: CodingKey {
 
     internal var intValue: Int?
     internal var stringValue: String
+}
+
+// MARK: - CodingKey
+
+extension SexpCodingKey: CodingKey {
 }
 
 // MARK: - CustomDebugStringConvertible

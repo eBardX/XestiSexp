@@ -7,7 +7,7 @@ extension Sexp {
     // MARK: Public Nested Types
 
     /// An S-expression symbol value.
-    public struct Symbol: StringRepresentable {
+    public struct Symbol {
 
         // MARK: Public Initializers
 
@@ -51,8 +51,8 @@ extension Sexp.Symbol {
 
     // MARK: Public Type Methods
 
-    /// Determines if the provided string value is a valid representation
-    /// for a symbol value.
+    /// Returns a Boolean value indicating whether the provided string value
+    /// is a valid representation for a symbol value.
     ///
     /// - Note: _Any_ string value is considered a valid representation for
     ///         a symbol value. Even an empty string.
@@ -77,4 +77,9 @@ extension Sexp.Symbol {
 
         return false
     }
+}
+
+// MARK: - StringRepresentable
+
+extension Sexp.Symbol: StringRepresentable {
 }

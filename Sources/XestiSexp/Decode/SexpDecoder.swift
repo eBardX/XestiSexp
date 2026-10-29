@@ -55,7 +55,7 @@ extension SexpDecoder {
                                           codingPath: [],
                                           userInfo: userInfo)
 
-        return try T(from: decoder)
+        return try decoder.decodeValue(type)
     }
 
     // MARK: Private Instance Methods
@@ -69,12 +69,10 @@ extension SexpDecoder {
         do {
             return try Sexp.Parser(syntax: syntax,
                                    tracing: tracing).parse(input: string)
-        } catch let error as Sexp.Error {
+        } catch {
             throw DecodingError.makeDataCorruptedError(at: [],
                                                        message: "Invalid S-expression in data",
                                                        underlyingError: error)
-        } catch {
-            throw error
         }
     }
 }

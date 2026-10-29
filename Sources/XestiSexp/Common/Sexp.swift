@@ -43,7 +43,8 @@ public struct Sexp {
     /// - Parameter hdValue:    The head S-expression to use for the new
     ///                         S-expression pair.
     /// - Parameter tlValue:    The optional tail S-expression to use for the
-    ///                         new S-expression pair.
+    ///                         new S-expression pair. If `nil`, an
+    ///                         S-expression null is used.
     public init(head hdValue: Self,
                 tail tlValue: Self? = nil) {
         self.value = .pair(hdValue,
@@ -241,9 +242,14 @@ extension Sexp {
             guard let (key, value) = Self._extractKeyValue(pair)
             else { return nil }
 
-            dict[key] = value
-
-            keys.append(key)
+            //
+            // A repeated key keeps its first position and takes its last value, as it does when
+            // encoding.
+            //
+            if dict.updateValue(value,
+                                forKey: key) == nil {
+                keys.append(key)
+            }
         }
 
         return (dict, keys)

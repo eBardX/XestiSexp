@@ -69,33 +69,33 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
 
     internal func decode(_ type: Int.Type,
                          forKey key: Key) throws -> Int {
-        try _fetchExactIntegerNumberValue(type, key).intValue
+        try _fetchInteger(type, key)
     }
 
     internal func decode(_ type: Int8.Type,
                          forKey key: Key) throws -> Int8 {
-        try _fetchExactIntegerNumberValue(type, key).int8Value
+        try _fetchInteger(type, key)
     }
 
     internal func decode(_ type: Int16.Type,
                          forKey key: Key) throws -> Int16 {
-        try _fetchExactIntegerNumberValue(type, key).int16Value
+        try _fetchInteger(type, key)
     }
 
     internal func decode(_ type: Int32.Type,
                          forKey key: Key) throws -> Int32 {
-        try _fetchExactIntegerNumberValue(type, key).int32Value
+        try _fetchInteger(type, key)
     }
 
     internal func decode(_ type: Int64.Type,
                          forKey key: Key) throws -> Int64 {
-        try _fetchExactIntegerNumberValue(type, key).int64Value
+        try _fetchInteger(type, key)
     }
 
     @available(iOS 18.0, macOS 15.0, *)
     internal func decode(_ type: Int128.Type,
                          forKey key: Key) throws -> Int128 {
-        try _fetchExactIntegerNumberValue(type, key).int128Value
+        try _fetchInteger(type, key)
     }
 
     internal func decode(_ type: String.Type,
@@ -112,38 +112,58 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
 
     internal func decode(_ type: UInt.Type,
                          forKey key: Key) throws -> UInt {
-        try _fetchExactIntegerNumberValue(type, key).uintValue
+        try _fetchInteger(type, key)
     }
 
     internal func decode(_ type: UInt8.Type,
                          forKey key: Key) throws -> UInt8 {
-        try _fetchExactIntegerNumberValue(type, key).uint8Value
+        try _fetchInteger(type, key)
     }
 
     internal func decode(_ type: UInt16.Type,
                          forKey key: Key) throws -> UInt16 {
-        try _fetchExactIntegerNumberValue(type, key).uint16Value
+        try _fetchInteger(type, key)
     }
 
     internal func decode(_ type: UInt32.Type,
                          forKey key: Key) throws -> UInt32 {
-        try _fetchExactIntegerNumberValue(type, key).uint32Value
+        try _fetchInteger(type, key)
     }
 
     internal func decode(_ type: UInt64.Type,
                          forKey key: Key) throws -> UInt64 {
-        try _fetchExactIntegerNumberValue(type, key).uint64Value
+        try _fetchInteger(type, key)
     }
 
     @available(iOS 18.0, macOS 15.0, *)
     internal func decode(_ type: UInt128.Type,
                          forKey key: Key) throws -> UInt128 {
-        try _fetchExactIntegerNumberValue(type, key).uint128Value
+        try _fetchInteger(type, key)
     }
 
     internal func decode<T: Decodable>(_ type: T.Type,
                                        forKey key: Key) throws -> T {
-        try T(from: _decoderForKey(key))
+        try _decoderForKey(key).decodeValue(type)
+    }
+
+    //
+    // Nil and an empty list are both `()`, so `()` alone can't say whether an optional is `nil` or
+    // holds an empty value — an empty array, a struct with no properties, or an optional that is
+    // itself `nil`.  Synthesized `Codable` leaves a `nil` optional out rather than writing `()`, so
+    // a key that is present is taken to hold a value when its type can be decoded from `()`, and
+    // `nil` only when it can't.
+    //
+    internal func decodeIfPresent<T: Decodable>(_ type: T.Type,
+                                                forKey key: Key) throws -> T? {
+        guard let value = dictionary[key.stringValue]
+        else { return nil }
+
+        guard value == Sexp()
+        else { return try decode(type,
+                                 forKey: key) }
+
+        return try? decode(type,
+                           forKey: key)
     }
 
     internal func decodeNil(forKey key: Key) throws -> Bool {
@@ -189,8 +209,8 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                                userInfo: decoderImpl.userInfo)
     }
 
-    private func _fetchExactIntegerNumberValue(_ type: (some Any).Type,
-                                               _ key: any CodingKey) throws -> Sexp.Number {
+    private func _fetchInteger<T: FixedWidthInteger>(_ type: T.Type,
+                                                     _ key: any CodingKey) throws -> T {
         let numberValue = try _fetchNumberValue(type, key)
 
         guard numberValue.isExact,
@@ -199,7 +219,11 @@ extension SexpDecoderImpl.KeyedContainer: KeyedDecodingContainerProtocol {
                                                          at: codingPath + [key],
                                                          message: "Expected an exact integer, instead found: \(numberValue)") }
 
-        return numberValue
+        guard let integer = numberValue.integer(as: type)
+        else { throw DecodingError.makeDataCorruptedError(at: codingPath + [key],
+                                                          message: "Number \(numberValue) does not fit in \(type)") }
+
+        return integer
     }
 
     private func _fetchNumberValue(_ type: (some Any).Type,

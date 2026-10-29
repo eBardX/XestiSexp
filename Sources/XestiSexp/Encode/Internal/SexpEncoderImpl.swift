@@ -20,17 +20,6 @@ internal final class SexpEncoderImpl {
     private var container: (any SexpEncodingContainer)?
 }
 
-// MARK: -
-
-extension SexpEncoderImpl {
-
-    // MARK: Internal Instance Properties
-
-    internal var sexp: Sexp {
-        container?.sexp ?? Sexp()
-    }
-}
-
 // MARK: - Encoder
 
 extension SexpEncoderImpl: Encoder {
@@ -68,5 +57,20 @@ extension SexpEncoderImpl: Encoder {
         container = tmpContainer
 
         return tmpContainer
+    }
+}
+
+// MARK: - SexpEncodingContainer
+
+//
+// So that a super encoder can be held by the container that made it, like any nested container,
+// and what's encoded through it ends up in that container's S-expression.
+//
+extension SexpEncoderImpl: SexpEncodingContainer {
+
+    // MARK: Internal Instance Properties
+
+    internal var sexp: Sexp {
+        container?.sexp ?? Sexp()
     }
 }

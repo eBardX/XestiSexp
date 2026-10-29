@@ -59,16 +59,40 @@ extension SexpEncoderImplKeyedContainerTests {
     }
 
     @Test
-    func superEncoder() {
+    func sexp_repeatedKeyAppearsOnce() throws {
         let container = makeKeyedEncoderContainer()
 
+        try container.encode(1, forKey: SexpCodingKey("a"))
+        try container.encode(2, forKey: SexpCodingKey("b"))
+        try container.encode(3, forKey: SexpCodingKey("a"))
+
         _ = container.superEncoder()
+        _ = container.superEncoder()
+
+        #expect(try fmt5(container.sexp) == "((a 3) (b 2) (super ()))")
     }
 
     @Test
-    func superEncoder_forKey() {
+    func superEncoder() throws {
         let container = makeKeyedEncoderContainer()
 
-        _ = container.superEncoder(forKey: SexpCodingKey("name"))
+        try container.encode(2, forKey: SexpCodingKey("b"))
+
+        var superContainer = container.superEncoder().singleValueContainer()
+
+        try superContainer.encode(1)
+
+        #expect(try fmt5(container.sexp) == "((b 2) (super 1))")
+    }
+
+    @Test
+    func superEncoder_forKey() throws {
+        let container = makeKeyedEncoderContainer()
+
+        var superContainer = container.superEncoder(forKey: SexpCodingKey("name")).singleValueContainer()
+
+        try superContainer.encode("Alice")
+
+        #expect(try fmt5(container.sexp) == "((name Alice))")
     }
 }

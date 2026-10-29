@@ -28,37 +28,6 @@ extension Sexp {
 
         internal let syntax: Syntax
 
-        // MARK: Private Type Properties
-
-        private nonisolated(unsafe) static let rulesCommon: [Rule] = [Rule(/'/, .quote),
-                                                                      Rule(/`/, .quasiquote),
-                                                                      Rule(/,/, .unquote),
-                                                                      Rule(/,@/, .unquoteSplicing),
-                                                                      Rule(/\(/, .pairBegin),
-                                                                      Rule(/\)/, .sequenceEnd),
-                                                                      Rule(/#\(/, .vectorBegin),
-                                                                      Rule(regex: /;.*(?=[\n\r]|$)/,
-                                                                           disposition: .skip(nil)),
-                                                                      Rule(regex: /[ \n\r\t]+/,
-                                                                           disposition: .skip(nil))]
-
-        private nonisolated(unsafe) static let rulesR5RS: [Rule] = [Rule(regexDotR5RS, .dot),
-                                                                    Rule(regexBooleanR5RS, .boolean),
-                                                                    Rule(regexCharacterR5RS, .character),
-                                                                    Rule(regexNumberR5RS, .number),
-                                                                    Rule(regexReservedR5RS, .reserved),
-                                                                    Rule(regexStringR5RS, .string),
-                                                                    Rule(regexSymbolR5RS, .symbol)]
-
-        private nonisolated(unsafe) static let rulesR7RS: [Rule] = [Rule(regexDotR7RS, .dot),
-                                                                    Rule(regexBooleanR7RS, .boolean),
-                                                                    Rule(regexBytevectorR7RS, .byteVectorBegin),
-                                                                    Rule(regexCharacterR7RS, .character),
-                                                                    Rule(regexNumberR7RS, .number),
-                                                                    Rule(regexReservedR7RS, .reserved),
-                                                                    Rule(regexStringR7RS, .string),
-                                                                    Rule(regexSymbolR7RS, .symbol)]
-
         // MARK: Private Instance Properties
 
         private let baseTokenizer: BaseTokenizer
@@ -80,6 +49,37 @@ extension Sexp.Tokenizer {
     internal func tokenize(input: String) throws -> [Token] {
         try baseTokenizer.tokenize(input: input)
     }
+
+    // MARK: Private Type Properties
+
+    private nonisolated(unsafe) static let rulesCommon: [Rule] = [Rule(/'/, .quote),
+                                                                  Rule(/`/, .quasiquote),
+                                                                  Rule(/,/, .unquote),
+                                                                  Rule(/,@/, .unquoteSplicing),
+                                                                  Rule(/\(/, .pairBegin),
+                                                                  Rule(/\)/, .sequenceEnd),
+                                                                  Rule(/#\(/, .vectorBegin),
+                                                                  Rule(regex: /;.*(?=[\n\r]|$)/,
+                                                                       disposition: .skip(nil)),
+                                                                  Rule(regex: /[ \n\r\t]+/,
+                                                                       disposition: .skip(nil))]
+
+    private nonisolated(unsafe) static let rulesR5RS: [Rule] = [Rule(regexDotR5RS, .dot),
+                                                                Rule(regexBooleanR5RS, .boolean),
+                                                                Rule(regexCharacterR5RS, .character),
+                                                                Rule(regexNumberR5RS, .number),
+                                                                Rule(regexReservedR5RS, .reserved),
+                                                                Rule(regexStringR5RS, .string),
+                                                                Rule(regexSymbolR5RS, .symbol)]
+
+    private nonisolated(unsafe) static let rulesR7RS: [Rule] = [Rule(regexDotR7RS, .dot),
+                                                                Rule(regexBooleanR7RS, .boolean),
+                                                                Rule(regexBytevectorR7RS, .byteVectorBegin),
+                                                                Rule(regexCharacterR7RS, .character),
+                                                                Rule(regexNumberR7RS, .number),
+                                                                Rule(regexReservedR7RS, .reserved),
+                                                                Rule(regexStringR7RS, .string),
+                                                                Rule(regexSymbolR7RS, .symbol)]
 
     // MARK: Private Type Methods
 

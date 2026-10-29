@@ -2,6 +2,7 @@
 
 import Foundation
 import Testing
+import XestiNumbers
 @testable import XestiSexp
 
 struct SexpDecoderTests {
@@ -31,7 +32,7 @@ extension SexpDecoderTests {
     func decode_errorInvalidSexp() {
         let data = Data("((((".utf8)
 
-        #expect(throws: (any Error).self) {
+        #expect(throws: DecodingError.self) {
             try SexpDecoder().decode(BoolRecord.self, from: data)
         }
     }
@@ -46,11 +47,29 @@ extension SexpDecoderTests {
     }
 
     @Test
+    func decode_errorTrailingGarbage() {
+        let data = Data("((flag #t)) x".utf8)
+
+        #expect(throws: DecodingError.self) {
+            try SexpDecoder().decode(BoolRecord.self, from: data)
+        }
+    }
+
+    @Test
     func decode_errorTypeMismatch() {
         let data = Data("((name 42) (age 30))".utf8)
 
         #expect(throws: DecodingError.self) {
             try SexpDecoder().decode(SimpleRecord.self, from: data)
+        }
+    }
+
+    @Test
+    func decode_errorUnrecognizedToken() {
+        let data = Data("((flag #z))".utf8)
+
+        #expect(throws: DecodingError.self) {
+            try SexpDecoder().decode(BoolRecord.self, from: data)
         }
     }
 
@@ -90,6 +109,22 @@ extension SexpDecoderTests {
     }
 
     @Test
+    func decode_numberInEveryContainer() throws {
+        let record = try decodeText(NumberRecord.self,
+                                    from: "((ratio 1/2) (ratios (1 3/4 2.5)) (step ((relative ((_0 2))))))")
+
+        #expect(record == NumberRecord(ratio: Number(numerator: 1, denominator: 2),
+                                       ratios: [1, Number(numerator: 3, denominator: 4), 2.5],
+                                       step: .relative(2)))
+    }
+
+    @Test
+    func decode_numberTopLevel() throws {
+        #expect(try decodeText(Number.self, from: "3/4") == Number(numerator: 3, denominator: 4))
+        #expect(try decodeText(Number.self, from: "\"3/4\"") == Number(numerator: 3, denominator: 4))
+    }
+
+    @Test
     func decode_stringQuoted() throws {
         let record = try decodeText(SimpleRecord.self,
                                     from: "((name \"hello world\") (age 1))")
@@ -116,5 +151,53 @@ extension SexpDecoderTests {
         let decoded = try SexpDecoder().decode(CodableRecord.self, from: encoded)
 
         #expect(decoded == original)
+    }
+
+    @Test
+    func roundtrip_emptyOptionals() throws {
+        for original in [OptionalCollectionsRecord(array: [], empty: EmptyRecord(), nested: .some(nil), set: []),
+                         OptionalCollectionsRecord(array: nil, empty: nil, nested: nil, set: nil),
+                         OptionalCollectionsRecord(array: [1], empty: nil, nested: 2, set: [3])] {
+            let encoded = try SexpEncoder().encode(original)
+
+            #expect(try SexpDecoder().decode(OptionalCollectionsRecord.self, from: encoded) == original)
+        }
+    }
+
+    @Test
+    func roundtrip_numbers() throws {
+        let original = NumberRecord(ratio: Number(numerator: 1, denominator: 3),
+                                    ratios: [0, 1, Number(numerator: 7, denominator: 8)],
+                                    step: .relative(Number(numerator: 3, denominator: 2)))
+
+        let encoded = try SexpEncoder().encode(original)
+        let decoded = try SexpDecoder().decode(NumberRecord.self, from: encoded)
+
+        #expect(decoded == original)
+    }
+
+    @Test
+    func roundtrip_superEncoderKeyed() throws {
+        var encoder = SexpEncoder()
+
+        encoder.prettyPrint = false
+
+        let encoded = try encoder.encode(DerivedRecord(a: 1, b: 2))
+        let decoded = try SexpDecoder().decode(DerivedRecord.self, from: encoded)
+
+        #expect(String(data: encoded, encoding: .utf8) == "((b 2) (super ((a 1))))")
+        #expect(decoded.a == 1)
+        #expect(decoded.b == 2)
+    }
+
+    @Test
+    func roundtrip_superEncoderUnkeyed() throws {
+        let original = UnkeyedSuperRecord(first: 1,
+                                          inner: SimpleCodableRecord(name: "Alice"))
+
+        let encoded = try SexpEncoder().encode(original)
+
+        #expect(String(data: encoded, encoding: .utf8) == "(1 ((name Alice)))")
+        #expect(try SexpDecoder().decode(UnkeyedSuperRecord.self, from: encoded) == original)
     }
 }

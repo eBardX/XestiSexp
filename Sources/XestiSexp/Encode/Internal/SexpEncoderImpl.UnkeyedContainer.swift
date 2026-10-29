@@ -82,9 +82,17 @@ extension SexpEncoderImpl.UnkeyedContainer: UnkeyedEncodingContainer {
         return container
     }
 
+    //
+    // Appended, like a nested container, so that what's encoded through it isn't lost; the
+    // decoder's `superDecoder()` reads the next element.
+    //
     internal func superEncoder() -> any Encoder {
-        SexpEncoderImpl(codingPath: currentCodingPath,
-                        userInfo: encoderImpl.userInfo)
+        let encoder = SexpEncoderImpl(codingPath: currentCodingPath,
+                                      userInfo: encoderImpl.userInfo)
+
+        containers.append(encoder)
+
+        return encoder
     }
 
     // MARK: Private Instance Properties

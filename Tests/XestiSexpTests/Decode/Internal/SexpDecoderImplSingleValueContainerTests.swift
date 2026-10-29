@@ -34,6 +34,20 @@ extension SexpDecoderImplSingleValueContainerTests {
     }
 
     @Test
+    func decode_int_outOfRange() throws {
+        #expect(try makeSingleValueDecoderContainer(Sexp(number: 255)).decode(UInt8.self) == 255)
+        #expect(try makeSingleValueDecoderContainer(Sexp(number: -128)).decode(Int8.self) == -128)
+
+        #expect(throws: DecodingError.self) {
+            try makeSingleValueDecoderContainer(Sexp(number: 256)).decode(UInt8.self)
+        }
+
+        #expect(throws: DecodingError.self) {
+            try makeSingleValueDecoderContainer(Sexp(number: -129)).decode(Int8.self)
+        }
+    }
+
+    @Test
     func decode_int_typeMismatch() {
         #expect(throws: DecodingError.self) {
             try makeSingleValueDecoderContainer(Sexp(number: 3.5)).decode(Int.self)
@@ -45,6 +59,11 @@ extension SexpDecoderImplSingleValueContainerTests {
         let number = Sexp.Number(42)
 
         #expect(try makeSingleValueDecoderContainer(Sexp(number: number)).decode(Sexp.Number.self) == number)
+    }
+
+    @Test
+    func decode_number_fromString() throws {
+        #expect(try makeSingleValueDecoderContainer(Sexp(string: "3/4")).decode(Sexp.Number.self) == Sexp.Number(numerator: 3, denominator: 4))
     }
 
     @Test

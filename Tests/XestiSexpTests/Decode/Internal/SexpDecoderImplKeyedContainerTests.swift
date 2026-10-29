@@ -17,6 +17,14 @@ extension SexpDecoderImplKeyedContainerTests {
     }
 
     @Test
+    func allKeys_repeatedKey() throws {
+        let container = try makeKeyedDecoderContainer("((a 1) (b 2) (a 3))")
+
+        #expect(container.allKeys.map(\.stringValue) == ["a", "b"])
+        #expect(try container.decode(Int.self, forKey: SexpCodingKey("a")) == 3)
+    }
+
+    @Test
     func contains() throws {
         let container = try makeKeyedDecoderContainer("((name x))")
 
@@ -36,6 +44,21 @@ extension SexpDecoderImplKeyedContainerTests {
         let container = try makeKeyedDecoderContainer("((age 30))")
 
         #expect(try container.decode(Int.self, forKey: SexpCodingKey("age")) == 30)
+    }
+
+    @Test
+    func decode_int_outOfRange() throws {
+        let container = try makeKeyedDecoderContainer("((big 300) (negative -1))")
+
+        #expect(try container.decode(Int16.self, forKey: SexpCodingKey("big")) == 300)
+
+        #expect(throws: DecodingError.self) {
+            try container.decode(Int8.self, forKey: SexpCodingKey("big"))
+        }
+
+        #expect(throws: DecodingError.self) {
+            try container.decode(UInt.self, forKey: SexpCodingKey("negative"))
+        }
     }
 
     @Test
@@ -61,6 +84,26 @@ extension SexpDecoderImplKeyedContainerTests {
         let container = try makeKeyedDecoderContainer("((name x))")
 
         #expect(try container.decode(String.self, forKey: SexpCodingKey("name")) == "x")
+    }
+
+    @Test
+    func decodeIfPresent_emptyListIsEmptyValueWhereItCanBe() throws {
+        let container = try makeKeyedDecoderContainer("((list ()) (number ()) (present 7))")
+
+        #expect(try container.decodeIfPresent([Int].self, forKey: SexpCodingKey("list"))?.isEmpty == true)
+        #expect(try container.decodeIfPresent(Int?.self, forKey: SexpCodingKey("list")) == .some(nil))
+        #expect(try container.decodeIfPresent(Int.self, forKey: SexpCodingKey("number")) == nil)
+        #expect(try container.decodeIfPresent(Int.self, forKey: SexpCodingKey("present")) == 7)
+        #expect(try container.decodeIfPresent([Int].self, forKey: SexpCodingKey("missing")) == nil)
+    }
+
+    @Test
+    func decodeIfPresent_wrongTypeStillThrows() throws {
+        let container = try makeKeyedDecoderContainer("((list (1 x)))")
+
+        #expect(throws: DecodingError.self) {
+            try container.decodeIfPresent([Int].self, forKey: SexpCodingKey("list"))
+        }
     }
 
     @Test

@@ -48,8 +48,7 @@ let output = try Sexp.Formatter(prettyPrint: false,
 ```
 
 See ``SexpEncoder``, ``SexpDecoder``, ``Sexp/Parser``, and ``Sexp/Formatter``
-for the full details of what each supports — and for the handful of
-documented limitations of each.
+for the full details of what each supports.
 
 ## Topics
 

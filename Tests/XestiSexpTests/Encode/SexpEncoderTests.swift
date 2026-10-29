@@ -2,6 +2,7 @@
 
 import Foundation
 import Testing
+import XestiNumbers
 @testable import XestiSexp
 
 struct SexpEncoderTests {
@@ -18,5 +19,13 @@ extension SexpEncoderTests {
                                      encoding: .utf8)
 
         #expect(actualValue == expectedValue)
+    }
+
+    @Test
+    func encode_numberTopLevel() throws {
+        let number = Sexp.Number(numerator: 3, denominator: 4)
+
+        #expect(try String(data: SexpEncoder().encode(number), encoding: .utf8) == "3/4")
+        #expect(try String(data: SexpEncoder().encode([number]), encoding: .utf8) == "(3/4)")
     }
 }
